@@ -2,6 +2,6 @@ package parameters;
 
 public interface Scalable
 {
-    float matches(FixedParameter value);
+    float calculateMatchPercentage(FixedParameter value);
     void expandBy(double value);
 }

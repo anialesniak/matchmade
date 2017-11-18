@@ -8,7 +8,7 @@ public final class ScalableRangedParameter extends RangedParameter implements Sc
     }
 
     @Override
-    public float matches(FixedParameter value)
+    public float calculateMatchPercentage(FixedParameter value)
     {
         // TODO
         return 0;

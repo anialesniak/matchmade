@@ -8,7 +8,7 @@ public final class ScalableFixedParameter extends FixedParameter implements Scal
     }
 
     @Override
-    public float matches(FixedParameter value)
+    public float calculateMatchPercentage(FixedParameter value)
     {
         // TODO
         return 0;
