@@ -1,8 +1,7 @@
 package parameters;
 
-public class ScalableRangedParameter extends RangedParameter implements Scalable
+public final class ScalableRangedParameter extends RangedParameter implements Scalable
 {
-
     public ScalableRangedParameter(double lower, double upper)
     {
         super(lower, upper);
@@ -16,8 +15,8 @@ public class ScalableRangedParameter extends RangedParameter implements Scalable
     }
 
     @Override
-    public void expand()
+    public void expandBy(float value)
     {
-        // TODO
+
     }
 }

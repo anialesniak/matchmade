@@ -1,8 +1,7 @@
 package parameters;
 
-public class ScalableFixedParameter extends FixedParameter implements Scalable
+public final class ScalableFixedParameter extends FixedParameter implements Scalable
 {
-
     public ScalableFixedParameter(double value)
     {
         super(value);
@@ -16,8 +15,8 @@ public class ScalableFixedParameter extends FixedParameter implements Scalable
     }
 
     @Override
-    public void expand()
+    public void expandBy(float value)
     {
-        // TODO
+
     }
 }
