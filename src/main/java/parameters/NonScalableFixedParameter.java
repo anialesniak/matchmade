@@ -8,7 +8,7 @@ public final class NonScalableFixedParameter extends FixedParameter implements N
     }
 
     @Override
-    public boolean matches(FixedParameter value, float epsilon)
+    public boolean matches(FixedParameter value, double epsilon)
     {
         // TODO
         return false;

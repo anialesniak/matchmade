@@ -8,7 +8,7 @@ public final class NonScalableRangedParameter extends RangedParameter implements
     }
 
     @Override
-    public boolean matches(FixedParameter value, float epsilon)
+    public boolean matches(FixedParameter value, double epsilon)
     {
         // TODO
         return false;

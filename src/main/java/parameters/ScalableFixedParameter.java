@@ -15,7 +15,7 @@ public final class ScalableFixedParameter extends FixedParameter implements Scal
     }
 
     @Override
-    public void expandBy(float value)
+    public void expandBy(double value)
     {
 
     }

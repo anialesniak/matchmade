@@ -15,7 +15,7 @@ public final class ScalableRangedParameter extends RangedParameter implements Sc
     }
 
     @Override
-    public void expandBy(float value)
+    public void expandBy(double value)
     {
 
     }
