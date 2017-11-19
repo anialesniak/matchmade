@@ -1,6 +1,6 @@
 package matchmaker;
 
-import clients.Client;
+import clients.ClientSearchingData;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -9,7 +9,7 @@ public final class ClientPool
 {
     private static final ClientPool INSTANCE = new ClientPool();
 
-    private final Set<Client> clientSet;
+    private final Set<ClientSearchingData> clientSet;
 
     private ClientPool()
     {
@@ -21,7 +21,7 @@ public final class ClientPool
         return INSTANCE;
     }
 
-    public Set<Client> getClientSet()
+    public Set<ClientSearchingData> getClientSet()
     {
         return clientSet;
     }
