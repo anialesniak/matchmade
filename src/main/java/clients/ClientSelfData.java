@@ -1,19 +1,19 @@
 package clients;
 
-import parameters.NonScalableFixedParameter;
+import parameters.Parameter;
 
 import java.util.Map;
 
 public class ClientSelfData
 {
-    private final Map<String, NonScalableFixedParameter> parameters;
+    private final Map<String, Parameter> parameters;
 
-    public ClientSelfData(final Map<String, NonScalableFixedParameter> parameters)
+    public ClientSelfData(final Map<String, Parameter> parameters)
     {
         this.parameters = parameters;
     }
 
-    public Map<String, NonScalableFixedParameter> getParameters()
+    public Map<String, Parameter> getParameters()
     {
         return parameters;
     }

@@ -1,29 +1,20 @@
 package clients;
 
-import parameters.NonScalable;
-import parameters.Scalable;
+import parameters.Parameter;
 
 import java.util.Map;
 
 public class ClientSearchingData
 {
-    private final Map<String, Scalable> scalableParameters;
-    private final Map<String, NonScalable> nonScalableParameters;
+    private final Map<String, Parameter> parameters;
 
-    public ClientSearchingData(final Map<String, Scalable> scalableParameters,
-                               final Map<String, NonScalable> nonScalableParameters)
+    public ClientSearchingData(final Map<String, Parameter> parameters)
     {
-        this.scalableParameters = scalableParameters;
-        this.nonScalableParameters = nonScalableParameters;
+        this.parameters = parameters;
     }
 
-    public Map<String, Scalable> getScalableParameters()
+    public Map<String, Parameter> getParameters()
     {
-        return scalableParameters;
-    }
-
-    public Map<String, NonScalable> getNonScalableParameters()
-    {
-        return nonScalableParameters;
+        return parameters;
     }
 }
