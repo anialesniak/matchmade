@@ -13,7 +13,7 @@ public final class ScalableFixedParameter extends FixedParameter implements Scal
     public double calculateMatchPercentage(NonScalableFixedParameter value)
     {
         Range<Double> range =
-                Range.open(this.getValue() - this.getExpandingRange(),
+                Range.closed(this.getValue() - this.getExpandingRange(),
                         this.getValue() + this.getExpandingRange());
         if (!range.contains(value.getValue())) return 0;
         if (Math.abs(this.getValue() - value.getValue()) < Constants.EPSILON) return 1;

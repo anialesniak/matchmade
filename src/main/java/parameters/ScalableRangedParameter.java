@@ -13,10 +13,10 @@ public final class ScalableRangedParameter extends RangedParameter implements Sc
     public double calculateMatchPercentage(NonScalableFixedParameter value)
     {
         Range<Double> initialRange =
-                Range.open(this.getLower(),
+                Range.closed(this.getLower(),
                         this.getUpper());
         Range<Double> expandedRange =
-                Range.open(this.getLower() - this.getExpandingRange(),
+                Range.closed(this.getLower() - this.getExpandingRange(),
                         this.getUpper() + this.getExpandingRange());
         if (!expandedRange.contains(value.getValue())) return 0;
         if (initialRange.contains(value.getValue())) return 1;
