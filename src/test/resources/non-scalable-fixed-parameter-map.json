@@ -1,0 +1,14 @@
+{
+  "age": {
+    "type": "nonScalableFixed",
+    "value": 25
+  },
+  "height": {
+    "type": "nonScalableFixed",
+    "value": 128
+  },
+  "weight": {
+    "type": "nonScalableFixed",
+    "value": 130
+  }
+}

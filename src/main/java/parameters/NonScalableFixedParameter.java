@@ -1,8 +1,14 @@
 package parameters;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+@JsonDeserialize
 public final class NonScalableFixedParameter extends FixedParameter implements NonScalable
 {
-    public NonScalableFixedParameter(double value)
+    @JsonCreator
+    public NonScalableFixedParameter(@JsonProperty("value") double value)
     {
         super(value);
     }
@@ -12,5 +18,11 @@ public final class NonScalableFixedParameter extends FixedParameter implements N
     {
         // TODO
         return false;
+    }
+
+    @Override
+    public ParameterType getType()
+    {
+        return ParameterType.NON_SCALABLE_FIXED;
     }
 }
