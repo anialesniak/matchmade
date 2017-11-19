@@ -1,6 +1,7 @@
 package http;
 
 import clients.Client;
+import clients.ClientDataType;
 import clients.ClientSearchingData;
 import clients.ClientSelfData;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -8,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import matchmaker.ClientPool;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import parameters.NonScalableFixedParameter;
 import parameters.Parameter;
 
 import javax.servlet.ServletException;
@@ -20,12 +20,6 @@ import java.util.Map;
 
 public class ClientRequestHandler extends AbstractHandler
 {
-    private final ObjectMapper objectMapper = new ObjectMapper();
-    private final TypeReference<Map<String, Map<String, NonScalableFixedParameter>>> nonScalableTypeReference =
-            new TypeReference<Map<String, Map<String, NonScalableFixedParameter>>>() {};
-    private final TypeReference<Map<String, Map<String, Parameter>>> nonScalableTypeReference =
-            new TypeReference<Map<String, Map<String, Parameter>>>() {};
-
     @Override
     public void handle(final String target,
                        final Request baseRequest,
@@ -35,6 +29,7 @@ public class ClientRequestHandler extends AbstractHandler
         final String body = extractBody(request);
         final Client client = convertToClient(body);
         ClientPool.getInstance().getClientSet().add(client);
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     private String extractBody(final HttpServletRequest request) throws IOException
@@ -62,9 +57,10 @@ public class ClientRequestHandler extends AbstractHandler
     private Client convertToClient(final String jsonBody) throws IOException
     {
         final Map<String, Map<String, Parameter>> parameterMap =
-                objectMapper.readValue(jsonBody, new TypeReference<Map<String, Map<String, Parameter>>>() {});
-        final ClientSelfData clientSelf = new ClientSelfData(parameterMap.get("clientSelf"));
-        final ClientSearchingData clientSearching = new ClientSearchingData(parameterMap.get("clientSearching"));
+                new ObjectMapper().readValue(jsonBody, new TypeReference<Map<String, Map<String, Parameter>>>() {});
+        final ClientSelfData clientSelf = new ClientSelfData(parameterMap.get(ClientDataType.CLIENT_SELF.getType()));
+        final ClientSearchingData clientSearching =
+                new ClientSearchingData(parameterMap.get(ClientDataType.CLIENT_SEARCHING.getType()));
         return new Client(clientSelf, clientSearching);
     }
 }
