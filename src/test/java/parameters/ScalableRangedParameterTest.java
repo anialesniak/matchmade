@@ -13,7 +13,7 @@ public class ScalableRangedParameterTest {
         ScalableRangedParameter parameter = new ScalableRangedParameter(3.5, 4.5);
         double matchResult = parameter.calculateMatchPercentage(new NonScalableFixedParameter(3.75));
 
-        assertThat(matchResult).isEqualTo(1);
+        assertThat(matchResult).isCloseTo(new Double(1), within(Constants.EPSILON));
     }
 
     @Test
@@ -22,7 +22,7 @@ public class ScalableRangedParameterTest {
         parameter.expandBy(0.5);
         double matchResult = parameter.calculateMatchPercentage(new NonScalableFixedParameter(5.75));
 
-        assertThat(matchResult).isEqualTo(0);
+        assertThat(matchResult).isCloseTo(new Double(0), within(Constants.EPSILON));
     }
 
     @Test
@@ -31,7 +31,7 @@ public class ScalableRangedParameterTest {
         parameter.expandBy(0.5);
         double matchResult = parameter.calculateMatchPercentage(new NonScalableFixedParameter(4.75));
 
-        assertThat(matchResult).isEqualTo(0.5);
+        assertThat(matchResult).isCloseTo(new Double(0.5), within(Constants.EPSILON));
     }
 
     @Test

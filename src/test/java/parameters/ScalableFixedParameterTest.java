@@ -13,7 +13,7 @@ public class ScalableFixedParameterTest {
         ScalableFixedParameter parameter = new ScalableFixedParameter(10);
         double matchResult = parameter.calculateMatchPercentage(new NonScalableFixedParameter(10));
 
-        assertThat(matchResult).isEqualTo(1);
+        assertThat(matchResult).isCloseTo(new Double(1), within(Constants.EPSILON));
     }
 
     @Test
@@ -22,7 +22,7 @@ public class ScalableFixedParameterTest {
         parameter.expandBy(5);
         double matchResult = parameter.calculateMatchPercentage(new NonScalableFixedParameter(20));
 
-        assertThat(matchResult).isEqualTo(0);
+        assertThat(matchResult).isCloseTo(new Double(0), within(Constants.EPSILON));
     }
 
     @Test
@@ -31,7 +31,7 @@ public class ScalableFixedParameterTest {
         parameter.expandBy(2);
         double matchResult = parameter.calculateMatchPercentage(new NonScalableFixedParameter(12));
 
-        assertThat(matchResult).isEqualTo(0);
+        assertThat(matchResult).isCloseTo(new Double(0), within(Constants.EPSILON));
     }
 
     @Test
@@ -41,7 +41,7 @@ public class ScalableFixedParameterTest {
         double matchResult = parameter.calculateMatchPercentage(new NonScalableFixedParameter(12));
 
         assertThat(matchResult).isGreaterThan(0);
-        assertThat(matchResult).isEqualTo(0.5);
+        assertThat(matchResult).isCloseTo(new Double(0.5), within(Constants.EPSILON));
 
     }
 

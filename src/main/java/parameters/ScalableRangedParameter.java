@@ -10,24 +10,19 @@ public final class ScalableRangedParameter extends RangedParameter implements Sc
     }
 
     @Override
-    public double calculateMatchPercentage(NonScalableFixedParameter value)
+    public double calculateMatchPercentage(NonScalableFixedParameter parameter)
     {
-        Range<Double> initialRange =
-                Range.closed(this.getLower(),
-                        this.getUpper());
-        Range<Double> expandedRange =
-                Range.closed(this.getLower() - this.getExpandingRange(),
-                        this.getUpper() + this.getExpandingRange());
-        if (!expandedRange.contains(value.getValue())) return 0;
-        if (initialRange.contains(value.getValue())) return 1;
-        if (value.getValue() > initialRange.upperEndpoint())
-            return 1 - Math.abs(initialRange.upperEndpoint() - value.getValue()) / this.getExpandingRange();
-        return 1 - Math.abs(initialRange.lowerEndpoint() - value.getValue()) / this.getExpandingRange();
+        Range<Double> initialRange = Range.closed(getLower(), getUpper());
+        Range<Double> expandedRange = Range.closed(getLower() - getExpandingRange(), getUpper() + getExpandingRange());
+        if (!expandedRange.contains(parameter.getValue())) return 0;
+        else if (initialRange.contains(parameter.getValue())) return 1;
+        else if (parameter.getValue() > initialRange.upperEndpoint())
+            return 1 - Math.abs(initialRange.upperEndpoint() - parameter.getValue()) / getExpandingRange();
+        else return 1 - Math.abs(initialRange.lowerEndpoint() - parameter.getValue()) / getExpandingRange();
     }
 
     @Override
-    public void expandBy(double value)
-    {
-        this.setExpandingRange(value);
+    public void expandBy(double value) {
+        setExpandingRange(value);
     }
 }

@@ -10,19 +10,18 @@ public final class ScalableFixedParameter extends FixedParameter implements Scal
     }
 
     @Override
-    public double calculateMatchPercentage(NonScalableFixedParameter value)
+    public double calculateMatchPercentage(NonScalableFixedParameter parameter)
     {
-        Range<Double> range =
-                Range.closed(this.getValue() - this.getExpandingRange(),
-                        this.getValue() + this.getExpandingRange());
-        if (!range.contains(value.getValue())) return 0;
-        if (Math.abs(this.getValue() - value.getValue()) < Constants.EPSILON) return 1;
-        return 1 - Math.abs(this.getValue() - value.getValue()) / this.getExpandingRange();
+        Range<Double> range = Range.closed(getValue() - getExpandingRange(),
+                getValue() + getExpandingRange());
+        if (!range.contains(parameter.getValue())) return 0;
+        else if (Math.abs(getValue() - parameter.getValue()) < Constants.EPSILON) return 1;
+        else return 1 - Math.abs(getValue() - parameter.getValue()) / getExpandingRange();
     }
 
     @Override
     public void expandBy(double value)
     {
-        this.setExpandingRange(value);
+        setExpandingRange(value);
     }
 }
