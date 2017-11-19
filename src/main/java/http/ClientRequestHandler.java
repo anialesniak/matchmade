@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import matchmaker.ClientPool;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import parameters.NonScalableFixedParameter;
 import parameters.Parameter;
 
 import javax.servlet.ServletException;
@@ -56,11 +57,16 @@ public class ClientRequestHandler extends AbstractHandler
 
     private Client convertToClient(final String jsonBody) throws IOException
     {
+        final ObjectMapper objectMapper = new ObjectMapper();
         final Map<String, Map<String, Parameter>> parameterMap =
-                new ObjectMapper().readValue(jsonBody, new TypeReference<Map<String, Map<String, Parameter>>>() {});
-        final ClientSelfData clientSelf = new ClientSelfData(parameterMap.get(ClientDataType.CLIENT_SELF.getType()));
+                objectMapper.readValue(jsonBody, new TypeReference<Map<String, Map<String, Parameter>>>() {});
+
+        final ClientSelfData clientSelf = new ClientSelfData(objectMapper.convertValue(
+                parameterMap.get(ClientDataType.CLIENT_SELF.getType()),
+                new TypeReference<Map<String, NonScalableFixedParameter>>() {}));
         final ClientSearchingData clientSearching =
                 new ClientSearchingData(parameterMap.get(ClientDataType.CLIENT_SEARCHING.getType()));
+
         return new Client(clientSelf, clientSearching);
     }
 }
