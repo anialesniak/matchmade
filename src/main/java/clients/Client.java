@@ -1,5 +1,9 @@
 package clients;
 
+import parameters.NonScalableFixedParameter;
+
+import java.util.Map;
+
 public class Client
 {
     private final ClientSelfData selfData;
@@ -20,4 +24,5 @@ public class Client
     {
         return searchingData;
     }
+
 }
