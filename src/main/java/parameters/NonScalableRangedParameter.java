@@ -6,11 +6,4 @@ public final class NonScalableRangedParameter extends RangedParameter implements
     {
         super(lower, upper);
     }
-
-    @Override
-    public boolean matches(FixedParameter value, double epsilon)
-    {
-        // TODO
-        return false;
-    }
 }
