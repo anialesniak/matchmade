@@ -24,4 +24,9 @@ public final class ScalableFixedParameter extends FixedParameter implements Scal
     {
         setExpandingRange(value);
     }
+
+    @Override
+    public ParameterRanges getRanges() {
+        return new ParameterRanges(value-getExpandingRange(), value+getExpandingRange());
+    }
 }

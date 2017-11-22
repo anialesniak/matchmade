@@ -1,8 +1,11 @@
 package algorithm;
 
 import clients.Client;
+import clients.ClientSearchingData;
 import net.sf.javaml.core.kdtree.KDTree;
+import parameters.NonScalable;
 import parameters.NonScalableFixedParameter;
+import parameters.Scalable;
 
 import java.util.*;
 
@@ -31,7 +34,20 @@ public final class MatchSearchTree {
         searchTree.insert(parametersArray, client);
     }
 
-    public Set<Client> findMatch(Client client){
-        return null;
+    public Set<Client> findMatchingSetFor(Client client){
+        final ClientSearchingData searchingData = client.getSearchingData();
+        final int parametersCount = searchingData.getScalableParameters().size() + searchingData.getNonScalableParameters().size();
+        double[] parametersArrayLower = new double[parametersCount];
+        double[] parametersArrayUpper = new double[parametersCount];
+        int index = 0;
+        for (Scalable scalableParameter : searchingData.getScalableParameters().values()){
+            parametersArrayLower[index] = scalableParameter.getRanges().getLower();
+            parametersArrayUpper[index] = scalableParameter.getRanges().getUpper();
+        }
+        for(NonScalable nonScalableParameter : searchingData.getNonScalableParameters().values()){
+            parametersArrayLower[index] = nonScalableParameter.getRanges().getLower();
+            parametersArrayUpper[index] = nonScalableParameter.getRanges().getUpper();
+        }
+        searchTree.range(parametersArrayLower, parametersArrayUpper);
     }
 }

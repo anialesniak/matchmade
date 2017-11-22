@@ -25,4 +25,9 @@ public final class ScalableRangedParameter extends RangedParameter implements Sc
     public void expandBy(double value) {
         setExpandingRange(value);
     }
+
+    @Override
+    public ParameterRanges getRanges() {
+        return new ParameterRanges(lower, upper);
+    }
 }
