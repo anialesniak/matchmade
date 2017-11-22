@@ -21,11 +21,6 @@ public final class ClientPool
         clientSet = ConcurrentHashMap.newKeySet();
     }
 
-    private static ClientPool getInstance()
-    {
-        return INSTANCE;
-    }
-
     private Set<Client> getClientSet()
     {
         return clientSet;
