@@ -14,13 +14,6 @@ public final class NonScalableFixedParameter extends FixedParameter implements N
     }
 
     @Override
-    public boolean matches(FixedParameter value, double epsilon)
-    {
-        // TODO
-        return false;
-    }
-
-    @Override
     public ParameterType getType()
     {
         return ParameterType.NON_SCALABLE_FIXED;

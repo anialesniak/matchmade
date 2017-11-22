@@ -4,11 +4,16 @@ public abstract class RangedParameter
 {
     protected double lower;
     protected double upper;
+    protected double expandingRange = 0;
 
     public RangedParameter(double lower, double upper)
     {
         this.lower = lower;
         this.upper = upper;
+    }
+
+    public void setExpandingRange(double expandingRange) {
+        this.expandingRange = expandingRange;
     }
 
     public double getLower()
@@ -19,5 +24,9 @@ public abstract class RangedParameter
     public double getUpper()
     {
         return upper;
+    }
+
+    public double getExpandingRange() {
+        return expandingRange;
     }
 }

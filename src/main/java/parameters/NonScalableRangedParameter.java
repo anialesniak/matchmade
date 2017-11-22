@@ -13,13 +13,6 @@ public final class NonScalableRangedParameter extends RangedParameter implements
     }
 
     @Override
-    public boolean matches(FixedParameter value, double epsilon)
-    {
-        // TODO
-        return false;
-    }
-
-    @Override
     public ParameterType getType()
     {
         return ParameterType.NON_SCALABLE_RANGED;
