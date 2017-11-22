@@ -62,10 +62,10 @@ public class ClientRequestHandler extends AbstractHandler
                 objectMapper.readValue(jsonBody, new TypeReference<Map<String, Map<String, Parameter>>>() {});
 
         final ClientSelfData clientSelf = new ClientSelfData(objectMapper.convertValue(
-                parameterMap.get(ClientDataType.CLIENT_SELF.getType()),
+                parameterMap.get(ClientDataType.CLIENT_SELF.getTypeName()),
                 new TypeReference<Map<String, NonScalableFixedParameter>>() {}));
         final ClientSearchingData clientSearching =
-                new ClientSearchingData(parameterMap.get(ClientDataType.CLIENT_SEARCHING.getType()));
+                new ClientSearchingData(parameterMap.get(ClientDataType.CLIENT_SEARCHING.getTypeName()));
 
         return new Client(clientSelf, clientSearching);
     }

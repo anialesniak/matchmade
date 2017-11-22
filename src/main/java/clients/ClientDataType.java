@@ -5,15 +5,15 @@ public enum ClientDataType
     CLIENT_SELF("clientSelf"),
     CLIENT_SEARCHING("clientSearching");
 
-    private final String type;
+    private final String typeName;
 
-    ClientDataType(final String type)
+    ClientDataType(final String typeName)
     {
-        this.type = type;
+        this.typeName = typeName;
     }
 
-    public String getType()
+    public String getTypeName()
     {
-        return type;
+        return typeName;
     }
 }
