@@ -24,5 +24,4 @@ local.properties
 #Gradle
 .gradletasknamecache
 .gradle/
-gradle/
 build/

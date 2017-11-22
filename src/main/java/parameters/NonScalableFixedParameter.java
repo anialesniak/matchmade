@@ -6,11 +6,4 @@ public final class NonScalableFixedParameter extends FixedParameter implements N
     {
         super(value);
     }
-
-    @Override
-    public boolean matches(FixedParameter value, double epsilon)
-    {
-        // TODO
-        return false;
-    }
 }

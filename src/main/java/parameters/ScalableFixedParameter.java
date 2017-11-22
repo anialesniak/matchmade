@@ -1,5 +1,7 @@
 package parameters;
 
+import com.google.common.collect.Range;
+
 public final class ScalableFixedParameter extends FixedParameter implements Scalable
 {
     public ScalableFixedParameter(double value)
@@ -8,15 +10,18 @@ public final class ScalableFixedParameter extends FixedParameter implements Scal
     }
 
     @Override
-    public float calculateMatchPercentage(FixedParameter value)
+    public double calculateMatchPercentage(NonScalableFixedParameter parameter)
     {
-        // TODO
-        return 0;
+        Range<Double> range = Range.closed(getValue() - getExpandingRange(),
+                getValue() + getExpandingRange());
+        if (!range.contains(parameter.getValue())) return 0;
+        else if (Math.abs(getValue() - parameter.getValue()) < Constants.EPSILON) return 1;
+        else return 1 - Math.abs(getValue() - parameter.getValue()) / getExpandingRange();
     }
 
     @Override
     public void expandBy(double value)
     {
-
+        setExpandingRange(value);
     }
 }
