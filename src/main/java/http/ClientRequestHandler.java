@@ -29,7 +29,7 @@ public class ClientRequestHandler extends AbstractHandler
     {
         final String body = extractBody(request);
         final Client client = convertToClient(body);
-        ClientPool.getInstance().getClientSet().add(client);
+        ClientPool.add(client);
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
