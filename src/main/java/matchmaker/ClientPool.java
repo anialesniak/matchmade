@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class ClientPool
 {
-    private static ClientPool INSTANCE = createEmptyClientPool();
+    private static ClientPool instance = createEmptyClientPool();
 
     private Set<Client> clientSet;
 
@@ -19,6 +19,7 @@ public final class ClientPool
     private ClientPool()
     {
         clientSet = ConcurrentHashMap.newKeySet();
+
     }
 
     private Set<Client> getClientSet()
@@ -28,21 +29,21 @@ public final class ClientPool
 
     public static void add(Client client)
     {
-        INSTANCE.getClientSet().add(client);
+        instance.getClientSet().add(client);
     }
 
     public static boolean contains(Client client)
     {
-        return INSTANCE.getClientSet().contains(client);
+        return instance.getClientSet().contains(client);
     }
 
     public static boolean remove(Client client)
     {
-        return INSTANCE.getClientSet().remove(client);
+        return instance.getClientSet().remove(client);
     }
 
     public static void clear()
     {
-        INSTANCE = createEmptyClientPool();
+        instance = createEmptyClientPool();
     }
 }
