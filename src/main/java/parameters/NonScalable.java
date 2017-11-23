@@ -1,5 +1,5 @@
 package parameters;
 
-public interface NonScalable
+public interface NonScalable extends Parameter
 {
 }

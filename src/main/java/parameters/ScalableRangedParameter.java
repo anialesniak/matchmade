@@ -1,10 +1,15 @@
 package parameters;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import com.google.common.collect.Range;
 
 public final class ScalableRangedParameter extends RangedParameter implements Scalable
 {
-    public ScalableRangedParameter(double lower, double upper)
+    @JsonCreator
+    public ScalableRangedParameter(@JsonProperty("lower") double lower,
+                                   @JsonProperty("upper") double upper)
     {
         super(lower, upper);
     }
@@ -22,7 +27,14 @@ public final class ScalableRangedParameter extends RangedParameter implements Sc
     }
 
     @Override
-    public void expandBy(double value) {
+    public void expandBy(double value)
+    {
         setExpandingRange(value);
+    }
+
+    @Override
+    public ParameterType getType()
+    {
+        return ParameterType.SCALABLE_RANGED;
     }
 }
