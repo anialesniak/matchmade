@@ -6,4 +6,8 @@ public final class NonScalableRangedParameter extends RangedParameter implements
     {
         super(lower, upper);
     }
+    @Override
+    public ParameterRanges getRanges() {
+        return new ParameterRanges(lower, upper);
+    }
 }

@@ -9,10 +9,10 @@ import parameters.Scalable;
 
 import java.util.*;
 
-/**
- * Created by kenjik on 19.11.17.
- */
+
 public final class MatchSearchTree {
+
+    private final int teamSize = 3; //TODO
 
     private final KDTree searchTree;
 
@@ -43,11 +43,19 @@ public final class MatchSearchTree {
         for (Scalable scalableParameter : searchingData.getScalableParameters().values()){
             parametersArrayLower[index] = scalableParameter.getRanges().getLower();
             parametersArrayUpper[index] = scalableParameter.getRanges().getUpper();
+            index++;
         }
         for(NonScalable nonScalableParameter : searchingData.getNonScalableParameters().values()){
             parametersArrayLower[index] = nonScalableParameter.getRanges().getLower();
             parametersArrayUpper[index] = nonScalableParameter.getRanges().getUpper();
+            index++;
         }
-        searchTree.range(parametersArrayLower, parametersArrayUpper);
+        final Client[] matches = (Client[])searchTree.range(parametersArrayLower, parametersArrayUpper);
+        return new LinkedHashSet<>(Arrays.asList(matches));
+    }
+
+    public Set<Client> tryCreatingAMatchFrom(Client client, Set<Client> matches){
+        if (matches.size()<teamSize-1) return new HashSet<>();
+        
     }
 }

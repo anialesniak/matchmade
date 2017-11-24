@@ -6,4 +6,8 @@ public final class NonScalableFixedParameter extends FixedParameter implements N
     {
         super(value);
     }
+    @Override
+    public ParameterRanges getRanges() {
+        return new ParameterRanges(value-expandingRange, value+expandingRange);
+    }
 }
