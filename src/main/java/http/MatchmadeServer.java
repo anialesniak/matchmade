@@ -6,7 +6,12 @@ public class MatchmadeServer
 {
     public static void run()
     {
-        // run http server
-        new Server(11111);
+        final Server server = new Server(8080);
+        server.setHandler(new ClientRequestHandler());
+        try {
+            server.start();
+        } catch (Exception e) {
+            System.out.println("Well.. exception happened. Looks like server could not be started.");
+        }
     }
 }

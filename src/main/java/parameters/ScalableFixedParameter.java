@@ -1,10 +1,14 @@
 package parameters;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import com.google.common.collect.Range;
 
 public final class ScalableFixedParameter extends FixedParameter implements Scalable
 {
-    public ScalableFixedParameter(double value)
+    @JsonCreator
+    public ScalableFixedParameter(@JsonProperty("value") double value)
     {
         super(value);
     }
@@ -23,6 +27,12 @@ public final class ScalableFixedParameter extends FixedParameter implements Scal
     public void expandBy(double value)
     {
         setExpandingRange(value);
+    }
+
+    @Override
+    public ParameterType getType()
+    {
+        return ParameterType.SCALABLE_FIXED;
     }
 
     @Override
