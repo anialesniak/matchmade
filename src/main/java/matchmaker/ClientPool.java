@@ -19,7 +19,6 @@ public final class ClientPool
     private ClientPool()
     {
         clientSet = ConcurrentHashMap.newKeySet();
-
     }
 
     private Set<Client> getClientSet()
@@ -42,8 +41,14 @@ public final class ClientPool
         return instance.getClientSet().remove(client);
     }
 
+    public static boolean removeAll(Set<Client> clients) {
+        return instance.getClientSet().removeAll(clients);
+    }
+
     public static void clear()
     {
         instance = createEmptyClientPool();
     }
+
+    public static Set<Client> getSet(){return instance.clientSet;}
 }

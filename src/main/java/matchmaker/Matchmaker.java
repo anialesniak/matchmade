@@ -1,10 +1,19 @@
 package matchmaker;
 
+import algorithm.MatchSearchTree;
+import clients.Client;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 public class Matchmaker
 {
-    public static void run()
+    public void run()
     {
-        //while or sth more sophisticated like net.jodah.failsafe
-        //operating on ClientPool.getInstance().getClientSet()
+        MatchSearchTree.getInstance().fillSearchTree();
+        while(true){
+            MatchSearchTree.getInstance().matchIteration();
+        }
     }
 }
