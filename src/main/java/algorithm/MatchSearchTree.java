@@ -22,7 +22,7 @@ public final class MatchSearchTree {
     private Map<Integer, Set<Client>> clientsMatches;
 
     private MatchSearchTree(){
-        searchTree = new KDTree(5); //TODO
+        searchTree = new KDTree(3); //TODO
         clientsMatches = new HashMap<>();
     }
 
@@ -40,7 +40,7 @@ public final class MatchSearchTree {
         }
     }
 
-    public void addClientToTree(Client client){
+    private void addClientToTree(Client client){
         final Map<String, NonScalableFixedParameter> parameters = client.getSelfData().getParameters();
         double[] parametersArray = new double[parameters.size()];
         int index = 0;
@@ -61,8 +61,12 @@ public final class MatchSearchTree {
             parametersArrayUpper[index] = parameter.getRanges().getUpper();
             index++;
         }
-        final Client[] matches = (Client[])searchTree.range(parametersArrayLower, parametersArrayUpper);
-        return new LinkedHashSet<>(Arrays.asList(matches));
+        final Object[] matches = searchTree.range(parametersArrayLower, parametersArrayUpper);
+        final Set<Client> clientSet = new LinkedHashSet<>();
+        for (Object object : matches) {
+            clientSet.add((Client) object);
+        }
+        return clientSet;
     }
 
     public Set<Client> tryCreatingAMatchFrom(Client client, Set<Client> matches) {
