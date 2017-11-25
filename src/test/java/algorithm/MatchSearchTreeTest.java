@@ -6,10 +6,9 @@ import http.ClientRequestHandler;
 import matchmaker.ClientPool;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
@@ -17,43 +16,46 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.*;
 
 
-/**
- * Created by annterina on 24.11.17.
- */
 public class MatchSearchTreeTest {
 
-    private Client client0, client1, client2, client3, client4, client5, client6, client7;
+    private static Client client0, client1, client2, client3, client4, client5, client6, client7;
 
-    @Before
-    public void addClientsToClientPool() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException {
+
+    @BeforeClass
+    public static void populateClients() throws Exception{
         ClientRequestHandler clientRequestHandler = new ClientRequestHandler();
         Method method = ClientRequestHandler.class.getDeclaredMethod("convertToClient", String.class);
         method.setAccessible(true);
 
         String json = Resources.toString(
-                Resources.getResource("Clients/client0.json"), StandardCharsets.UTF_8);
+                Resources.getResource("clients/client0.json"), StandardCharsets.UTF_8);
         client0 = (Client) method.invoke(clientRequestHandler, json);
         json = Resources.toString(
-                Resources.getResource("Clients/client1.json"), StandardCharsets.UTF_8);
+                Resources.getResource("clients/client1.json"), StandardCharsets.UTF_8);
         client1 = (Client) method.invoke(clientRequestHandler, json);
         json = Resources.toString(
-                Resources.getResource("Clients/client2.json"), StandardCharsets.UTF_8);
+                Resources.getResource("clients/client2.json"), StandardCharsets.UTF_8);
         client2 = (Client) method.invoke(clientRequestHandler, json);
         json = Resources.toString(
-                Resources.getResource("Clients/client3.json"), StandardCharsets.UTF_8);
+                Resources.getResource("clients/client3.json"), StandardCharsets.UTF_8);
         client3 = (Client) method.invoke(clientRequestHandler, json);
         json = Resources.toString(
-                Resources.getResource("Clients/client4.json"), StandardCharsets.UTF_8);
+                Resources.getResource("clients/client4.json"), StandardCharsets.UTF_8);
         client4 = (Client) method.invoke(clientRequestHandler, json);
         json = Resources.toString(
-                Resources.getResource("Clients/client5.json"), StandardCharsets.UTF_8);
+                Resources.getResource("clients/client5.json"), StandardCharsets.UTF_8);
         client5 = (Client) method.invoke(clientRequestHandler, json);
         json = Resources.toString(
-                Resources.getResource("Clients/client6.json"), StandardCharsets.UTF_8);
+                Resources.getResource("clients/client6.json"), StandardCharsets.UTF_8);
         client6 = (Client) method.invoke(clientRequestHandler, json);
         json = Resources.toString(
-                Resources.getResource("Clients/client7.json"), StandardCharsets.UTF_8);
+                Resources.getResource("clients/client7.json"), StandardCharsets.UTF_8);
         client7 = (Client) method.invoke(clientRequestHandler, json);
+
+    }
+
+    @Before
+    public void addClientsToClientPool() throws Exception {
 
         ClientPool.add(client0);
         ClientPool.add(client1);
@@ -64,6 +66,7 @@ public class MatchSearchTreeTest {
         ClientPool.add(client6);
         ClientPool.add(client7);
 
+        MatchSearchTree.getInstance().initializeSearchTree();
         MatchSearchTree.getInstance().fillSearchTree();
     }
 

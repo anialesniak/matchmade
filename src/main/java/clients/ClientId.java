@@ -1,6 +1,6 @@
 package clients;
 
-public class ClientID {
+public class ClientId {
 
     private static int currentID = 0;
 
