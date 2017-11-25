@@ -34,23 +34,28 @@ public final class MatchSearchTree {
         }
     }
 
-    public void fillClientsMatches(){
+    public void clearSearchTree() {
+        clientsMatches.clear();
+        searchTree = new KDTree(3); //TODO
+    }
+
+    public void fillClientsMatches() {
         for (Client client : ClientPool.getSet()) {
             clientsMatches.put(client.getClientID(), MatchSearchTree.getInstance().findMatchingSetFor(client));
         }
     }
 
-    private void addClientToTree(Client client){
+    private void addClientToTree(Client client) {
         final Map<String, NonScalableFixedParameter> parameters = client.getSelfData().getParameters();
         double[] parametersArray = new double[parameters.size()];
         int index = 0;
-        for (Map.Entry<String, NonScalableFixedParameter> parameter : parameters.entrySet()){
+        for (Map.Entry<String, NonScalableFixedParameter> parameter : parameters.entrySet()) {
                 parametersArray[index++] = parameter.getValue().getValue();
         }
         searchTree.insert(parametersArray, client);
     }
 
-    public Set<Client> findMatchingSetFor(Client client){
+    public Set<Client> findMatchingSetFor(Client client) {
         final ClientSearchingData searchingData = client.getSearchingData();
         final int parametersCount = searchingData.getParameters().size();
         double[] parametersArrayLower = new double[parametersCount];
@@ -64,50 +69,51 @@ public final class MatchSearchTree {
         final Object[] matches = searchTree.range(parametersArrayLower, parametersArrayUpper);
         final Set<Client> clientSet = new LinkedHashSet<>();
         for (Object object : matches) {
-            clientSet.add((Client) object);
+            if (!object.equals(client)) clientSet.add((Client) object);
         }
         return clientSet;
     }
 
     public Set<Client> tryCreatingAMatchFrom(Client client, Set<Client> matches) {
+        Set<Client> correctMatches = new LinkedHashSet<>();
         for (Client currentClient : matches) {
-            if (!clientsMatches.containsKey(currentClient.getClientID())
-                    || !clientsMatches.get(currentClient.getClientID()).contains(client)) {
-                matches.remove(currentClient);
+            if (clientsMatches.containsKey(currentClient.getClientID())
+                    && clientsMatches.get(currentClient.getClientID()).contains(client)) {
+                correctMatches.add(currentClient);
             }
         }
-        if (matches.size() < teamSize - 1) return new HashSet<>();
-        final Set<Set<Client>> matchesCombinations = Sets.combinations(matches, teamSize - 1);
+        if (correctMatches.size() < teamSize - 1) return new HashSet<>();
+        Set<Set<Client>> matchesCombinations = Sets.combinations(correctMatches, teamSize - 1);
         for (Set<Client> currentMatch : matchesCombinations) {
             boolean correctMatch = true;
             matchCombinationLoop:
             for (Client currentClient : currentMatch) {
                 for (Client checkedClient : currentMatch) {
                     if (!currentClient.equals(checkedClient)) {
-                        final Set<Client> checkedClientsSet = clientsMatches.get(checkedClient.getClientID());
+                        Set<Client> checkedClientsSet = clientsMatches.get(checkedClient.getClientID());
                         if (!checkedClientsSet.contains(currentClient)) {
                             checkedClientsSet.remove(currentClient);
-                            matchesCombinations.remove(currentMatch);
                             correctMatch = false;
                             break matchCombinationLoop;
                         }
                     }
                 }
             }
-            if(correctMatch){
-                currentMatch.add(client);
-                return currentMatch;
+            if (correctMatch) {
+                LinkedHashSet<Client> preparedMatch = new LinkedHashSet<>(currentMatch);
+                preparedMatch.add(client);
+                return preparedMatch;
             }
         }
         return new HashSet<>();
     }
 
-    public void matchIteration(){
+    public void matchIteration() {
         clientsMatches.clear();
         fillClientsMatches();
-        for (Client client : ClientPool.getSet()){
+        for (Client client : ClientPool.getSet()) {
             final Set<Client> match = tryCreatingAMatchFrom(client, clientsMatches.get(client.getClientID()));
-            if (!match.isEmpty()){
+            if (!match.isEmpty()) {
                 for (Client matchedClient: match) {
                     clientsMatches.remove(matchedClient.getClientID());
                 }

@@ -12,27 +12,27 @@
 
     "weight" : {
       "type" : "nonScalableFixed",
-      "value" : 90
+      "value" : 95
     }
   },
 
   "clientSearching" : {
     "age" : {
       "type" : "nonScalableRanged",
-      "lower" : 20,
-      "upper" : 28
+      "lower" : 19,
+      "upper" : 30
     },
 
     "height" : {
       "type" : "scalableRanged",
-      "lower" : 150,
-      "upper" : 190
+      "lower" : 170,
+      "upper" : 200
     },
 
     "weight" : {
       "type" : "scalableRanged",
       "lower" : 50,
-      "upper" : 120
+      "upper" : 100
     }
   }
 }

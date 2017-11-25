@@ -2,7 +2,7 @@
   "clientSelf" : {
     "age" : {
       "type" : "nonScalableFixed",
-      "value" : 30
+      "value" : 20
     },
 
     "height" : {

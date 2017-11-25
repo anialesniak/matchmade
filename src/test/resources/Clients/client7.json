@@ -2,37 +2,37 @@
   "clientSelf" : {
     "age" : {
       "type" : "nonScalableFixed",
-      "value" : 28
+      "value" : 16
     },
 
     "height" : {
       "type" : "nonScalableFixed",
-      "value" : 188
+      "value" : 158
     },
 
     "weight" : {
       "type" : "nonScalableFixed",
-      "value" : 90
+      "value" : 45
     }
   },
 
   "clientSearching" : {
     "age" : {
       "type" : "nonScalableRanged",
-      "lower" : 20,
-      "upper" : 28
+      "lower" : 15,
+      "upper" : 18
     },
 
     "height" : {
       "type" : "scalableRanged",
       "lower" : 150,
-      "upper" : 190
+      "upper" : 170
     },
 
     "weight" : {
       "type" : "scalableRanged",
-      "lower" : 50,
-      "upper" : 120
+      "lower" : 40,
+      "upper" : 60
     }
   }
 }
