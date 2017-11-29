@@ -7,29 +7,33 @@ import matchmaker.ClientPool;
 import net.sf.javaml.core.kdtree.KDTree;
 import parameters.NonScalableFixedParameter;
 import parameters.Parameter;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
-
+@Singleton
 public final class MatchSearchTree {
 
-    private static final MatchSearchTree INSTANCE = new MatchSearchTree();
-
+    private final ClientPool clientPool;
     private final int teamSize = 3; //TODO
     private KDTree searchTree;
     private Map<Integer, Set<Client>> clientsMatches;
 
-    private MatchSearchTree(){}
+    @Inject
+    public MatchSearchTree(final ClientPool clientPool)
+    {
+        this.clientPool = clientPool;
+    }
 
     public void initializeSearchTree(){
         searchTree = new KDTree(3); //TODO
         clientsMatches = new HashMap<>();
     }
 
-    public static MatchSearchTree getInstance(){return INSTANCE;}
-
     public void fillSearchTree(){
-        for (Client client : ClientPool.getSet()) {
-            MatchSearchTree.getInstance().addClientToTree(client);
+        for (Client client : clientPool.getClients()) {
+            addClientToTree(client);
         }
     }
 
@@ -39,8 +43,8 @@ public final class MatchSearchTree {
     }
 
     public void fillClientsMatches() {
-        for (Client client : ClientPool.getSet()) {
-            clientsMatches.put(client.getClientID(), MatchSearchTree.getInstance().findMatchingSetFor(client));
+        for (Client client : clientPool.getClients()) {
+            clientsMatches.put(client.getClientID(), findMatchingSetFor(client));
         }
     }
 
@@ -114,13 +118,13 @@ public final class MatchSearchTree {
     public void matchIteration() {
         clientsMatches.clear();
         fillClientsMatches();
-        for (Client client : ClientPool.getSet()) {
+        for (Client client : clientPool.getClients()) {
             final Set<Client> match = tryCreatingAMatchFrom(client, clientsMatches.get(client.getClientID()));
             if (!match.isEmpty()) {
                 for (Client matchedClient: match) {
                     clientsMatches.remove(matchedClient.getClientID());
                 }
-                ClientPool.removeAll(match);
+                clientPool.getClients().removeAll(match);
             }
         }
     }

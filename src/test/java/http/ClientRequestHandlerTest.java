@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.*;
 public class ClientRequestHandlerTest {
 
     @Test
-    public void covertJsonToClient() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException {
+    public void convertJsonToClient() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException {
         ClientRequestHandler clientRequestHandler = new ClientRequestHandler();
         final String json = Resources.toString(
                 Resources.getResource("clients/client1.json"), StandardCharsets.UTF_8);
