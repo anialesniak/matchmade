@@ -17,4 +17,10 @@ public final class NonScalableRangedParameter extends RangedParameter implements
     {
         return ParameterType.NON_SCALABLE_RANGED;
     }
+
+    @Override
+    public ParameterRanges getRanges() {
+        return new ParameterRanges(lower, upper);
+    }
+
 }

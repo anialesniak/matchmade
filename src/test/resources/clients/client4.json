@@ -1,0 +1,38 @@
+{
+  "clientSelf" : {
+    "age" : {
+      "type" : "nonScalableFixed",
+      "value" : 20
+    },
+
+    "height" : {
+      "type" : "nonScalableFixed",
+      "value" : 200
+    },
+
+    "weight" : {
+      "type" : "nonScalableFixed",
+      "value" : 80
+    }
+  },
+
+  "clientSearching" : {
+    "age" : {
+      "type" : "nonScalableRanged",
+      "lower" : 24,
+      "upper" : 28
+    },
+
+    "height" : {
+      "type" : "scalableRanged",
+      "lower" : 170,
+      "upper" : 190
+    },
+
+    "weight" : {
+      "type" : "scalableRanged",
+      "lower" : 80,
+      "upper" : 100
+    }
+  }
+}

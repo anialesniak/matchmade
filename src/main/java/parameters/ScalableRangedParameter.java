@@ -37,4 +37,10 @@ public final class ScalableRangedParameter extends RangedParameter implements Sc
     {
         return ParameterType.SCALABLE_RANGED;
     }
+
+    @Override
+    public ParameterRanges getRanges() {
+        return new ParameterRanges(lower, upper);
+    }
+
 }
