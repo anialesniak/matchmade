@@ -11,7 +11,6 @@ public class MatchmadeModule extends AbstractModule
     @Override
     protected void configure()
     {
-
     }
 
     @Provides

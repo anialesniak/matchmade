@@ -24,11 +24,12 @@ import java.util.Map;
 @Singleton
 public class ClientRequestHandler extends AbstractHandler
 {
-    @Inject
-    private ClientPool clientPool;
+    private final ClientPool clientPool;
 
-    ClientRequestHandler()
+    @Inject
+    ClientRequestHandler(final ClientPool clientPool)
     {
+        this.clientPool = clientPool;
     }
 
     @Override

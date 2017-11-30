@@ -2,6 +2,8 @@ package http;
 
 import clients.Client;
 import com.google.common.io.Resources;
+import com.google.inject.Guice;
+import guice.MatchmadeModule;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -18,7 +20,8 @@ public class ClientRequestHandlerTest {
 
     @Test
     public void convertJsonToClient() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException {
-        ClientRequestHandler clientRequestHandler = new ClientRequestHandler();
+        final ClientRequestHandler clientRequestHandler =
+                Guice.createInjector(new MatchmadeModule()).getInstance(ClientRequestHandler.class);
         final String json = Resources.toString(
                 Resources.getResource("clients/client1.json"), StandardCharsets.UTF_8);
 
