@@ -23,7 +23,7 @@ public class MatchmadeServer
         try {
             server.start();
         } catch (Exception e) {
-            System.out.println("Well.. exception happened. Looks like server could not be started.");
+            System.err.println("Well.. exception was thrown. Looks like server could not be started.");
         }
     }
 }

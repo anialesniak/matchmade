@@ -8,6 +8,39 @@
 
 apply plugin: 'java'
 
+// add new source set, so we have no [main, test, integration-test]
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integration-test/java')
+        }
+        resources.srcDir file('src/integration-test/resources')
+    }
+}
+
+// integration tests configuration uses test configuration (especially dependencies)
+configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+}
+
+// creating runnable task - can be fired with `gradle clean integrationTest`
+task integrationTest(type: Test) {
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    outputs.upToDateWhen { false }
+}
+
+check.dependsOn integrationTest
+integrationTest.mustRunAfter test
+
+// print html reports to different folders not to be unit and integration tests mixed up
+tasks.withType(Test) {
+    reports.html.destination = file("${reporting.baseDir}/${name}")
+}
+
 repositories {
     jcenter()
 }
@@ -24,4 +57,5 @@ dependencies {
 
     testCompile 'org.assertj:assertj-core:3.8.0'
     testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-all:1.10.19'
 }
