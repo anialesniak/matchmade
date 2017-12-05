@@ -18,8 +18,8 @@ public class MatchmadeServerTest
     public void shouldStartWithNoException() throws Exception
     {
         //when
-        final Throwable throwable = catchThrowable(() -> new MatchmadeServer(requestHandler).run());
+        final Throwable throwableWithNoException = catchThrowable(() -> new MatchmadeServer(requestHandler).run());
         //then
-        assertThat(throwable).doesNotThrowAnyException();
+        assertThat(throwableWithNoException).doesNotThrowAnyException();
     }
 }

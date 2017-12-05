@@ -21,6 +21,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 @Singleton
 public class ClientRequestHandler extends AbstractHandler
 {
@@ -29,7 +31,7 @@ public class ClientRequestHandler extends AbstractHandler
     @Inject
     ClientRequestHandler(final ClientPool clientPool)
     {
-        this.clientPool = clientPool;
+        this.clientPool = checkNotNull(clientPool);
     }
 
     @Override

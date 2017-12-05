@@ -2,37 +2,42 @@ package http;
 
 import clients.Client;
 import com.google.common.io.Resources;
-import com.google.inject.Guice;
-import guice.MatchmadeModule;
+import matchmaker.ClientPool;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Created by annterina on 24.11.17.
- */
+@RunWith(MockitoJUnitRunner.class)
 public class ClientRequestHandlerTest {
 
+    @Mock
+    private ClientPool clientPool;
+
     @Test
-    public void convertJsonToClient() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException {
-        final ClientRequestHandler clientRequestHandler =
-                Guice.createInjector(new MatchmadeModule()).getInstance(ClientRequestHandler.class);
+    public void convertJsonToClient() throws Exception {
+        final ClientRequestHandler clientRequestHandler = new ClientRequestHandler(clientPool);
         final String json = Resources.toString(
                 Resources.getResource("clients/client1.json"), StandardCharsets.UTF_8);
 
-        Method method = ClientRequestHandler.class.getDeclaredMethod("convertToClient", String.class);
+        final Method method = ClientRequestHandler.class.getDeclaredMethod("convertToClient", String.class);
         method.setAccessible(true);
-        Client client = (Client) method.invoke(clientRequestHandler, json);
+        final Client client = (Client) method.invoke(clientRequestHandler, json);
 
-        assertThat(client).extracting("clientId").hasOnlyElementsOfType(Integer.class);
-        assertThat(client).extracting("selfData").extracting("parameters").isNotEmpty();
-        assertThat(client).extracting("searchingData").extracting("parameters").isNotEmpty();
+        assertThat(client).isNotNull();
+        assertThat(client.getClientID()).isGreaterThanOrEqualTo(0);
+        assertThat(client.getSelfData().getParameters())
+                .isNotNull()
+                .hasSize(3)
+                .containsKeys("age", "height", "weight");
+        assertThat(client.getSearchingData().getParameters())
+                .isNotNull()
+                .hasSize(3)
+                .containsKeys("age", "height", "weight");
     }
-
-
 }

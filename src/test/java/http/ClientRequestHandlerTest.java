@@ -56,10 +56,10 @@ public class ClientRequestHandlerTest {
         //given
         given(request.getContentLength()).willReturn(0);
         //when
-        final Throwable throwable = catchThrowable(
+        final Throwable throwableWithEmptyBodyException = catchThrowable(
                 () -> new ClientRequestHandler(clientPool).handle("", baseRequest, request, response));
         //then
-        assertThat(throwable)
+        assertThat(throwableWithEmptyBodyException)
                 .isInstanceOf(EmptyBodyException.class)
                 .hasMessage("No body was found in request.");
     }
