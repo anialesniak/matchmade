@@ -5,12 +5,15 @@ import clients.ClientSearchingData;
 import com.google.common.collect.Sets;
 import matchmaker.ClientPool;
 import net.sf.javaml.core.kdtree.KDTree;
+import parameters.FixedParameter;
 import parameters.NonScalableFixedParameter;
 import parameters.Parameter;
+import parameters.ParameterRanges;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
+import java.util.stream.Stream;
 
 @Singleton
 public final class MatchSearchTree {
@@ -32,9 +35,7 @@ public final class MatchSearchTree {
     }
 
     public void fillSearchTree(){
-        for (Client client : clientPool.getClients()) {
-            addClientToTree(client);
-        }
+        clientPool.getClients().forEach(client -> addClientToTree(client));
     }
 
     public void clearSearchTree() {
@@ -43,89 +44,80 @@ public final class MatchSearchTree {
     }
 
     public void fillClientsMatches() {
-        for (Client client : clientPool.getClients()) {
-            clientsMatches.put(client.getClientID(), findMatchingSetFor(client));
-        }
+        clientPool.getClients().forEach(client -> clientsMatches.put(client.getClientID(), findMatchingSetFor(client)));
     }
 
     private void addClientToTree(Client client) {
-        final Map<String, NonScalableFixedParameter> parameters = client.getSelfData().getParameters();
-        final double[] parametersArray = new double[parameters.size()];
-        int index = 0;
-        for (Map.Entry<String, NonScalableFixedParameter> parameter : parameters.entrySet()) {
-                parametersArray[index++] = parameter.getValue().getValue();
-        }
-        searchTree.insert(parametersArray, client);
+        final double[] parametersArrayDouble = client.getSelfData().getParameters().values()
+                .stream()
+                .map(FixedParameter::getValue)
+                .mapToDouble(Double::doubleValue)
+                .toArray();
+        searchTree.insert(parametersArrayDouble, client);
     }
 
     public Set<Client> findMatchingSetFor(Client client) {
-        final ClientSearchingData searchingData = client.getSearchingData();
-        final int parametersCount = searchingData.getParameters().size();
-        final double[] parametersArrayLower = new double[parametersCount];
-        final double[] parametersArrayUpper = new double[parametersCount];
-        int index = 0;
-        for (Parameter parameter : searchingData.getParameters().values()){
-            parametersArrayLower[index] = parameter.getRanges().getLower();
-            parametersArrayUpper[index] = parameter.getRanges().getUpper();
-            index++;
-        }
-        final Object[] matches = searchTree.range(parametersArrayLower, parametersArrayUpper);
+        final double[] parametersArrayLowerDouble = client.getSearchingData().getParameters().values()
+                .stream()
+                .map(Parameter::getRanges).map(ParameterRanges::getLower)
+                .mapToDouble(Double::doubleValue).toArray();
+        final double[] parametersArrayUpperDouble = client.getSearchingData().getParameters().values()
+                .stream()
+                .map(Parameter::getRanges).map(ParameterRanges::getUpper)
+                .mapToDouble(Double::doubleValue).toArray();
         final Set<Client> clientSet = new LinkedHashSet<>();
-        for (Object object : matches) {
-            if (!object.equals(client)) clientSet.add((Client) object);
-        }
+        Arrays.stream(searchTree.range(parametersArrayLowerDouble, parametersArrayUpperDouble))
+                .map(Client.class::cast)
+                .filter(match -> !match.equals(client))
+                .forEach(clientSet::add);
         return clientSet;
     }
 
     public Set<Client> tryCreatingAMatchFrom(Client client, Set<Client> matches) {
         final Set<Client> processedMatches = new LinkedHashSet<>();
-        for (Client currentClient : matches) {
-            if (clientsMatches.containsKey(currentClient.getClientID())
-                    && clientsMatches.get(currentClient.getClientID()).contains(client)) {
-                processedMatches.add(currentClient);
-            }
-        }
+        matches.stream()
+                .filter(currentClient -> clientsMatches.containsKey(currentClient.getClientID())
+                && clientsMatches.get(currentClient.getClientID()).contains(client))
+                .forEach(processedMatches::add);
+
         if (processedMatches.size() < teamSize - 1) return new HashSet<>();
+
         Set<Set<Client>> matchesCombinations = Sets.combinations(processedMatches, teamSize - 1);
-        for (Set<Client> currentMatch : matchesCombinations) {
-            if (isCorrectMatch(currentMatch)) {
-                LinkedHashSet<Client> correctMatch = new LinkedHashSet<>(currentMatch);
-                correctMatch.add(client);
-                return correctMatch;
-            }
+        final Optional<Set<Client>> optionalCorrectMatch = matchesCombinations.stream().filter(this::isCorrectMatch).findFirst();
+        if(optionalCorrectMatch.isPresent()) {
+            LinkedHashSet<Client> correctMatch = new LinkedHashSet<>(optionalCorrectMatch.get());
+            correctMatch.add(client);
+            return correctMatch;
         }
         return new HashSet<>();
     }
 
     private boolean isCorrectMatch(Set<Client> match) {
-        boolean correctMatch = true;
-        matchCombinationLoop:
         for (Client firstClient : match) {
-            for (Client checkedClient : match) {
-                if (!firstClient.equals(checkedClient)) {
-                    Set<Client> checkedClientsSet = clientsMatches.get(checkedClient.getClientID());
-                    if (!checkedClientsSet.contains(firstClient)) {
-                        checkedClientsSet.remove(firstClient);
-                        correctMatch = false;
-                        break matchCombinationLoop;
-                    }
-                }
+            final Optional<Set<Client>> matchedClients = match.stream()
+                    .filter(checkedClient -> !firstClient.equals(checkedClient))
+                    .map(checkedClient -> clientsMatches.get(checkedClient.getClientID()))
+                    .filter(checkedClientsSet -> !checkedClientsSet.contains(firstClient))
+                    .findFirst();
+            if (matchedClients.isPresent()) {
+                matchedClients.get().remove(firstClient);
+                return false;
             }
         }
-        return correctMatch;
+        return true;
     }
 
     public void matchIteration() {
         clientsMatches.clear();
         fillClientsMatches();
-        for (Client client : clientPool.getClients()) {
-            final Set<Client> match = tryCreatingAMatchFrom(client, clientsMatches.get(client.getClientID()));
-            if (!match.isEmpty()) {
-                for (Client matchedClient: match) {
-                    clientsMatches.remove(matchedClient.getClientID());
-                }
-                clientPool.getClients().removeAll(match);
-            }
-        }
+        clientPool.getClients().stream()
+                .map(client -> tryCreatingAMatchFrom(client, clientsMatches.get(client.getClientID())))
+                .filter(match -> !match.isEmpty())
+                .forEach(this::eraseMatchedClients);
+    }
+
+    private void eraseMatchedClients(Set<Client> match) {
+        match.forEach(matchedClient -> clientsMatches.remove(matchedClient.getClientID()));
+        clientPool.getClients().removeAll(match);
     }
 }
