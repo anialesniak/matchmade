@@ -20,6 +20,7 @@ public final class MatchSearchTree {
 
     private final ClientPool clientPool;
     private final int teamSize = 3; //TODO
+    private final int parametersCount = 3; //TODO
     private KDTree searchTree;
     private Map<Integer, Set<Client>> clientsMatches;
 
@@ -30,17 +31,17 @@ public final class MatchSearchTree {
     }
 
     public void initializeSearchTree(){
-        searchTree = new KDTree(3); //TODO
+        searchTree = new KDTree(parametersCount); //TODO
         clientsMatches = new HashMap<>();
     }
 
     public void fillSearchTree(){
-        clientPool.getClients().forEach(client -> addClientToTree(client));
+        clientPool.getClients().forEach(this::addClientToTree);
     }
 
     public void clearSearchTree() {
         clientsMatches.clear();
-        searchTree = new KDTree(3); //TODO
+        searchTree = new KDTree(parametersCount); //TODO
     }
 
     public void fillClientsMatches() {
