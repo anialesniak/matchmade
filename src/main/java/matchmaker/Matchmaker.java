@@ -2,13 +2,25 @@ package matchmaker;
 
 import algorithm.MatchSearchTree;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class Matchmaker
 {
+    private final MatchSearchTree searchTree;
+
+    @Inject
+    Matchmaker(final MatchSearchTree searchTree)
+    {
+        this.searchTree = searchTree;
+    }
+
     public void run()
     {
-        MatchSearchTree.getInstance().fillSearchTree();
+        searchTree.fillSearchTree();
         while (true) {
-            MatchSearchTree.getInstance().matchIteration();
+            searchTree.matchIteration();
         }
     }
 }

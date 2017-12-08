@@ -12,6 +12,8 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import parameters.NonScalableFixedParameter;
 import parameters.Parameter;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,8 +21,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Map;
 
+@Singleton
 public class ClientRequestHandler extends AbstractHandler
 {
+    private final ClientPool clientPool;
+
+    @Inject
+    ClientRequestHandler(final ClientPool clientPool)
+    {
+        this.clientPool = clientPool;
+    }
+
     @Override
     public void handle(final String target,
                        final Request baseRequest,
@@ -29,7 +40,7 @@ public class ClientRequestHandler extends AbstractHandler
     {
         final String body = extractBody(request);
         final Client client = convertToClient(body);
-        ClientPool.add(client);
+        clientPool.getClients().add(client);
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
