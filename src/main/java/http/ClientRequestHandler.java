@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import matchmaker.ClientPool;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import parameters.NonScalableFixedParameter;
 import parameters.Parameter;
 
@@ -24,6 +26,8 @@ import java.util.Map;
 @Singleton
 public class ClientRequestHandler extends AbstractHandler
 {
+    private final static Logger LOGGER = LoggerFactory.getLogger(ClientRequestHandler.class);
+
     private final ClientPool clientPool;
 
     @Inject
@@ -38,10 +42,13 @@ public class ClientRequestHandler extends AbstractHandler
                        final HttpServletRequest request,
                        final HttpServletResponse response) throws IOException, ServletException
     {
+        LOGGER.info("Received client request");
         final String body = extractBody(request);
         final Client client = convertToClient(body);
+        LOGGER.info("Request converted to client: {}", client.toString());
         clientPool.getClients().add(client);
         response.setStatus(HttpServletResponse.SC_OK);
+        LOGGER.info("Client added to pool, returning with status 200.");
     }
 
     private String extractBody(final HttpServletRequest request) throws IOException
