@@ -1,22 +1,30 @@
 package algorithm;
 
 import clients.Client;
-import clients.ClientSearchingData;
 import com.google.common.collect.Sets;
 import matchmaker.ClientPool;
 import net.sf.javaml.core.kdtree.KDTree;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import parameters.FixedParameter;
-import parameters.NonScalableFixedParameter;
 import parameters.Parameter;
 import parameters.ParameterRanges;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
-import java.util.stream.Stream;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 @Singleton
-public class MatchSearchTree {
+public class MatchSearchTree
+{
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(MatchSearchTree.class);
 
     private final ClientPool clientPool;
     private final int teamSize = 3; //TODO
@@ -30,12 +38,15 @@ public class MatchSearchTree {
         this.clientPool = clientPool;
     }
 
-    public void initializeSearchTree(){
+    public void initializeSearchTree()
+    {
+        LOGGER.info("Search tree initialized");
         searchTree = new KDTree(parametersCount); //TODO
         clientsMatches = new HashMap<>();
     }
 
-    public void matchIteration() {
+    public void matchIteration()
+    {
         clientsMatches.clear();
         fillClientsMatches();
         clientPool.getClients().stream()
@@ -44,21 +55,25 @@ public class MatchSearchTree {
                 .forEach(this::eraseMatchedClients);
     }
 
-    public void fillSearchTree(){
+    public void fillSearchTree()
+    {
         clientPool.getClients().forEach(this::addClientToTree);
     }
 
-    public void clearSearchTree() {
+    public void clearSearchTree()
+    {
         clientsMatches.clear();
         searchTree = new KDTree(parametersCount); //TODO
     }
 
-    public void fillClientsMatches() {
+    public void fillClientsMatches()
+    {
         clientPool.getClients().forEach(client -> clientsMatches.put(client.getClientID(), findMatchingSetFor(client)));
     }
 
 
-    private void addClientToTree(Client client) {
+    private void addClientToTree(Client client)
+    {
         final double[] parametersArrayDouble = client.getSelfData().getParameters().values()
                 .stream()
                 .map(FixedParameter::getValue)
@@ -67,7 +82,8 @@ public class MatchSearchTree {
         searchTree.insert(parametersArrayDouble, client);
     }
 
-    public Set<Client> findMatchingSetFor(Client client) {
+    public Set<Client> findMatchingSetFor(Client client)
+    {
         final double[] parametersArrayLowerDouble = client.getSearchingData().getParameters().values()
                 .stream()
                 .map(Parameter::getRanges).map(ParameterRanges::getLower)
@@ -81,10 +97,12 @@ public class MatchSearchTree {
                 .map(Client.class::cast)
                 .filter(match -> !match.equals(client))
                 .forEach(clientSet::add);
+        LOGGER.info("Matching set for client: {} is {}", client, clientSet);
         return clientSet;
     }
 
-    public Set<Client> tryCreatingAMatchFrom(Client client, Set<Client> matches) {
+    public Set<Client> tryCreatingAMatchFrom(Client client, Set<Client> matches)
+    {
         final Set<Client> processedMatches = filterClientsThatDontMatchTo(client, matches);
 
         if (processedMatches.size() < teamSize - 1) return new HashSet<>();
@@ -93,14 +111,17 @@ public class MatchSearchTree {
         Sets.combinations(processedMatches, teamSize - 1)
                 .stream()
                 .filter(this::isCorrectMatch)
-                .findFirst().ifPresent((match) ->{
+                .findFirst()
+                .ifPresent((match) -> {
                     correctMatch.addAll(match);
                     correctMatch.add(client);
-            });
+                    LOGGER.info("Found match: {}", correctMatch);
+                });
         return correctMatch;
     }
 
-    private Set<Client> filterClientsThatDontMatchTo(Client client, Set<Client> matches) {
+    private Set<Client> filterClientsThatDontMatchTo(Client client, Set<Client> matches)
+    {
         final Set<Client> processedMatches = new LinkedHashSet<>();
         matches.stream()
                 .filter(currentClient -> doesMatch(client, currentClient))
@@ -108,12 +129,14 @@ public class MatchSearchTree {
         return processedMatches;
     }
 
-    private boolean doesMatch(Client client, Client checkedClient) {
+    private boolean doesMatch(Client client, Client checkedClient)
+    {
         return clientsMatches.containsKey(checkedClient.getClientID())
-        && clientsMatches.get(checkedClient.getClientID()).contains(client);
+                && clientsMatches.get(checkedClient.getClientID()).contains(client);
     }
 
-    private boolean isCorrectMatch(Set<Client> match) {
+    private boolean isCorrectMatch(Set<Client> match)
+    {
         for (Client firstClient : match) {
             final Optional<Set<Client>> matchedClients = match.stream()
                     .filter(checkedClient -> !firstClient.equals(checkedClient))
@@ -128,7 +151,8 @@ public class MatchSearchTree {
         return true;
     }
 
-    private void eraseMatchedClients(Set<Client> match) {
+    private void eraseMatchedClients(Set<Client> match)
+    {
         match.forEach(matchedClient -> clientsMatches.remove(matchedClient.getClientID()));
         clientPool.getClients().removeAll(match);
     }
