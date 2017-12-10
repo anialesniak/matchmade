@@ -1,19 +1,22 @@
 package algorithm;
 
 import clients.Client;
-import clients.ClientSearchingData;
 import com.google.common.collect.Sets;
 import matchmaker.ClientPool;
 import net.sf.javaml.core.kdtree.KDTree;
 import parameters.FixedParameter;
-import parameters.NonScalableFixedParameter;
 import parameters.Parameter;
 import parameters.ParameterRanges;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
-import java.util.stream.Stream;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 @Singleton
 public class MatchSearchTree {
@@ -28,6 +31,10 @@ public class MatchSearchTree {
     public MatchSearchTree(final ClientPool clientPool)
     {
         this.clientPool = clientPool;
+    }
+
+    public boolean isInitialized() {
+        return searchTree != null && clientsMatches != null;
     }
 
     public void initializeSearchTree(){
