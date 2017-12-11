@@ -1,5 +1,7 @@
 package clients;
 
+import java.util.Objects;
+
 public class Client
 {
     private final int clientId;
@@ -30,21 +32,16 @@ public class Client
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         final Client client = (Client) o;
-
-        if (clientId != client.clientId) return false;
-        if (selfData != null ? !selfData.equals(client.selfData) : client.selfData != null) return false;
-        return searchingData != null ? searchingData.equals(client.searchingData) : client.searchingData == null;
+        return clientId == client.clientId &&
+                Objects.equals(selfData, client.selfData) &&
+                Objects.equals(searchingData, client.searchingData);
     }
 
     @Override
     public int hashCode()
     {
-        int result = clientId;
-        result = 31 * result + (selfData != null ? selfData.hashCode() : 0);
-        result = 31 * result + (searchingData != null ? searchingData.hashCode() : 0);
-        return result;
+        return Objects.hash(clientId, selfData, searchingData);
     }
 
     @Override

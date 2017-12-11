@@ -45,7 +45,7 @@ public class ClientRequestHandler extends AbstractHandler
         LOGGER.info("Received client request");
         final String body = extractBody(request);
         final Client client = convertToClient(body);
-        LOGGER.info("Request converted to client: {}", client.toString());
+        LOGGER.info("Request converted to client: {}", client);
         clientPool.getClients().add(client);
         response.setStatus(HttpServletResponse.SC_OK);
         LOGGER.info("Client added to pool, returning with status 200.");

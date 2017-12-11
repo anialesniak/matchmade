@@ -3,6 +3,7 @@ package clients;
 import parameters.Parameter;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class ClientSearchingData
 {
@@ -23,16 +24,14 @@ public class ClientSearchingData
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         final ClientSearchingData that = (ClientSearchingData) o;
-
-        return parameters != null ? parameters.equals(that.parameters) : that.parameters == null;
+        return Objects.equals(parameters, that.parameters);
     }
 
     @Override
     public int hashCode()
     {
-        return parameters != null ? parameters.hashCode() : 0;
+        return Objects.hash(parameters);
     }
 
     @Override

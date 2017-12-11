@@ -3,6 +3,7 @@ package clients;
 import parameters.NonScalableFixedParameter;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class ClientSelfData
 {
@@ -23,16 +24,14 @@ public class ClientSelfData
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         final ClientSelfData that = (ClientSelfData) o;
-
-        return parameters != null ? parameters.equals(that.parameters) : that.parameters == null;
+        return Objects.equals(parameters, that.parameters);
     }
 
     @Override
     public int hashCode()
     {
-        return parameters != null ? parameters.hashCode() : 0;
+        return Objects.hash(parameters);
     }
 
     @Override
