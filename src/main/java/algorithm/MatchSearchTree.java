@@ -3,6 +3,7 @@ package algorithm;
 import clients.Client;
 import clients.ClientSearchingData;
 import com.google.common.collect.Sets;
+import configuration.Configuration;
 import matchmaker.ClientPool;
 import net.sf.javaml.core.kdtree.KDTree;
 import parameters.FixedParameter;
@@ -19,8 +20,8 @@ import java.util.stream.Stream;
 public class MatchSearchTree {
 
     private final ClientPool clientPool;
-    private final int teamSize = 3; //TODO
-    private final int parametersCount = 3; //TODO
+    private final int teamSize = Configuration.getParameters().getTeamSize();
+    private final int parametersCount = Configuration.getParameters().getParameterCount();
     private KDTree searchTree;
     private Map<Integer, Set<Client>> clientsMatches;
 
@@ -31,7 +32,7 @@ public class MatchSearchTree {
     }
 
     public void initializeSearchTree(){
-        searchTree = new KDTree(parametersCount); //TODO
+        searchTree = new KDTree(parametersCount);
         clientsMatches = new HashMap<>();
     }
 
@@ -50,7 +51,7 @@ public class MatchSearchTree {
 
     public void clearSearchTree() {
         clientsMatches.clear();
-        searchTree = new KDTree(parametersCount); //TODO
+        searchTree = new KDTree(parametersCount);
     }
 
     public void fillClientsMatches() {
