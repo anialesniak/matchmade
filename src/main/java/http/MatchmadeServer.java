@@ -1,6 +1,8 @@
 package http;
 
 import org.eclipse.jetty.server.Server;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -8,6 +10,8 @@ import javax.inject.Singleton;
 @Singleton
 public class MatchmadeServer
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MatchmadeServer.class);
+
     private final ClientRequestHandler requestHandler;
 
     @Inject
@@ -18,12 +22,13 @@ public class MatchmadeServer
 
     public void run()
     {
+        LOGGER.info("Matchmade http server starting on 8080...");
         final Server server = new Server(8080);
         server.setHandler(requestHandler);
         try {
             server.start();
         } catch (Exception e) {
-            System.err.println("Well.. exception was thrown. Looks like server could not be started.");
+            LOGGER.error("Well.. exception was thrown. Looks like server could not be started.", e);
         }
     }
 }
