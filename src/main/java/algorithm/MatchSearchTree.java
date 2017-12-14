@@ -38,6 +38,11 @@ public class MatchSearchTree
         this.clientPool = clientPool;
     }
 
+    public boolean isInitialized()
+    {
+        return searchTree != null && clientsMatches != null;
+    }
+
     public void initializeSearchTree()
     {
         LOGGER.info("Search tree initialized");
