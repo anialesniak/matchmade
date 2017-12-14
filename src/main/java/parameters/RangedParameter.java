@@ -1,5 +1,9 @@
 package parameters;
 
+/**
+ * Base class for parameters which are intended to be <i>ranged</i> - range of possible values as opposed to
+ * {@link FixedParameter} where parameter is one concrete value.
+ */
 public abstract class RangedParameter
 {
     protected double lower;
@@ -39,7 +43,6 @@ public abstract class RangedParameter
         final RangedParameter that = (RangedParameter) o;
 
         if (Double.compare(that.lower, lower) != 0) return false;
-        if (Double.compare(that.upper, upper) != 0) return false;
         return Double.compare(that.expandingRange, expandingRange) == 0;
     }
 

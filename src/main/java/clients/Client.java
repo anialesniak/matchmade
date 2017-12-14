@@ -2,6 +2,14 @@ package clients;
 
 import java.util.Objects;
 
+/**
+ * {@link Client} in {@code Matchmade} consists of three things:
+ * <ul>
+ *     <li>{@code self data} - data which is describing client trying to find a match</li>
+ *     <li>{@code searching data} - these are the values wanted in clients which will be a match for current client</li>
+ *     <li>{@code client id} - internal unique identifier for a client</li>
+ * </ul>
+ */
 public class Client
 {
     private final int clientId;

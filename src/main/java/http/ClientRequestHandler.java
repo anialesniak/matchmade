@@ -23,6 +23,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * Entry point of {@code Matchmade} from client request point of view. This class handles http requests sent by
+ * client while looking for a match. Depends on {@code Jetty} http server implementation.
+ */
 @Singleton
 public class ClientRequestHandler extends AbstractHandler
 {
@@ -36,6 +40,17 @@ public class ClientRequestHandler extends AbstractHandler
         this.clientPool = clientPool;
     }
 
+    /**
+     * Is called when server receives an http request. Then http request is being validated. If valid, body in the
+     * form of JSON is deserialized and converted to client instance and added to the {@link ClientPool}.
+     *
+     * @param target
+     * @param baseRequest
+     * @param request
+     * @param response
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     public void handle(final String target,
                        final Request baseRequest,

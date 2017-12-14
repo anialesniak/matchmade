@@ -1,5 +1,9 @@
 package parameters;
 
+/**
+ * Base class for parameters which are intended to be <i>fixed</i> - concrete value as opposed to
+ * {@link RangedParameter} where parameter is by a range of possible values.
+ */
 public abstract class FixedParameter
 {
     protected final double value;

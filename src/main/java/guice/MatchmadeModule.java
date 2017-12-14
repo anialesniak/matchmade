@@ -6,6 +6,10 @@ import com.google.inject.Inject;
 import com.google.inject.Provides;
 import matchmaker.ClientPool;
 
+/**
+ * This is {@code Guice} module which injects dependencies throughout whole project. Methods from this class are not
+ * supposed to be called 'by hand', only by internal {@code Guice} calls.
+ */
 public class MatchmadeModule extends AbstractModule
 {
     @Override
