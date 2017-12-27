@@ -4,6 +4,7 @@ import clients.Client;
 import clients.ClientSearchingData;
 import com.google.common.collect.Sets;
 import configuration.Configuration;
+import configuration.ConfigurationParameters;
 import matchmaker.ClientPool;
 import net.sf.javaml.core.kdtree.KDTree;
 import parameters.FixedParameter;
@@ -20,15 +21,17 @@ import java.util.stream.Stream;
 public class MatchSearchTree {
 
     private final ClientPool clientPool;
-    private final int teamSize = Configuration.getParameters().getTeamSize();
-    private final int parametersCount = Configuration.getParameters().getParameterCount();
+    private final int teamSize;
+    private final int parametersCount;
     private KDTree searchTree;
     private Map<Integer, Set<Client>> clientsMatches;
 
     @Inject
-    public MatchSearchTree(final ClientPool clientPool)
+    public MatchSearchTree(final ClientPool clientPool, final Configuration configuration)
     {
         this.clientPool = clientPool;
+        this.teamSize = configuration.getConfigurationParameters().getTeamSize();
+        this. parametersCount = configuration.getConfigurationParameters().getParameterCount();
     }
 
     public void initializeSearchTree(){
