@@ -2,6 +2,8 @@ package algorithm;
 
 import clients.Client;
 import com.google.common.collect.Sets;
+import configuration.Configuration;
+import configuration.ConfigurationParameters;
 import matchmaker.ClientPool;
 import net.sf.javaml.core.kdtree.KDTree;
 import org.slf4j.Logger;
@@ -27,15 +29,17 @@ public class MatchSearchTree
     private final static Logger LOGGER = LoggerFactory.getLogger(MatchSearchTree.class);
 
     private final ClientPool clientPool;
-    private final int teamSize = 3; //TODO
-    private final int parametersCount = 3; //TODO
+    private final int teamSize;
+    private final int parametersCount;
     private KDTree searchTree;
     private Map<Integer, Set<Client>> clientsMatches;
 
     @Inject
-    public MatchSearchTree(final ClientPool clientPool)
+    public MatchSearchTree(final ClientPool clientPool, final Configuration configuration)
     {
         this.clientPool = clientPool;
+        this.teamSize = configuration.getConfigurationParameters().getTeamSize();
+        this. parametersCount = configuration.getConfigurationParameters().getParameterCount();
     }
 
     public boolean isInitialized()
@@ -46,7 +50,7 @@ public class MatchSearchTree
     public void initializeSearchTree()
     {
         LOGGER.info("Search tree initialized");
-        searchTree = new KDTree(parametersCount); //TODO
+        searchTree = new KDTree(parametersCount);
         clientsMatches = new HashMap<>();
     }
 
@@ -68,7 +72,7 @@ public class MatchSearchTree
     public void clearSearchTree()
     {
         clientsMatches.clear();
-        searchTree = new KDTree(parametersCount); //TODO
+        searchTree = new KDTree(parametersCount);
     }
 
     public void fillClientsMatches()
