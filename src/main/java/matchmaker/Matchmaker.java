@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * Wrapper class for {@code Matchmaker} matchmaking functionality. Intended to be called by {@link Matchmaker#run()}.
+ */
 @Singleton
 public class Matchmaker
 {

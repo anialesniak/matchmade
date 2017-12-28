@@ -22,6 +22,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Class responsible for matching {@link Client}s. This is where the algorithm is being used. Mind that to work class
+ * needs to be properly initialized by calling {@link MatchSearchTree#initializeSearchTree()}.
+ */
 @Singleton
 public class MatchSearchTree
 {
@@ -47,6 +51,9 @@ public class MatchSearchTree
         return searchTree != null && clientsMatches != null;
     }
 
+    //TODO I actually think this is worse than calling it in a constructor. I am aware this was also my idea to
+    // extract this from constructor, maybe use static factory method here for initialization which will be called in
+    // guice? :^) - #cleancodingneverends #sorryforbeingmaniac
     public void initializeSearchTree()
     {
         LOGGER.info("Search tree initialized");
