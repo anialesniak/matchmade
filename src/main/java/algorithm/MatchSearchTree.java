@@ -22,7 +22,7 @@ import java.util.Set;
 
 /**
  * Class responsible for matching {@link Client}s. This is where the algorithm is being used. Mind that to work class
- * needs to properly initialized by calling {@link MatchSearchTree#initializeSearchTree()}.
+ * needs to be properly initialized by calling {@link MatchSearchTree#initializeSearchTree()}.
  */
 @Singleton
 public class MatchSearchTree

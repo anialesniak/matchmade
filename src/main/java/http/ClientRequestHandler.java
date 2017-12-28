@@ -44,10 +44,6 @@ public class ClientRequestHandler extends AbstractHandler
      * Is called when server receives an http request. Then http request is being validated. If valid, body in the
      * form of JSON is deserialized and converted to client instance and added to the {@link ClientPool}.
      *
-     * @param target
-     * @param baseRequest
-     * @param request
-     * @param response
      * @throws IOException
      * @throws ServletException
      */
