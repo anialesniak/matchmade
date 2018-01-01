@@ -76,11 +76,7 @@ public class ClientRequestHandler extends AbstractHandler
         final BufferedReader reader = request.getReader();
         int len = request.getContentLength();
         char[] buf = new char[len];
-        int read = 0, readTo = 0;
-        while (read > -1) {
-            read = reader.read(buf, readTo, 1000);
-            readTo += read;
-        }
+        reader.read(buf);
         return new String(buf);
     }
 
