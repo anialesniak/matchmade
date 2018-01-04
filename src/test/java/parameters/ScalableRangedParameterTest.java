@@ -10,7 +10,7 @@ public class ScalableRangedParameterTest {
 
     @Test
     public void calculatePerfectMatchPercentage() throws Exception {
-        ScalableRangedParameter parameter = new ScalableRangedParameter(3.5, 4.5);
+        ScalableRangedParameter parameter = new ScalableRangedParameter(3.5, 4.5, 0);
         double matchResult = parameter.calculateMatchPercentage(new NonScalableFixedParameter(3.75));
 
         assertThat(matchResult).isCloseTo(new Double(1), within(Constants.EPSILON));
@@ -18,7 +18,7 @@ public class ScalableRangedParameterTest {
 
     @Test
     public void calculateNoMatchPercentage() throws Exception {
-        ScalableRangedParameter parameter = new ScalableRangedParameter(3.5, 4.5);
+        ScalableRangedParameter parameter = new ScalableRangedParameter(3.5, 4.5, 0);
         parameter.expandBy(0.5);
         double matchResult = parameter.calculateMatchPercentage(new NonScalableFixedParameter(5.75));
 
@@ -27,7 +27,7 @@ public class ScalableRangedParameterTest {
 
     @Test
     public void calculateHalfwayMatchPercentage() throws Exception {
-        ScalableRangedParameter parameter = new ScalableRangedParameter(3.5, 4.5);
+        ScalableRangedParameter parameter = new ScalableRangedParameter(3.5, 4.5, 0);
         parameter.expandBy(0.5);
         double matchResult = parameter.calculateMatchPercentage(new NonScalableFixedParameter(4.75));
 
@@ -36,7 +36,7 @@ public class ScalableRangedParameterTest {
 
     @Test
     public void calculateRealNumbersMatchPercentage() throws Exception {
-        ScalableRangedParameter parameter = new ScalableRangedParameter(3.125, 4.125);
+        ScalableRangedParameter parameter = new ScalableRangedParameter(3.125, 4.125, 0);
         parameter.expandBy(0.125);
         double matchResult1 = parameter.calculateMatchPercentage(new NonScalableFixedParameter(3.123));
         double matchResult2 = parameter.calculateMatchPercentage(new NonScalableFixedParameter(4.126));

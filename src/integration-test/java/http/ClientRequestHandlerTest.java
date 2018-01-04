@@ -1,6 +1,6 @@
 package http;
 
-import clients.Client;
+import clients.TemporaryClient;
 import com.google.common.io.Resources;
 import matchmaker.ClientPool;
 import org.junit.Test;
@@ -27,15 +27,15 @@ public class ClientRequestHandlerTest {
 
         final Method method = ClientRequestHandler.class.getDeclaredMethod("convertToClient", String.class);
         method.setAccessible(true);
-        final Client client = (Client) method.invoke(clientRequestHandler, json);
+        final TemporaryClient temporaryClient = (TemporaryClient) method.invoke(clientRequestHandler, json);
 
-        assertThat(client).isNotNull();
-        assertThat(client.getClientID()).isGreaterThanOrEqualTo(0);
-        assertThat(client.getSelfData().getParameters())
+        assertThat(temporaryClient).isNotNull();
+        assertThat(temporaryClient.getClientID()).isGreaterThanOrEqualTo(0);
+        assertThat(temporaryClient.getSelfData().getParameters())
                 .isNotNull()
                 .hasSize(3)
                 .containsKeys("age", "height", "weight");
-        assertThat(client.getSearchingData().getParameters())
+        assertThat(temporaryClient.getSearchingData().getParameters())
                 .isNotNull()
                 .hasSize(3)
                 .containsKeys("age", "height", "weight");

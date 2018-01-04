@@ -1,6 +1,7 @@
 package algorithm;
 
-import clients.Client;
+import clients.PoolClient;
+import clients.TemporaryClient;
 import com.google.common.io.Resources;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -21,7 +22,7 @@ import static org.assertj.core.api.Assertions.*;
 
 public class MatchSearchTreeTest {
 
-    private static Client client0, client1, client2, client3, client4, client5, client6, client7;
+    private static TemporaryClient client0, client1, client2, client3, client4, client5, client6, client7;
     private static MatchSearchTree searchTree;
     private static ClientPool clientPool;
 
@@ -37,42 +38,42 @@ public class MatchSearchTreeTest {
 
         String json = Resources.toString(
                 Resources.getResource("clients/client0.json"), StandardCharsets.UTF_8);
-        client0 = (Client) method.invoke(requestHandler, json);
+        client0 = (TemporaryClient) method.invoke(requestHandler, json);
         json = Resources.toString(
                 Resources.getResource("clients/client1.json"), StandardCharsets.UTF_8);
-        client1 = (Client) method.invoke(requestHandler, json);
+        client1 = (TemporaryClient) method.invoke(requestHandler, json);
         json = Resources.toString(
                 Resources.getResource("clients/client2.json"), StandardCharsets.UTF_8);
-        client2 = (Client) method.invoke(requestHandler, json);
+        client2 = (TemporaryClient) method.invoke(requestHandler, json);
         json = Resources.toString(
                 Resources.getResource("clients/client3.json"), StandardCharsets.UTF_8);
-        client3 = (Client) method.invoke(requestHandler, json);
+        client3 = (TemporaryClient) method.invoke(requestHandler, json);
         json = Resources.toString(
                 Resources.getResource("clients/client4.json"), StandardCharsets.UTF_8);
-        client4 = (Client) method.invoke(requestHandler, json);
+        client4 = (TemporaryClient) method.invoke(requestHandler, json);
         json = Resources.toString(
                 Resources.getResource("clients/client5.json"), StandardCharsets.UTF_8);
-        client5 = (Client) method.invoke(requestHandler, json);
+        client5 = (TemporaryClient) method.invoke(requestHandler, json);
         json = Resources.toString(
                 Resources.getResource("clients/client6.json"), StandardCharsets.UTF_8);
-        client6 = (Client) method.invoke(requestHandler, json);
+        client6 = (TemporaryClient) method.invoke(requestHandler, json);
         json = Resources.toString(
                 Resources.getResource("clients/client7.json"), StandardCharsets.UTF_8);
-        client7 = (Client) method.invoke(requestHandler, json);
+        client7 = (TemporaryClient) method.invoke(requestHandler, json);
 
     }
 
     @Before
     public void addClientsToClientPool() throws Exception {
 
-        clientPool.getClients().add(client0);
-        clientPool.getClients().add(client1);
-        clientPool.getClients().add(client2);
-        clientPool.getClients().add(client3);
-        clientPool.getClients().add(client4);
-        clientPool.getClients().add(client5);
-        clientPool.getClients().add(client6);
-        clientPool.getClients().add(client7);
+        clientPool.getClients().add(new PoolClient(client0));
+        clientPool.getClients().add(new PoolClient(client1));
+        clientPool.getClients().add(new PoolClient(client2));
+        clientPool.getClients().add(new PoolClient(client3));
+        clientPool.getClients().add(new PoolClient(client4));
+        clientPool.getClients().add(new PoolClient(client5));
+        clientPool.getClients().add(new PoolClient(client6));
+        clientPool.getClients().add(new PoolClient(client7));
 
         searchTree.initializeSearchTree();
         searchTree.fillSearchTree();
@@ -87,20 +88,21 @@ public class MatchSearchTreeTest {
     @Test
     public void findMatchingSetForClient0() throws Exception {
 
-        Set<Client> matchingSetForClient0 = searchTree.findMatchingSetFor(client0);
+        Set<PoolClient> matchingSetForClient0 = searchTree.findMatchingSetFor(new PoolClient(client0));
 
         assertThat(matchingSetForClient0).hasSize(3);
-        assertThat(matchingSetForClient0).containsOnly(client3, client4, client6);
+        assertThat(matchingSetForClient0)
+                .containsOnly(new PoolClient(client3), new PoolClient(client4), new PoolClient(client6));
 
     }
 
     @Test
     public void findMatchingSetForClient1() throws Exception {
 
-        Set<Client> matchingSetForClient1 = searchTree.findMatchingSetFor(client1);
+        Set<PoolClient> matchingSetForClient1 = searchTree.findMatchingSetFor(new PoolClient(client1));
 
         assertThat(matchingSetForClient1).hasSize(2);
-        assertThat(matchingSetForClient1).containsOnly(client4, client5);
+        assertThat(matchingSetForClient1).containsOnly(new PoolClient(client4), new PoolClient(client5));
 
     }
 
@@ -108,22 +110,23 @@ public class MatchSearchTreeTest {
     public void tryCreatingAMatchFromClient0AndTheirMatches() throws Exception {
 
         searchTree.fillClientsMatches();
-        Set<Client> matchingSetForClient0 = searchTree.findMatchingSetFor(client0);
+        Set<PoolClient> matchingSetForClient0 = searchTree.findMatchingSetFor(new PoolClient(client0));
 
-        Set<Client> match = searchTree.tryCreatingAMatchFrom(client0, matchingSetForClient0);
+        Set<PoolClient> match = searchTree.tryCreatingAMatchFrom(new PoolClient(client0), matchingSetForClient0);
 
         assertThat(match).isNotEmpty();
         assertThat(match).hasSize(3); //TODO
-        assertThat(match).containsOnly(client0, client3, client6);
+        assertThat(match)
+                .containsOnly(new PoolClient(client0), new PoolClient(client3), new PoolClient(client6));
     }
 
     @Test
     public void tryCreatingAMatchFromClient1AndTheirMatches() throws Exception {
 
         searchTree.fillClientsMatches();
-        Set<Client> matchingSetForClient1 = searchTree.findMatchingSetFor(client1);
+        Set<PoolClient> matchingSetForClient1 = searchTree.findMatchingSetFor(new PoolClient(client1));
 
-        Set<Client> match = searchTree.tryCreatingAMatchFrom(client1, matchingSetForClient1);
+        Set<PoolClient> match = searchTree.tryCreatingAMatchFrom(new PoolClient(client1), matchingSetForClient1);
 
         assertThat(match).isEmpty();
     }

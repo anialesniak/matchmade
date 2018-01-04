@@ -1,9 +1,6 @@
 package http;
 
-import clients.Client;
-import clients.ClientDataType;
-import clients.ClientSearchingData;
-import clients.ClientSelfData;
+import clients.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import matchmaker.ClientPool;
@@ -53,13 +50,13 @@ public class ClientRequestHandler extends AbstractHandler
                        final HttpServletRequest request,
                        final HttpServletResponse response) throws IOException, ServletException
     {
-        LOGGER.info("Received client request");
+        LOGGER.info("Received temporaryClient request");
         final String body = extractBody(request);
-        final Client client = convertToClient(body);
-        LOGGER.info("Request converted to client: {}", client);
-        clientPool.getClients().add(client);
+        final TemporaryClient temporaryClient = convertToClient(body);
+        LOGGER.info("Request converted to temporaryClient: {}", temporaryClient);
+        clientPool.getClients().add(new PoolClient(temporaryClient));
         response.setStatus(HttpServletResponse.SC_OK);
-        LOGGER.info("Client added to pool, returning with status 200.");
+        LOGGER.info("TemporaryClient added to pool, returning with status 200.");
     }
 
     private String extractBody(final HttpServletRequest request) throws IOException
@@ -80,7 +77,7 @@ public class ClientRequestHandler extends AbstractHandler
         return new String(buf);
     }
 
-    private Client convertToClient(final String jsonBody) throws IOException
+    private TemporaryClient convertToClient(final String jsonBody) throws IOException
     {
         final ObjectMapper objectMapper = new ObjectMapper();
         final Map<String, Map<String, Parameter>> parameterMap =
@@ -92,6 +89,6 @@ public class ClientRequestHandler extends AbstractHandler
         final ClientSearchingData clientSearching =
                 new ClientSearchingData(parameterMap.get(ClientDataType.CLIENT_SEARCHING.getTypeName()));
 
-        return new Client(clientSelf, clientSearching);
+        return new TemporaryClient(clientSelf, clientSearching);
     }
 }

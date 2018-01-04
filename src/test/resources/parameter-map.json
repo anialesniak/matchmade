@@ -20,18 +20,21 @@
     "age" : {
       "type" : "nonScalableRanged",
       "lower" : 17,
-      "upper" : 21
+      "upper" : 21,
+      "priority" : 2
     },
 
     "height" : {
       "type" : "scalableRanged",
       "lower" : 150,
-      "upper" : 201
+      "upper" : 201,
+      "priority" : 6
     },
 
     "weight" : {
       "type" : "scalableFixed",
-      "value" : 50
+      "value" : 50,
+      "priority" : 4
     }
   }
 }

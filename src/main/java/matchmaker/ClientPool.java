@@ -1,6 +1,7 @@
 package matchmaker;
 
-import clients.Client;
+import clients.PoolClient;
+import clients.TemporaryClient;
 
 import javax.inject.Singleton;
 import java.util.Set;
@@ -13,14 +14,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 public class ClientPool
 {
-    private Set<Client> clientSet;
+    private Set<PoolClient> clientSet;
 
     ClientPool()
     {
         clientSet = ConcurrentHashMap.newKeySet();
     }
 
-    public Set<Client> getClients()
+    public Set<PoolClient> getClients()
     {
         return clientSet;
     }

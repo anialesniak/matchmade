@@ -1,9 +1,8 @@
 package algorithm;
 
-import clients.Client;
+import clients.PoolClient;
 import com.google.common.collect.Sets;
 import configuration.Configuration;
-import configuration.ConfigurationParameters;
 import matchmaker.ClientPool;
 import net.sf.javaml.core.kdtree.KDTree;
 import org.slf4j.Logger;
@@ -23,7 +22,7 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Class responsible for matching {@link Client}s. This is where the algorithm is being used. Mind that to work class
+ * Class responsible for matching {@link PoolClient}s. This is where the algorithm is being used. Mind that to work class
  * needs to be properly initialized by calling {@link MatchSearchTree#initializeSearchTree()}.
  */
 @Singleton
@@ -36,7 +35,7 @@ public class MatchSearchTree
     private final int teamSize;
     private final int parametersCount;
     private KDTree searchTree;
-    private Map<Integer, Set<Client>> clientsMatches;
+    private Map<Integer, Set<PoolClient>> clientsMatches;
 
     @Inject
     public MatchSearchTree(final ClientPool clientPool, final Configuration configuration)
@@ -88,7 +87,7 @@ public class MatchSearchTree
     }
 
 
-    private void addClientToTree(Client client)
+    private void addClientToTree(PoolClient client)
     {
         final double[] parametersArrayDouble = client.getSelfData().getParameters().values()
                 .stream()
@@ -98,32 +97,32 @@ public class MatchSearchTree
         searchTree.insert(parametersArrayDouble, client);
     }
 
-    public Set<Client> findMatchingSetFor(Client client)
+    public Set<PoolClient> findMatchingSetFor(PoolClient client)
     {
-        final double[] parametersArrayLowerDouble = client.getSearchingData().getParameters().values()
+        final double[] parametersArrayLowerDouble = client.getPrioritizedSearchingData().getParameters().values()
                 .stream()
                 .map(Parameter::getRanges).map(ParameterRanges::getLower)
                 .mapToDouble(Double::doubleValue).toArray();
-        final double[] parametersArrayUpperDouble = client.getSearchingData().getParameters().values()
+        final double[] parametersArrayUpperDouble = client.getPrioritizedSearchingData().getParameters().values()
                 .stream()
                 .map(Parameter::getRanges).map(ParameterRanges::getUpper)
                 .mapToDouble(Double::doubleValue).toArray();
-        final Set<Client> clientSet = new LinkedHashSet<>();
+        final Set<PoolClient> clientSet = new LinkedHashSet<>();
         Arrays.stream(searchTree.range(parametersArrayLowerDouble, parametersArrayUpperDouble))
-                .map(Client.class::cast)
+                .map(PoolClient.class::cast)
                 .filter(match -> !match.equals(client))
                 .forEach(clientSet::add);
         LOGGER.info("Matching set for client: {} is {}", client, clientSet);
         return clientSet;
     }
 
-    public Set<Client> tryCreatingAMatchFrom(Client client, Set<Client> matches)
+    public Set<PoolClient> tryCreatingAMatchFrom(PoolClient client, Set<PoolClient> matches)
     {
-        final Set<Client> processedMatches = filterClientsThatDontMatchTo(client, matches);
+        final Set<PoolClient> processedMatches = filterClientsThatDontMatchTo(client, matches);
 
         if (processedMatches.size() < teamSize - 1) return new HashSet<>();
 
-        final Set<Client> correctMatch = new LinkedHashSet<>();
+        final Set<PoolClient> correctMatch = new LinkedHashSet<>();
         Sets.combinations(processedMatches, teamSize - 1)
                 .stream()
                 .filter(this::isCorrectMatch)
@@ -136,25 +135,25 @@ public class MatchSearchTree
         return correctMatch;
     }
 
-    private Set<Client> filterClientsThatDontMatchTo(Client client, Set<Client> matches)
+    private Set<PoolClient> filterClientsThatDontMatchTo(PoolClient client, Set<PoolClient> matches)
     {
-        final Set<Client> processedMatches = new LinkedHashSet<>();
+        final Set<PoolClient> processedMatches = new LinkedHashSet<>();
         matches.stream()
                 .filter(currentClient -> doesMatch(client, currentClient))
                 .forEach(processedMatches::add);
         return processedMatches;
     }
 
-    private boolean doesMatch(Client client, Client checkedClient)
+    private boolean doesMatch(PoolClient client, PoolClient checkedClient)
     {
         return clientsMatches.containsKey(checkedClient.getClientID())
                 && clientsMatches.get(checkedClient.getClientID()).contains(client);
     }
 
-    private boolean isCorrectMatch(Set<Client> match)
+    private boolean isCorrectMatch(Set<PoolClient> match)
     {
-        for (Client firstClient : match) {
-            final Optional<Set<Client>> matchedClients = match.stream()
+        for (PoolClient firstClient : match) {
+            final Optional<Set<PoolClient>> matchedClients = match.stream()
                     .filter(checkedClient -> !firstClient.equals(checkedClient))
                     .map(checkedClient -> clientsMatches.get(checkedClient.getClientID()))
                     .filter(checkedClientsSet -> !checkedClientsSet.contains(firstClient))
@@ -167,7 +166,7 @@ public class MatchSearchTree
         return true;
     }
 
-    private void eraseMatchedClients(Set<Client> match)
+    private void eraseMatchedClients(Set<PoolClient> match)
     {
         match.forEach(matchedClient -> clientsMatches.remove(matchedClient.getClientID()));
         clientPool.getClients().removeAll(match);

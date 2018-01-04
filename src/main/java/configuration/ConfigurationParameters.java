@@ -1,9 +1,12 @@
 package configuration;
 
+import java.util.Map;
+
 public class ConfigurationParameters {
 
     private int parameterCount;
     private int teamSize;
+    private Map<String, Double> parameterBaseSteps;
 
     public int getParameterCount() {
         return parameterCount;
@@ -13,12 +16,24 @@ public class ConfigurationParameters {
         return teamSize;
     }
 
+    public Map<String, Double> getParameterBaseSteps() {
+        return parameterBaseSteps;
+    }
+
     public void setParameterCount(int parameterCount) {
         this.parameterCount = parameterCount;
     }
 
     public void setTeamSize(int teamSize) {
         this.teamSize = teamSize;
+    }
+
+    public void setParameterBaseSteps(Map<String, Double> parameterBaseSteps) {
+        this.parameterBaseSteps = parameterBaseSteps;
+    }
+
+    public double getBaseStepForParameter(String parameterName) {
+        return parameterBaseSteps.get(parameterName);
     }
 
 }
