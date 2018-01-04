@@ -52,11 +52,11 @@ public class ClientRequestHandler extends AbstractHandler
     {
         LOGGER.info("Received temporaryClient request");
         final String body = extractBody(request);
-        final TemporaryClient temporaryClient = convertToClient(body);
-        LOGGER.info("Request converted to temporaryClient: {}", temporaryClient);
-        clientPool.getClients().add(new PoolClient(temporaryClient));
+        final PoolClient poolClient = new PoolClient(convertToClient(body));
+        LOGGER.info("Request converted to poolClient: {}", poolClient);
+        clientPool.getClients().add(poolClient);
         response.setStatus(HttpServletResponse.SC_OK);
-        LOGGER.info("TemporaryClient added to pool, returning with status 200.");
+        LOGGER.info("PoolClient added to pool, returning with status 200.");
     }
 
     private String extractBody(final HttpServletRequest request) throws IOException

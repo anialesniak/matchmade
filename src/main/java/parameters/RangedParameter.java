@@ -80,6 +80,7 @@ public abstract class RangedParameter
                 "lower=" + lower +
                 ", \nupper=" + upper +
                 ", \nexpandingRange=" + expandingRange +
+                ", \nexpandingStep=" + expandingStep +
                 '}';
     }
 }

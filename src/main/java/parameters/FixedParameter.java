@@ -71,6 +71,7 @@ public abstract class FixedParameter
         return "FixedParameter{" +
                 "value=" + value +
                 ", \nexpandingRange=" + expandingRange +
+                ", \nexpandingStep=" + expandingStep +
                 '}';
     }
 }
