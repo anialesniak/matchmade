@@ -43,7 +43,7 @@ public class PoolClientBuilder
         Map<String, Parameter> prioritizedSearchingDataMap = new LinkedHashMap<>();
         for (Map.Entry<String, Parameter> entry : searchingData.getParameters().entrySet()) {
             Parameter parameter = entry.getValue();
-            parameter.setExpandingStep(entry.getValue().getExpandingStep()
+            parameter.setExpandingStep(parameter.getExpandingStep()
                     *configurationParameters.getBaseStepForParameter(entry.getKey()));
             prioritizedSearchingDataMap.put(entry.getKey(), parameter);
         }
