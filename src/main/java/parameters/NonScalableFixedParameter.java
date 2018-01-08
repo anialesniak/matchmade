@@ -12,7 +12,7 @@ public final class NonScalableFixedParameter extends FixedParameter implements N
     @JsonCreator
     public NonScalableFixedParameter(@JsonProperty("value") double value)
     {
-        super(value ,0);
+        super(value, 0);
     }
 
     @Override
