@@ -9,9 +9,10 @@ public final class ScalableRangedParameter extends RangedParameter implements Sc
 {
     @JsonCreator
     public ScalableRangedParameter(@JsonProperty("lower") double lower,
-                                   @JsonProperty("upper") double upper)
+                                   @JsonProperty("upper") double upper,
+                                   @JsonProperty("priority") double expandingStep)
     {
-        super(lower, upper);
+        super(lower, upper, expandingStep);
     }
 
     @Override

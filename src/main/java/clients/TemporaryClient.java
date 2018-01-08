@@ -3,20 +3,20 @@ package clients;
 import java.util.Objects;
 
 /**
- * {@link Client} in {@code Matchmade} consists of three things:
+ * {@link TemporaryClient} in {@code Matchmade} consists of three things:
  * <ul>
  *     <li>{@code self data} - data which is describing client trying to find a match</li>
  *     <li>{@code searching data} - these are the values wanted in clients which will be a match for current client</li>
  *     <li>{@code client id} - internal unique identifier for a client</li>
  * </ul>
  */
-public class Client
+public class TemporaryClient
 {
     private final int clientId;
     private final ClientSelfData selfData;
     private final ClientSearchingData searchingData;
 
-    public Client(final ClientSelfData selfData, final ClientSearchingData searchingData)
+    public TemporaryClient(final ClientSelfData selfData, final ClientSearchingData searchingData)
     {
         this.clientId = ClientId.getNextID();
         this.selfData = selfData;
@@ -40,10 +40,10 @@ public class Client
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final Client client = (Client) o;
-        return clientId == client.clientId &&
-                Objects.equals(selfData, client.selfData) &&
-                Objects.equals(searchingData, client.searchingData);
+        final TemporaryClient temporaryClient = (TemporaryClient) o;
+        return clientId == temporaryClient.clientId &&
+                Objects.equals(selfData, temporaryClient.selfData) &&
+                Objects.equals(searchingData, temporaryClient.searchingData);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class Client
     @Override
     public String toString()
     {
-        return "Client{" +
+        return "TemporaryClient{" +
                 "clientId=\n\t" + clientId +
                 ", selfData=\n\t" + selfData +
                 ", searchingData=\n\t" + searchingData +

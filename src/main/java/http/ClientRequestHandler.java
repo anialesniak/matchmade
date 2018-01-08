@@ -1,11 +1,9 @@
 package http;
 
-import clients.Client;
-import clients.ClientDataType;
-import clients.ClientSearchingData;
-import clients.ClientSelfData;
+import clients.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import configuration.Configuration;
 import matchmaker.ClientPool;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -33,11 +31,13 @@ public class ClientRequestHandler extends AbstractHandler
     private final static Logger LOGGER = LoggerFactory.getLogger(ClientRequestHandler.class);
 
     private final ClientPool clientPool;
+    private final Configuration configuration;
 
     @Inject
-    ClientRequestHandler(final ClientPool clientPool)
+    ClientRequestHandler(final ClientPool clientPool, final Configuration configuration)
     {
         this.clientPool = clientPool;
+        this.configuration = configuration;
     }
 
     /**
@@ -53,13 +53,16 @@ public class ClientRequestHandler extends AbstractHandler
                        final HttpServletRequest request,
                        final HttpServletResponse response) throws IOException, ServletException
     {
-        LOGGER.info("Received client request");
+        LOGGER.info("Received temporaryClient request");
         final String body = extractBody(request);
-        final Client client = convertToClient(body);
-        LOGGER.info("Request converted to client: {}", client);
-        clientPool.getClients().add(client);
+        final PoolClient poolClient = PoolClient.builder()
+                .withTemporaryClient(convertToTemporaryClient(body))
+                .withConfigurationParameters(configuration.getConfigurationParameters())
+                .build();
+        LOGGER.info("Request converted to poolClient: {}", poolClient);
+        clientPool.getClients().add(poolClient);
         response.setStatus(HttpServletResponse.SC_OK);
-        LOGGER.info("Client added to pool, returning with status 200.");
+        LOGGER.info("PoolClient added to pool, returning with status 200.");
     }
 
     private String extractBody(final HttpServletRequest request) throws IOException
@@ -80,7 +83,7 @@ public class ClientRequestHandler extends AbstractHandler
         return new String(buf);
     }
 
-    private Client convertToClient(final String jsonBody) throws IOException
+    private TemporaryClient convertToTemporaryClient(final String jsonBody) throws IOException
     {
         final ObjectMapper objectMapper = new ObjectMapper();
         final Map<String, Map<String, Parameter>> parameterMap =
@@ -92,6 +95,6 @@ public class ClientRequestHandler extends AbstractHandler
         final ClientSearchingData clientSearching =
                 new ClientSearchingData(parameterMap.get(ClientDataType.CLIENT_SEARCHING.getTypeName()));
 
-        return new Client(clientSelf, clientSearching);
+        return new TemporaryClient(clientSelf, clientSearching);
     }
 }

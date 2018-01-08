@@ -26,13 +26,15 @@
     "height" : {
       "type" : "scalableRanged",
       "lower" : 150,
-      "upper" : 170
+      "upper" : 170,
+      "priority" : 3
     },
 
     "weight" : {
       "type" : "scalableRanged",
       "lower" : 40,
-      "upper" : 60
+      "upper" : 60,
+      "priority" : 8
     }
   }
 }

@@ -8,9 +8,10 @@ import com.google.common.collect.Range;
 public final class ScalableFixedParameter extends FixedParameter implements Scalable
 {
     @JsonCreator
-    public ScalableFixedParameter(@JsonProperty("value") double value)
+    public ScalableFixedParameter(@JsonProperty("value") double value,
+                                  @JsonProperty("priority") double expandingStep)
     {
-        super(value);
+        super(value, expandingStep);
     }
 
     @Override

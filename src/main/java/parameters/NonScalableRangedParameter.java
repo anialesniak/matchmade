@@ -9,7 +9,7 @@ public final class NonScalableRangedParameter extends RangedParameter implements
     public NonScalableRangedParameter(@JsonProperty("lower") double lower,
                                       @JsonProperty("upper") double upper)
     {
-        super(lower, upper);
+        super(lower, upper, 0);
     }
 
     @Override

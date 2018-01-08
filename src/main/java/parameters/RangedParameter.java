@@ -1,23 +1,32 @@
 package parameters;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Base class for parameters which are intended to be <i>ranged</i> - range of possible values as opposed to
  * {@link FixedParameter} where parameter is one concrete value.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class RangedParameter
 {
-    protected double lower;
-    protected double upper;
+    protected final double lower;
+    protected final double upper;
     protected double expandingRange = 0;
+    protected double expandingStep = 0;
 
-    public RangedParameter(double lower, double upper)
+    public RangedParameter(double lower, double upper, double expandingStep)
     {
         this.lower = lower;
         this.upper = upper;
+        this.expandingStep = expandingStep;
     }
 
     public void setExpandingRange(double expandingRange) {
         this.expandingRange = expandingRange;
+    }
+
+    public void setExpandingStep(double expandingStep) {
+        this.expandingStep = expandingStep;
     }
 
     public double getLower()
@@ -32,6 +41,10 @@ public abstract class RangedParameter
 
     public double getExpandingRange() {
         return expandingRange;
+    }
+
+    public double getExpandingStep() {
+        return expandingStep;
     }
 
     @Override
@@ -67,6 +80,7 @@ public abstract class RangedParameter
                 "lower=" + lower +
                 ", \nupper=" + upper +
                 ", \nexpandingRange=" + expandingRange +
+                ", \nexpandingStep=" + expandingStep +
                 '}';
     }
 }
