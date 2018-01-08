@@ -2,8 +2,10 @@ package http;
 
 import clients.*;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import configuration.Configuration;
+import configuration.ConfigurationParameters;
 import matchmaker.ClientPool;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -11,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import parameters.NonScalableFixedParameter;
 import parameters.Parameter;
+import validation.JSONValidator;
+import validation.Validator;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,12 +36,14 @@ public class ClientRequestHandler extends AbstractHandler
 
     private final ClientPool clientPool;
     private final Configuration configuration;
+    private final Validator validator;
 
     @Inject
     ClientRequestHandler(final ClientPool clientPool, final Configuration configuration)
     {
         this.clientPool = clientPool;
         this.configuration = configuration;
+        this.validator = new JSONValidator(configuration);
     }
 
     /**
@@ -55,14 +61,23 @@ public class ClientRequestHandler extends AbstractHandler
     {
         LOGGER.info("Received temporaryClient request");
         final String body = extractBody(request);
-        final PoolClient poolClient = PoolClient.builder()
-                .withTemporaryClient(convertToTemporaryClient(body))
-                .withConfigurationParameters(configuration.getConfigurationParameters())
-                .build();
-        LOGGER.info("Request converted to poolClient: {}", poolClient);
-        clientPool.getClients().add(poolClient);
-        response.setStatus(HttpServletResponse.SC_OK);
-        LOGGER.info("PoolClient added to pool, returning with status 200.");
+        JsonNode json = new ObjectMapper().readTree(body);
+        if (validator.isValid(json)) {
+            LOGGER.info("Request validated successfully");
+            ConfigurationParameters configurationParameters = configuration.getConfigurationParameters();
+            final PoolClient poolClient = PoolClient.builder()
+                                                    .withTemporaryClient(convertToTemporaryClient(body))
+                                                    .withConfigurationParameters(configurationParameters)
+                                                    .build();
+            LOGGER.info("Request converted to poolClient: {}", poolClient);
+            clientPool.getClients().add(poolClient);
+            response.setStatus(HttpServletResponse.SC_OK);
+            LOGGER.info("PoolClient added to pool, returning with status 200.");
+        }
+        else {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            LOGGER.info("Request failed validation, returning with status 400");
+        }
     }
 
     private String extractBody(final HttpServletRequest request) throws IOException
