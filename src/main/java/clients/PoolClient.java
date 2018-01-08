@@ -1,28 +1,28 @@
 package clients;
 
-import com.google.inject.Inject;
-import configuration.Configuration;
-import configuration.ConfigurationParameters;
-import parameters.Parameter;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Objects;
 
 /**
  * Created by annterina on 04.01.18.
  */
-public class PoolClient {
-
+public class PoolClient
+{
     private final int clientId;
     private final ClientSelfData selfData;
     private final ClientSearchingData prioritizedSearchingData;
 
-    public PoolClient(final TemporaryClient temporaryClient)
+    PoolClient(final int clientId,
+               final ClientSelfData selfData,
+               final ClientSearchingData prioritizedSearchingData)
     {
-        this.clientId = temporaryClient.getClientID();
-        this.selfData = temporaryClient.getSelfData();
-        this.prioritizedSearchingData = applyParameterBaseStepsTo(temporaryClient.getSearchingData());
+        this.clientId = clientId;
+        this.selfData = selfData;
+        this.prioritizedSearchingData = prioritizedSearchingData;
+    }
+
+    public static PoolClientBuilder builder()
+    {
+        return new PoolClientBuilder();
     }
 
     public ClientSelfData getSelfData()
@@ -35,19 +35,9 @@ public class PoolClient {
         return prioritizedSearchingData;
     }
 
-    public int getClientID() {return clientId;}
-
-    private ClientSearchingData applyParameterBaseStepsTo(ClientSearchingData searchingData) {
-        ConfigurationParameters configurationParameters = new Configuration().getConfigurationParameters();
-        //TODO should get singleton with guice
-        Map<String, Parameter> prioritizedSearchingDataMap = new LinkedHashMap<>();
-        for (Map.Entry<String, Parameter> entry : searchingData.getParameters().entrySet()) {
-            Parameter parameter = entry.getValue();
-            parameter.setExpandingStep(entry.getValue().getExpandingStep()
-                    *configurationParameters.getBaseStepForParameter(entry.getKey()));
-            prioritizedSearchingDataMap.put(entry.getKey(), parameter);
-        }
-        return new ClientSearchingData(prioritizedSearchingDataMap);
+    public int getClientID()
+    {
+        return clientId;
     }
 
     @Override
