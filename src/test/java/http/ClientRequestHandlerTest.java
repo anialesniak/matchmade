@@ -1,5 +1,7 @@
 package http;
 
+import configuration.Configuration;
+import configuration.ConfigurationParameters;
 import matchmaker.ClientPool;
 import org.eclipse.jetty.server.Request;
 import org.junit.Test;
@@ -33,6 +35,10 @@ public class ClientRequestHandlerTest {
     private static Request baseRequest;
     @Mock
     private static ClientPool clientPool;
+    @Mock
+    private static Configuration configuration;
+    @Mock
+    private static ConfigurationParameters configurationParameters;
 
     @Test
     public void shouldHandleResponse() throws Exception {
@@ -42,8 +48,9 @@ public class ClientRequestHandlerTest {
         given(request.getReader()).willReturn(reader);
         given(request.getContentLength()).willReturn(CONTENT_LENGTH);
         given(clientPool.getClients()).willReturn(new HashSet<>());
+        given(configuration.getConfigurationParameters()).willReturn(configurationParameters);
         //when
-        new ClientRequestHandler(clientPool).handle("", baseRequest, request, response);
+        new ClientRequestHandler(clientPool, configuration).handle("", baseRequest, request, response);
         //then
         verify(request).getReader();
         verify(request, times(2)).getContentLength();
@@ -57,7 +64,7 @@ public class ClientRequestHandlerTest {
         given(request.getContentLength()).willReturn(0);
         //when
         final Throwable throwableWithEmptyBodyException = catchThrowable(
-                () -> new ClientRequestHandler(clientPool).handle("", baseRequest, request, response));
+                () -> new ClientRequestHandler(clientPool, configuration).handle("", baseRequest, request, response));
         //then
         assertThat(throwableWithEmptyBodyException)
                 .isInstanceOf(EmptyBodyException.class)

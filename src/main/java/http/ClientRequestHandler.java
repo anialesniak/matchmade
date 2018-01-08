@@ -3,6 +3,7 @@ package http;
 import clients.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import configuration.Configuration;
 import matchmaker.ClientPool;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -30,11 +31,13 @@ public class ClientRequestHandler extends AbstractHandler
     private final static Logger LOGGER = LoggerFactory.getLogger(ClientRequestHandler.class);
 
     private final ClientPool clientPool;
+    private final Configuration configuration;
 
     @Inject
-    ClientRequestHandler(final ClientPool clientPool)
+    ClientRequestHandler(final ClientPool clientPool, final Configuration configuration)
     {
         this.clientPool = clientPool;
+        this.configuration = configuration;
     }
 
     /**
@@ -52,7 +55,10 @@ public class ClientRequestHandler extends AbstractHandler
     {
         LOGGER.info("Received temporaryClient request");
         final String body = extractBody(request);
-        final PoolClient poolClient = new PoolClient(convertToClient(body));
+        final PoolClient poolClient = PoolClient.builder()
+                .withTemporaryClient(convertToTemporaryClient(body))
+                .withConfigurationParameters(configuration.getConfigurationParameters())
+                .build();
         LOGGER.info("Request converted to poolClient: {}", poolClient);
         clientPool.getClients().add(poolClient);
         response.setStatus(HttpServletResponse.SC_OK);
@@ -77,7 +83,7 @@ public class ClientRequestHandler extends AbstractHandler
         return new String(buf);
     }
 
-    private TemporaryClient convertToClient(final String jsonBody) throws IOException
+    private TemporaryClient convertToTemporaryClient(final String jsonBody) throws IOException
     {
         final ObjectMapper objectMapper = new ObjectMapper();
         final Map<String, Map<String, Parameter>> parameterMap =
