@@ -11,32 +11,19 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import java.util.Arrays;
 import java.util.List;
 
-public class ClientRequestJsonSchema
+public class JSONSchemaCreator
 {
-    private final ObjectMapper mapper;
-    private final List<String> parameterNames;
-    private final JsonNode schemaJsonNode;
-    private final JsonSchema requestSchema;
+    private static ObjectMapper mapper;
+    private static List<String> parameterNames;
 
-    public ClientRequestJsonSchema(List<String> configurationParameterNames)
+    public static JsonSchema createFor(List<String> configurationParameterNames)
     {
         mapper = new ObjectMapper();
         parameterNames = configurationParameterNames;
-        schemaJsonNode = createSchemaJsonNode();
-        requestSchema = createSchema(schemaJsonNode);
+        return createSchema(createSchemaJsonNode());
     }
 
-    public JsonSchema getSchema()
-    {
-        return requestSchema;
-    }
-
-    public JsonNode getSchemaAsJson()
-    {
-        return schemaJsonNode;
-    }
-
-    private JsonNode createSchemaJsonNode()
+    private static JsonNode createSchemaJsonNode()
     {
         ObjectNode schema = createSchemaSpecification();
         schema.set("properties", createSchemaProperties());
@@ -44,7 +31,7 @@ public class ClientRequestJsonSchema
         return schema;
     }
 
-    private JsonSchema createSchema(JsonNode jsonNode)
+    private static JsonSchema createSchema(JsonNode jsonNode)
     {
         try {
             return JsonSchemaFactory.byDefault().getJsonSchema(jsonNode);
@@ -54,7 +41,7 @@ public class ClientRequestJsonSchema
         }
     }
 
-    private ObjectNode createSchemaSpecification()
+    private static ObjectNode createSchemaSpecification()
     {
         ObjectNode schema = mapper.createObjectNode();
         schema.put("type", "object");
@@ -67,7 +54,7 @@ public class ClientRequestJsonSchema
         return schema;
     }
 
-    private ObjectNode createSchemaProperties()
+    private static ObjectNode createSchemaProperties()
     {
         ObjectNode schemaProperties = mapper.createObjectNode();
         schemaProperties.set("clientSelf", createClientSelfSchema());
@@ -76,7 +63,7 @@ public class ClientRequestJsonSchema
         return schemaProperties;
     }
 
-    private ObjectNode createClientSelfSchema()
+    private static ObjectNode createClientSelfSchema()
     {
         ObjectNode clientSelf = mapper.createObjectNode();
         clientSelf.put("type", "object");
@@ -89,7 +76,7 @@ public class ClientRequestJsonSchema
         return clientSelf;
     }
 
-    private ObjectNode createClientSelfProperties()
+    private static ObjectNode createClientSelfProperties()
     {
         ObjectNode clientSelfProperties = mapper.createObjectNode();
         parameterNames.forEach(propertyName -> clientSelfProperties.set(propertyName, createClientSelfProperty()));
@@ -97,7 +84,7 @@ public class ClientRequestJsonSchema
         return clientSelfProperties;
     }
 
-    private ObjectNode createClientSelfProperty()
+    private static ObjectNode createClientSelfProperty()
     {
         ObjectNode property = mapper.createObjectNode();
         property.put("type", "object");
@@ -111,7 +98,7 @@ public class ClientRequestJsonSchema
         return property;
     }
 
-    private ObjectNode createStringTypeFieldWithValuePattern(String valuePattern)
+    private static ObjectNode createStringTypeFieldWithValuePattern(String valuePattern)
     {
         ObjectNode stringTypeField = mapper.createObjectNode();
         stringTypeField.put("type", "string");
@@ -120,14 +107,14 @@ public class ClientRequestJsonSchema
         return stringTypeField;
     }
 
-    private ObjectNode createNumberTypeField()
+    private static ObjectNode createNumberTypeField()
     {
         ObjectNode numberTypeField = mapper.createObjectNode();
         numberTypeField.put("type", "number");
         return numberTypeField;
     }
 
-    private ObjectNode createClientSearchingSchema()
+    private static ObjectNode createClientSearchingSchema()
     {
         ObjectNode clientSearching = mapper.createObjectNode();
         clientSearching.put("type", "object");
@@ -140,7 +127,7 @@ public class ClientRequestJsonSchema
         return clientSearching;
     }
 
-    private ObjectNode createClientSearchingProperties()
+    private static ObjectNode createClientSearchingProperties()
     {
         ObjectNode clientSearchingProperties = mapper.createObjectNode();
         parameterNames.forEach(propertyName -> clientSearchingProperties.set(propertyName,
@@ -148,7 +135,7 @@ public class ClientRequestJsonSchema
         return clientSearchingProperties;
     }
 
-    private ObjectNode createClientSearchingProperty()
+    private static ObjectNode createClientSearchingProperty()
     {
         ObjectNode property = mapper.createObjectNode();
         ArrayNode possibleProperties = mapper.createArrayNode();
@@ -162,7 +149,7 @@ public class ClientRequestJsonSchema
         return property;
     }
 
-    private ObjectNode createNonScalableFixedJsonObject()
+    private static ObjectNode createNonScalableFixedJsonObject()
     {
         ObjectNode nonScalableFixedProperty = mapper.createObjectNode();
         nonScalableFixedProperty.put("type", "object");
@@ -180,7 +167,7 @@ public class ClientRequestJsonSchema
         return nonScalableFixedProperty;
     }
 
-    private ObjectNode createScalableFixedJsonObject()
+    private static ObjectNode createScalableFixedJsonObject()
     {
         ObjectNode scalableFixedProperty = mapper.createObjectNode();
         scalableFixedProperty.put("type", "object");
@@ -199,7 +186,7 @@ public class ClientRequestJsonSchema
         return scalableFixedProperty;
     }
 
-    private ObjectNode createNonScalableRangedJsonObject()
+    private static ObjectNode createNonScalableRangedJsonObject()
     {
         ObjectNode nonScalableRangedProperty = mapper.createObjectNode();
         nonScalableRangedProperty.put("type", "object");
@@ -218,7 +205,7 @@ public class ClientRequestJsonSchema
         return nonScalableRangedProperty;
     }
 
-    private ObjectNode createScalableRangedJsonObject()
+    private static ObjectNode createScalableRangedJsonObject()
     {
         ObjectNode scalableRangedProperty = mapper.createObjectNode();
         scalableRangedProperty.put("type", "object");

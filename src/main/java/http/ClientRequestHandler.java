@@ -13,8 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import parameters.NonScalableFixedParameter;
 import parameters.Parameter;
-import validation.JSONValidator;
-import validation.Validator;
+import validation.JSONRequestBodyValidator;
+import validation.RequestBodyValidator;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -36,14 +36,14 @@ public class ClientRequestHandler extends AbstractHandler
 
     private final ClientPool clientPool;
     private final Configuration configuration;
-    private final Validator validator;
+    private final RequestBodyValidator validator;
 
     @Inject
     ClientRequestHandler(final ClientPool clientPool, final Configuration configuration)
     {
         this.clientPool = clientPool;
         this.configuration = configuration;
-        this.validator = new JSONValidator(configuration.getConfigurationParameters());
+        this.validator = new JSONRequestBodyValidator(configuration.getConfigurationParameters());
     }
 
     /**
@@ -61,18 +61,11 @@ public class ClientRequestHandler extends AbstractHandler
     {
         LOGGER.info("Received temporaryClient request");
         final String body = extractBody(request);
-        JsonNode json = new ObjectMapper().readTree(body);
-        if (validator.isValid(json)) {
+        if (validator.isValid(body)) {
             LOGGER.info("Request validated successfully");
-            ConfigurationParameters configurationParameters = configuration.getConfigurationParameters();
-            final PoolClient poolClient = PoolClient.builder()
-                                                    .withTemporaryClient(convertToTemporaryClient(body))
-                                                    .withConfigurationParameters(configurationParameters)
-                                                    .build();
-            LOGGER.info("Request converted to poolClient: {}", poolClient);
-            clientPool.getClients().add(poolClient);
+            handleValidRequestBody(body);
             response.setStatus(HttpServletResponse.SC_OK);
-            LOGGER.info("PoolClient added to pool, returning with status 200.");
+            LOGGER.info("PoolClient added to pool, returning with status 200");
         }
         else {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -96,6 +89,17 @@ public class ClientRequestHandler extends AbstractHandler
         char[] buf = new char[len];
         reader.read(buf);
         return new String(buf);
+    }
+
+    private void handleValidRequestBody(String body) throws IOException
+    {
+        ConfigurationParameters configurationParameters = configuration.getConfigurationParameters();
+        final PoolClient poolClient = PoolClient.builder()
+                                                .withTemporaryClient(convertToTemporaryClient(body))
+                                                .withConfigurationParameters(configurationParameters)
+                                                .build();
+        LOGGER.info("Request converted to poolClient: {}", poolClient);
+        clientPool.getClients().add(poolClient);
     }
 
     private TemporaryClient convertToTemporaryClient(final String jsonBody) throws IOException
