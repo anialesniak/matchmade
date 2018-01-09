@@ -25,4 +25,7 @@ public final class NonScalableFixedParameter extends FixedParameter implements N
     public ParameterRanges getRanges() {
         return new ParameterRanges(value-expandingRange, value+expandingRange);
     }
+
+    @Override
+    public void expand() {}
 }

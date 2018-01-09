@@ -1,5 +1,6 @@
 package clients;
 
+import com.fasterxml.jackson.databind.deser.impl.CreatorCandidate;
 import parameters.Parameter;
 
 import java.util.Map;
@@ -19,6 +20,10 @@ public class ClientSearchingData
         return parameters;
     }
 
+    public void expandParameters() {
+        parameters.forEach((key, parameter) -> parameter.expand());
+    }
+
     @Override
     public boolean equals(final Object o)
     {
@@ -27,6 +32,7 @@ public class ClientSearchingData
         final ClientSearchingData that = (ClientSearchingData) o;
         return Objects.equals(parameters, that.parameters);
     }
+
 
     @Override
     public int hashCode()
@@ -41,4 +47,6 @@ public class ClientSearchingData
                 "parameters=\n\t" + parameters +
                 '}';
     }
+
+
 }
