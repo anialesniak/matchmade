@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,6 +51,7 @@ public class ClientRequestHandlerTest {
         given(request.getContentLength()).willReturn(CONTENT_LENGTH);
         given(clientPool.getClients()).willReturn(new HashSet<>());
         given(configuration.getConfigurationParameters()).willReturn(configurationParameters);
+        given(configurationParameters.getParameterNames()).willReturn(Arrays.asList("age", "weight", "height"));
         //when
         new ClientRequestHandler(clientPool, configuration).handle("", baseRequest, request, response);
         //then
@@ -62,6 +65,8 @@ public class ClientRequestHandlerTest {
     public void shouldThrowEmptyBodyException() throws Exception {
         //given
         given(request.getContentLength()).willReturn(0);
+        given(configuration.getConfigurationParameters()).willReturn(configurationParameters);
+        given(configurationParameters.getParameterNames()).willReturn(new ArrayList<>());
         //when
         final Throwable throwableWithEmptyBodyException = catchThrowable(
                 () -> new ClientRequestHandler(clientPool, configuration).handle("", baseRequest, request, response));
