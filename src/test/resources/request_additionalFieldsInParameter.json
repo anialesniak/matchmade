@@ -1,0 +1,18 @@
+{
+  "clientSelf" : {
+    "age" : {
+      "type" : "nonScalableFixed",
+      "value" : 25,
+      "message" : "Hello!"
+    }
+  },
+
+  "clientSearching" : {
+    "age" : {
+      "type" : "nonScalableRanged",
+      "lower" : 17,
+      "upper" : 21,
+      "message" : "Bye!"
+    }
+  }
+}

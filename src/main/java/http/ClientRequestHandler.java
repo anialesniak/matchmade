@@ -43,7 +43,7 @@ public class ClientRequestHandler extends AbstractHandler
     {
         this.clientPool = clientPool;
         this.configuration = configuration;
-        this.validator = new JSONValidator(configuration);
+        this.validator = new JSONValidator(configuration.getConfigurationParameters());
     }
 
     /**
