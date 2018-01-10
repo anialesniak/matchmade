@@ -1,0 +1,9 @@
+{
+  "clientSearching" : {
+    "age" : {
+      "type" : "nonScalableRanged",
+      "lower" : 17,
+      "upper" : 21
+    }
+  }
+}

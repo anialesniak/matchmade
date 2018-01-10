@@ -1,6 +1,8 @@
 package configuration;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ConfigurationParameters {
 
@@ -18,6 +20,14 @@ public class ConfigurationParameters {
 
     public Map<String, Double> getParameterBaseSteps() {
         return parameterBaseSteps;
+    }
+
+    public List<String> getParameterNames()
+    {
+        return parameterBaseSteps.entrySet()
+                                 .stream()
+                                 .map(Map.Entry::getKey)
+                                 .collect(Collectors.toList());
     }
 
     public void setParameterCount(int parameterCount) {
