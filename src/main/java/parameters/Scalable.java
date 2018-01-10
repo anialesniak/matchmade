@@ -7,7 +7,4 @@ package parameters;
  * slightly off parameters searched for)
  */
 public interface Scalable extends Parameter
-{
-    double calculateMatchPercentage(NonScalableFixedParameter parameter);
-    void expandBy(double value);
-}
+{}

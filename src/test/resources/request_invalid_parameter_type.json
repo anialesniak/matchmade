@@ -1,0 +1,16 @@
+{
+  "clientSelf" : {
+    "age" : {
+      "type" : "nonScalableFixed",
+      "value" : 25
+    }
+  },
+
+  "clientSearching" : {
+    "age" : {
+      "type" : "myParameterName",
+      "lower" : 17,
+      "upper" : 21
+    }
+  }
+}
