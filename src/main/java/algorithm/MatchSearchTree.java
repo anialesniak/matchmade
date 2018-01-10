@@ -68,7 +68,7 @@ public class MatchSearchTree
                 .map(client -> tryCreatingAMatchFrom(client, clientsMatches.get(client.getClientID())))
                 .filter(match -> !match.isEmpty())
                 .forEach(this::eraseMatchedClients);
-        clientPool.expandClients();
+        clientPool.expandClientsParameters();
     }
 
     public void fillSearchTree()

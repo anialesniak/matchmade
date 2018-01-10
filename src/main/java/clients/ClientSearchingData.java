@@ -33,7 +33,6 @@ public class ClientSearchingData
         return Objects.equals(parameters, that.parameters);
     }
 
-
     @Override
     public int hashCode()
     {
@@ -47,6 +46,5 @@ public class ClientSearchingData
                 "parameters=\n\t" + parameters +
                 '}';
     }
-
 
 }

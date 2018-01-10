@@ -23,7 +23,4 @@ public final class NonScalableRangedParameter extends RangedParameter implements
         return new ParameterRanges(lower, upper);
     }
 
-    @Override
-    public void expand() {}
-
 }
