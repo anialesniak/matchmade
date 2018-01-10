@@ -1,5 +1,6 @@
 package validation;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
@@ -12,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
@@ -27,10 +29,10 @@ public class JSONRequestBodyValidatorTest
                 Resources.getResource("request_valid.json"), StandardCharsets.UTF_8);
 
         // when
-        boolean validationResult = validator.isValid(validatedJsonBody);
+        Throwable shouldNotThrowException = catchThrowable(() -> validator.validate(validatedJsonBody));
 
         // then
-        assertThat(validationResult).isTrue();
+        assertThat(shouldNotThrowException).doesNotThrowAnyException();
     }
 
     @Test
@@ -42,10 +44,10 @@ public class JSONRequestBodyValidatorTest
                 Resources.getResource("request_additional_parameters.json"), StandardCharsets.UTF_8);
 
         // when
-        boolean validationResult = validator.isValid(validatedJsonBody);
+        Throwable shouldThrowInvalidRequestBodyException = catchThrowable(() -> validator.validate(validatedJsonBody));
 
         // then
-        assertThat(validationResult).isFalse();
+        assertThat(shouldThrowInvalidRequestBodyException).isInstanceOf(InvalidRequestBodyException.class);
     }
 
     @Test
@@ -57,10 +59,10 @@ public class JSONRequestBodyValidatorTest
                 Resources.getResource("request_additional_fields_in_parameter.json"), StandardCharsets.UTF_8);
 
         // when
-        boolean validationResult = validator.isValid(validatedJsonBody);
+        Throwable shouldThrowInvalidRequestBodyException = catchThrowable(() -> validator.validate(validatedJsonBody));
 
         // then
-        assertThat(validationResult).isFalse();
+        assertThat(shouldThrowInvalidRequestBodyException).isInstanceOf(InvalidRequestBodyException.class);
     }
 
     @Test
@@ -72,10 +74,10 @@ public class JSONRequestBodyValidatorTest
                 Resources.getResource("request_missing_field_in_parameter.json"), StandardCharsets.UTF_8);
 
         // when
-        boolean validationResult = validator.isValid(validatedJsonBody);
+        Throwable shouldThrowInvalidRequestBodyException = catchThrowable(() -> validator.validate(validatedJsonBody));
 
         // then
-        assertThat(validationResult).isFalse();
+        assertThat(shouldThrowInvalidRequestBodyException).isInstanceOf(InvalidRequestBodyException.class);
     }
 
     @Test
@@ -88,10 +90,10 @@ public class JSONRequestBodyValidatorTest
         JsonNode validatedJson = new ObjectMapper().readTree(validatedJsonBody);
 
         // when
-        boolean validationResult = validator.isValid(validatedJsonBody);
+        Throwable shouldThrowInvalidRequestBodyException = catchThrowable(() -> validator.validate(validatedJsonBody));
 
         // then
-        assertThat(validationResult).isFalse();
+        assertThat(shouldThrowInvalidRequestBodyException).isInstanceOf(InvalidRequestBodyException.class);
     }
 
     @Test
@@ -103,10 +105,24 @@ public class JSONRequestBodyValidatorTest
                 Resources.getResource("request_missing_client_self_data.json"), StandardCharsets.UTF_8);
 
         // when
-        boolean validationResult = validator.isValid(validatedJsonBody);
+        Throwable shouldThrowInvalidRequestBodyException = catchThrowable(() -> validator.validate(validatedJsonBody));
 
         // then
-        assertThat(validationResult).isFalse();
+        assertThat(shouldThrowInvalidRequestBodyException).isInstanceOf(InvalidRequestBodyException.class);
+    }
+
+    @Test
+    public void shouldThrowJsonParseExceptionForInvalidRequestBodyFormat() throws Exception
+    {
+        // given
+        RequestBodyValidator validator = createJsonRequestBodyValidatorFor(Arrays.asList("age"));
+        String invalidRequestBody = "{invalid json}";
+
+        // when
+        Throwable throwableWithJsonParseException = catchThrowable(() -> validator.validate(invalidRequestBody));
+
+        // then
+        assertThat(throwableWithJsonParseException.getCause()).isInstanceOf(JsonParseException.class);
     }
 
     private RequestBodyValidator createJsonRequestBodyValidatorFor(List<String> parameterNames)

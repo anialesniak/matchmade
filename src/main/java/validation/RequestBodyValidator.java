@@ -2,5 +2,5 @@ package validation;
 
 public interface RequestBodyValidator
 {
-    boolean isValid(String requestBody);
+    void validate(String requestBody) throws InvalidRequestBodyException;
 }
