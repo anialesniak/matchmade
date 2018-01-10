@@ -7,7 +7,6 @@ import com.beust.jcommander.JCommander
 import com.beust.jcommander.Parameter
 import com.beust.jcommander.Parameters
 import groovy.transform.Field
-import okhttp3.*
 
 import java.nio.charset.Charset
 import java.nio.file.Files
@@ -52,16 +51,7 @@ def sendRequest(String host, int port, String body)
     println response.body().string()
 }
 
-//def sendApachePost(String url, String body) {
-//    CloseableHttpClient httpClient = HttpClientBuilder.create().build()
-//    HttpPost request = new HttpPost(url)
-//    StringEntity params = new StringEntity(body)
-//    request.addHeader("content-type", "application/json")
-//    request.setEntity(params)
-//    httpClient.execute(request)
-//    HttpResponse result = httpClient.execute(request)
-//    println result
-//}
+
 
 @Parameters(separators = '=')
 class EnrollParameters
