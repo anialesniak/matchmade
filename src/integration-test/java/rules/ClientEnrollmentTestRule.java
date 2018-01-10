@@ -23,7 +23,7 @@ public class ClientEnrollmentTestRule extends ExternalResource
         this.port = port;
     }
 
-    public void enrollClient(final String filePath)
+    public Response enrollClient(final String filePath)
     {
         final String body = readFile(filePath);
         OkHttpClient client = new OkHttpClient();
@@ -33,7 +33,7 @@ public class ClientEnrollmentTestRule extends ExternalResource
                 .post(requestBody)
                 .build();
         try {
-            Response response = client.newCall(request).execute();
+            return client.newCall(request).execute();
         } catch (IOException e) {
             e.printStackTrace();
         }
