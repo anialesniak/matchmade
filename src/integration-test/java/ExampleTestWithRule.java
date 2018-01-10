@@ -1,4 +1,5 @@
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Test;
 import rules.ClientEnrollmentTestRule;
 
@@ -9,6 +10,7 @@ public class ExampleTestWithRule
             "localhost", 8080
     );
 
+    @Ignore("presentation purposes :^)")
     @Test
     public void shouldSendClientRequest() throws Exception
     {
