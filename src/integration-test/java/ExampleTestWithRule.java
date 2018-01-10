@@ -12,6 +12,6 @@ public class ExampleTestWithRule
     @Test
     public void shouldSendClientRequest() throws Exception
     {
-        TEST_RULE.enrollClient("resources/clients/client0.json");
+        TEST_RULE.enrollClient("src/integration-test/resources/clients/client0.json");
     }
 }
