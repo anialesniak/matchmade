@@ -35,7 +35,7 @@ public class ClientEnrollmentTestRule extends ExternalResource
         try {
             return client.newCall(request).execute();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
