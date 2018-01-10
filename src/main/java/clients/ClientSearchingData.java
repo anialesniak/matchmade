@@ -1,5 +1,6 @@
 package clients;
 
+import com.fasterxml.jackson.databind.deser.impl.CreatorCandidate;
 import parameters.Parameter;
 
 import java.util.Map;
@@ -17,6 +18,10 @@ public class ClientSearchingData
     public Map<String, Parameter> getParameters()
     {
         return parameters;
+    }
+
+    public void expandParameters() {
+        parameters.forEach((key, parameter) -> parameter.expand());
     }
 
     @Override
@@ -41,4 +46,5 @@ public class ClientSearchingData
                 "parameters=\n\t" + parameters +
                 '}';
     }
+
 }

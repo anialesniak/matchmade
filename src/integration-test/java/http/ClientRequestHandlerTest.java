@@ -1,7 +1,11 @@
 package http;
 
+import algorithm.MatchSearchTree;
 import clients.TemporaryClient;
 import com.google.common.io.Resources;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import guice.MatchmadeModule;
 import matchmaker.ClientPool;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,11 +25,14 @@ public class ClientRequestHandlerTest {
 
     @Test
     public void convertJsonToClient() throws Exception {
-        final ClientRequestHandler clientRequestHandler = new ClientRequestHandler(clientPool);
+        Injector injector = Guice.createInjector(new MatchmadeModule());
+
+        final ClientRequestHandler clientRequestHandler = injector.getInstance(ClientRequestHandler.class);
+
         final String json = Resources.toString(
                 Resources.getResource("clients/client1.json"), StandardCharsets.UTF_8);
 
-        final Method method = ClientRequestHandler.class.getDeclaredMethod("convertToClient", String.class);
+        final Method method = ClientRequestHandler.class.getDeclaredMethod("convertToTemporaryClient", String.class);
         method.setAccessible(true);
         final TemporaryClient temporaryClient = (TemporaryClient) method.invoke(clientRequestHandler, json);
 

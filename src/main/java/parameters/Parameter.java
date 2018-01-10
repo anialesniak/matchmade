@@ -29,6 +29,7 @@ public interface Parameter
 {
     ParameterType getType();
     ParameterRanges getRanges();
+    default void expand() {}
     void setExpandingStep(double expandingStep);
     double getExpandingStep();
 

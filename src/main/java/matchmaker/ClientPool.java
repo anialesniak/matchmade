@@ -25,4 +25,8 @@ public class ClientPool
     {
         return clientSet;
     }
+
+    public void expandClientsParameters(){
+        clientSet.forEach(PoolClient::expandParameters);
+    }
 }

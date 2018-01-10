@@ -40,6 +40,10 @@ public class PoolClient
         return clientId;
     }
 
+    public void expandParameters(){
+        prioritizedSearchingData.expandParameters();
+    }
+
     @Override
     public boolean equals(final Object o)
     {
