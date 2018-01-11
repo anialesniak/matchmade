@@ -36,7 +36,7 @@ public class MatchmadeServer
         server.setHandler(context);
         try {
             server.start();
-            server.join();
+            //server.join();
         } catch (Exception e) {
             LOGGER.error("Well.. exception was thrown. Looks like server could not be started.", e);
         }

@@ -23,11 +23,18 @@ public class Matchmaker
         this.searchTree = searchTree;
     }
 
-    public void run()
-    {
+    public void run(){
         LOGGER.info("Matchmaker starting...");
-        searchTree.fillSearchTree();
+        int i = 0;
         while (true) {
+            i++;
+            LOGGER.info("Iteration: " + i);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            searchTree.fillSearchTree();
             searchTree.matchIteration();
         }
     }

@@ -113,7 +113,7 @@ public class MatchSearchTree
                 .map(PoolClient.class::cast)
                 .filter(match -> !match.equals(client))
                 .forEach(clientSet::add);
-        LOGGER.info("Matching set for client: {} is {}", client, clientSet);
+        //LOGGER.info("Matching set for client: {} is {}", client, clientSet);
         return clientSet;
     }
 
