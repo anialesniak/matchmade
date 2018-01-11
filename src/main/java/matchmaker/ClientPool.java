@@ -16,9 +16,14 @@ public class ClientPool
 {
     private Set<PoolClient> clientSet;
 
-    ClientPool()
+    public ClientPool()
     {
         clientSet = ConcurrentHashMap.newKeySet();
+    }
+
+    ClientPool(final Set<PoolClient> clientSet)
+    {
+        this.clientSet = clientSet;
     }
 
     public Set<PoolClient> getClients()

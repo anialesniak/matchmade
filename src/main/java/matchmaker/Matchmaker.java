@@ -26,19 +26,21 @@ public class Matchmaker
 
     public void run(){
         LOGGER.info("Matchmaker starting...");
-        int iterationCount = 0;
-        while (true) {
-            iterationCount++;
-            LOGGER.info("Iteration: {} Number of waiting clients: {}",
+        new Thread(() -> {
+            int iterationCount = 0;
+            while (true) {
+                iterationCount++;
+                LOGGER.info("Iteration: {} Number of waiting clients: {}",
                         iterationCount,
                         searchTree.getNumberOfClientsToMatch());
-            try {
-                Thread.sleep(MINIMAL_ITERATION_TIME_IN_MILLIS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                try {
+                    Thread.sleep(MINIMAL_ITERATION_TIME_IN_MILLIS);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                searchTree.fillSearchTree();
+                searchTree.matchIteration();
             }
-            searchTree.fillSearchTree();
-            searchTree.matchIteration();
-        }
+        }).start();
     }
 }
