@@ -3,6 +3,7 @@ package algorithm;
 import clients.PoolClient;
 import com.google.common.collect.Sets;
 import configuration.Configuration;
+import http.MatchReporter;
 import matchmaker.ClientPool;
 import net.sf.javaml.core.kdtree.KDTree;
 import org.slf4j.Logger;
@@ -42,7 +43,12 @@ public class MatchSearchTree
     {
         this.clientPool = clientPool;
         this.teamSize = configuration.getConfigurationParameters().getTeamSize();
-        this. parametersCount = configuration.getConfigurationParameters().getParameterCount();
+        this.parametersCount = configuration.getConfigurationParameters().getParameterCount();
+    }
+
+    public int getNumberOfClientsToMatch()
+    {
+        return clientPool.getNumberOfClientsInPool();
     }
 
     public boolean isInitialized()
@@ -113,7 +119,7 @@ public class MatchSearchTree
                 .map(PoolClient.class::cast)
                 .filter(match -> !match.equals(client))
                 .forEach(clientSet::add);
-        LOGGER.info("Matching set for client: {} is {}", client, clientSet);
+        //LOGGER.info("Matching set for client: {} is {}", client, clientSet);
         return clientSet;
     }
 
@@ -131,7 +137,7 @@ public class MatchSearchTree
                 .ifPresent((match) -> {
                     correctMatch.addAll(match);
                     correctMatch.add(client);
-                    LOGGER.info("Found match: {}", correctMatch);
+                    MatchReporter.reportMatch(correctMatch);
                 });
         return correctMatch;
     }
@@ -139,7 +145,8 @@ public class MatchSearchTree
     private Set<PoolClient> filterClientsThatDontMatchTo(PoolClient client, Set<PoolClient> matches)
     {
         final Set<PoolClient> processedMatches = new LinkedHashSet<>();
-        matches.stream()
+
+        if (matches != null)matches.stream()
                 .filter(currentClient -> doesMatch(client, currentClient))
                 .forEach(processedMatches::add);
         return processedMatches;
@@ -171,5 +178,13 @@ public class MatchSearchTree
     {
         match.forEach(matchedClient -> clientsMatches.remove(matchedClient.getClientID()));
         clientPool.getClients().removeAll(match);
+        for (PoolClient client:match) {
+            final double[] parametersArrayDouble = client.getSelfData().getParameters().values()
+                    .stream()
+                    .map(FixedParameter::getValue)
+                    .mapToDouble(Double::doubleValue)
+                    .toArray();
+            searchTree.delete(parametersArrayDouble);
+        }
     }
 }

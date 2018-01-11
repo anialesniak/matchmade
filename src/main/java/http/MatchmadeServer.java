@@ -1,6 +1,7 @@
 package http;
 
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,9 +29,14 @@ public class MatchmadeServer
     {
         LOGGER.info("Matchmade http server starting on 8080...");
         final Server server = new Server(8080);
-        server.setHandler(requestHandler);
+        ContextHandler context = new ContextHandler();
+        context.setContextPath("/");
+        context.setHandler(requestHandler);
+        context.setAllowNullPathInfo(true);
+        server.setHandler(context);
         try {
             server.start();
+            //server.join();
         } catch (Exception e) {
             LOGGER.error("Well.. exception was thrown. Looks like server could not be started.", e);
         }

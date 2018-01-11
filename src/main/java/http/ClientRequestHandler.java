@@ -8,6 +8,7 @@ import configuration.ConfigurationParameters;
 import matchmaker.ClientPool;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.util.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import parameters.NonScalableFixedParameter;
@@ -66,23 +67,24 @@ public class ClientRequestHandler extends AbstractHandler
     public void handle(final String target, final Request baseRequest, final HttpServletRequest request,
                        final HttpServletResponse response) throws IOException, ServletException
     {
-        LOGGER.info("Received temporaryClient request");
+        LOGGER.debug("Received temporaryClient request");
         final String body = extractBody(request);
         handleRequestBody(body, response);
+        baseRequest.setHandled(true);
     }
 
     private void handleRequestBody(String body, HttpServletResponse response) throws IOException
     {
         try {
             validator.validate(body);
-            LOGGER.info("Request validated successfully");
+            LOGGER.debug("Request validated successfully");
             handleValidRequestBody(body);
             response.setStatus(HttpServletResponse.SC_OK);
-            LOGGER.info("PoolClient added to pool, returning with status 200");
+            LOGGER.debug("PoolClient added to pool, returning with status 200");
         }
         catch (InvalidRequestBodyException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            LOGGER.info("Request failed validation, returning with status 400");
+            LOGGER.warn("Request failed validation, returning with status 400");
         }
 
     }
@@ -113,7 +115,7 @@ public class ClientRequestHandler extends AbstractHandler
                                                 .withTemporaryClient(convertToTemporaryClient(body))
                                                 .withConfigurationParameters(configurationParameters)
                                                 .build();
-        LOGGER.info("Request converted to poolClient: {}", poolClient);
+        LOGGER.debug("Request converted to poolClient with ID = {}", poolClient.getClientID());
         clientPool.getClients().add(poolClient);
     }
 

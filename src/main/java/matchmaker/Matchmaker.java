@@ -14,6 +14,7 @@ import javax.inject.Singleton;
 public class Matchmaker
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(Matchmaker.class);
+    private static final int MINIMAL_ITERATION_TIME_IN_MILLIS = 300;
 
     private final MatchSearchTree searchTree;
 
@@ -23,11 +24,20 @@ public class Matchmaker
         this.searchTree = searchTree;
     }
 
-    public void run()
-    {
+    public void run(){
         LOGGER.info("Matchmaker starting...");
-        searchTree.fillSearchTree();
+        int iterationCount = 0;
         while (true) {
+            iterationCount++;
+            LOGGER.info("Iteration: {} Number of waiting clients: {}",
+                        iterationCount,
+                        searchTree.getNumberOfClientsToMatch());
+            try {
+                Thread.sleep(MINIMAL_ITERATION_TIME_IN_MILLIS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            searchTree.fillSearchTree();
             searchTree.matchIteration();
         }
     }

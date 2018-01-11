@@ -1,6 +1,6 @@
 parameterCount: 3
 teamSize: 3
 parameterBaseSteps:
-  age: 1
-  height: 2
-  weight: 2
+  age: 0.1
+  height: 0.2
+  weight: 0.2
