@@ -13,10 +13,7 @@ import org.assertj.core.internal.Integers;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -93,9 +90,96 @@ public class MatchSearchTreeTest
         assertThat(clientMatches).isEmpty();
     }
 
-    //TODO fillClientsMatches
-    // TODO findMatchingSetFor
-    // TODO tryCreatingAMatchFrom
+    @Test
+    public void shouldFillClientsMatches() throws Exception
+    {
+        // given
+        PoolClient poolClient1 = getDummyPoolClient(1);
+        PoolClient poolClient2 = getDummyPoolClient(2);
+        PoolClient poolClient3 = getDummyPoolClient(3);
+        Map<Integer, Set<PoolClient>> clientMatches = new HashMap<>();
+        given(clientPool.getClients()).willReturn(new HashSet<>(Arrays.asList(
+            poolClient1,
+            poolClient2,
+            poolClient3
+        )));
+        given(searchTree.range(any(double[].class), any(double[].class))).willReturn(new Object[]{poolClient1});
+        final MatchSearchTree matchSearchTree = new MatchSearchTree(
+                clientPool,
+                configuration,
+                clientMatches,
+                searchTree
+        );
+
+        // when
+        matchSearchTree.fillClientsMatches();
+
+        // then
+        assertThat(clientMatches).hasSize(3);
+    }
+
+    @Test
+    public void shouldNotFindMatchingSetForGivenClient() throws Exception
+    {
+        // given
+        given(searchTree.range(any(double[].class), any(double[].class))).willReturn(new Object[]{DUMMY_POOL_CLIENT});
+
+        // when
+        Set<PoolClient> matchingSetForDummyClient = matchSearchTree.findMatchingSetFor(DUMMY_POOL_CLIENT);
+
+        // then
+        assertThat(matchingSetForDummyClient).hasSize(0);
+    }
+
+    @Test
+    public void shouldFindMatchingSetForGivenClient() throws Exception
+    {
+        // given
+        PoolClient poolClient = getDummyPoolClient(2);
+        given(searchTree.range(any(double[].class), any(double[].class))).willReturn(new Object[]{
+                DUMMY_POOL_CLIENT,
+                poolClient});
+
+        // when
+        Set<PoolClient> matchingSetForDummyClient = matchSearchTree.findMatchingSetFor(DUMMY_POOL_CLIENT);
+
+        // then
+        assertThat(matchingSetForDummyClient).hasSize(1);
+    }
+
+    @Test
+    public void shouldTryCreatingAMatchFromGivenClients() throws Exception
+    {
+        // given
+        int teamSize = 3;
+        Configuration configuration = mock(Configuration.class, withSettings().stubOnly());
+        ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class,
+                                                               withSettings().stubOnly());
+        given(configuration.getConfigurationParameters()).willReturn(configurationParameters);
+        given(configurationParameters.getTeamSize()).willReturn(teamSize);
+        PoolClient dummyPoolClient1 = getDummyPoolClient(1);
+        PoolClient dummyPoolClient2 = getDummyPoolClient(2);
+        PoolClient dummyPoolClient3 = getDummyPoolClient(3);
+        Map<Integer, Set<PoolClient>> clientMatches = new HashMap<>();
+        clientMatches.put(1, new HashSet<>(Arrays.asList(dummyPoolClient2, dummyPoolClient3)));
+        clientMatches.put(2, new HashSet<>(Arrays.asList(dummyPoolClient1, dummyPoolClient3)));
+        clientMatches.put(3, new HashSet<>(Arrays.asList(dummyPoolClient1, dummyPoolClient2)));
+
+        final MatchSearchTree matchSearchTree = new MatchSearchTree(
+                clientPool,
+                configuration,
+                clientMatches,
+                searchTree
+        );
+
+        // when
+        Set<PoolClient> foundMatch = matchSearchTree.tryCreatingAMatchFrom(
+                dummyPoolClient1,
+                ImmutableSet.of(dummyPoolClient2, dummyPoolClient3));
+
+        // then
+        assertThat(foundMatch).hasSize(3);
+    }
 
     private static Set<PoolClient> getDummyPoolClientSet(int numberOfClients)
     {
