@@ -103,9 +103,15 @@ Base steps require some more explanation. But first we need to introduce possibl
 * **non-scalable ranged** - if the parameter is set to this type Matchmade will find clients with _self parameter belonging to specified range (inclusive)_, but will not expand this range during execution when matches could not be found. Coming back to the tennis example, **age** will be of this type, because we want players to be sure with how old opponents they can be matched, but we want to let them specify more than one concrete age (which would be quite limiting).
 * **scalable ranged** - setting searching parameter to this type tells Matchmade to find clients with _self parameter belonging to specified range (inclusive)_, like with non-scalable ranged type, but it also allows Matchmade to expand the search range if the match could not be found. In our example, **winLooseRatio** will be of that type, as broadening the range of this values slightly will not affect players satisfaction with the match, but will help Matchmade to find the matches faster.
 
+**Fixed** types will contain `value` field simply holding value for given search parameter.
+
+**Ranged** types will contain `lower` and `upper` fields storing the inclusive boundaries of the search parameter range.
+
+Both **scalable** types will contain information field `priority` (explained below).
+
 ### Priorities and ranged search expansion
 
-Now, when we know what are the possible types of parameters the base step value can be explained. If a parameter is of scalable type (**scalable fixed** or **scalable ranged**) and match for a given client could not be found in the current client pool, Matchmade will **expand searching parameter _at least_ by the base step value**. Why at least? Because with scalable parameters come parameter priorities specified in sent client request. This are basically the multipliers of the base step. So if the base step is for `ranking` is set to 5, but client sets in searching parameters priority of `ranking` to 3, when the searching parameter is expanded it will be expanded by 3*5=15, instead of just base step value (5).
+Now, when we know what are the possible types of parameters the base step value can be explained. If a parameter is of scalable type (**scalable fixed** or **scalable ranged**) and match for a given client could not be found in the current client pool, Matchmade will **expand searching parameter _at least_ by the base step value**. Why at least? Because with scalable parameters come parameter `priority` fields specified in sent client request. This are basically the multipliers of the base step. So if the base step is for `ranking` is set to 5, but client sets in searching parameters priority of `ranking` to 3, when the searching parameter is expanded it will be expanded by 3*5=15, instead of just base step value (5).
 
 ### JSON format
 
@@ -156,8 +162,32 @@ Before we finally show how client request JSON can look like in our example we n
 }
 ```
 
+### Important notes
+
+As far as for the `clientSelf` parameters we are restricted to use only non-scalable fixed type, there is no such restriction for `clientSearching` ones, where we can use all 4 types. 
+
+Note that in server configuration **we do not specify what are the expected types** of given parameters. All we is set base steps so that **in case** a parameter is expanded, it will be expanded at least by this value. However clients sending requests to server may assign any type to each searching parameter, also the non-scalable types. Even though a base step might be set to such parameter to some number bigger than 0, non-scalable parameter will never be expanded.
+
+Quite the opposite scenario is also possible - to set base step to 0 in configuration for parameters that client decided to send as ones of scalable type. Then even though it has expandable type we decided to enforce NOT expanding particular parameter by setting base step to 0 in configuration.
+
+This leads to the conclusion that Matchmade **configuration is in some way superior to client requests parameter types**. In configuration we specify if we allow for parameter expansion (base step bigger than 0) or not (base step equal to 0) and if we do, what is the minimal expansion value. Client can assign a given searching parameter any type deciding between fixed and ranged value and scalable and non-scalable behaviour. However the scalable behaviour may be blocked by the server configuration if such parameter has base step set to 0.
+
+Usually all clients will use the same set of searching parameters with same types associated with specific parameters. This will be enforced by the nature of the modeled problem or expecting common behaviour and fairly similar way in which matches are created. However Matchmade allows more flexible approach if you ever need to use it that way.
+
 ## Matchmaking results
+
+When Matchmade founds the match between clients in its client pool it logs this success to standard server output. Matchmade server uses internal client identification system - each client is simply assigned a unique number. The logged results will consist of information which clients have been matched identifying clients by those values.
 
 ## License
 
+Matchmade is made publicly available with [BSD 2-Clause License](https://github.com/annterina/matchmade/blob/master/LICENSE).
+
 ## Authors
+
+Anna Leśniak @annterina
+
+Kacper Leśniak @KacperKenjiLesniak
+
+Jakub Gwizdała @Bzdeco
+
+Łukasz Ściga @OatmealLick
