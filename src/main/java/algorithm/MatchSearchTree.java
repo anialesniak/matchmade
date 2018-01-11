@@ -131,7 +131,7 @@ public class MatchSearchTree
                 .map(PoolClient.class::cast)
                 .filter(match -> !match.equals(client))
                 .forEach(clientSet::add);
-        //LOGGER.info("Matching set for client: {} is {}", client, clientSet);
+
         return clientSet;
     }
 
@@ -158,9 +158,10 @@ public class MatchSearchTree
     {
         final Set<PoolClient> processedMatches = new LinkedHashSet<>();
 
-        if (matches != null)matches.stream()
-                .filter(currentClient -> doesMatch(client, currentClient))
-                .forEach(processedMatches::add);
+        if (matches != null)
+            matches.stream()
+                   .filter(currentClient -> doesMatch(client, currentClient))
+                   .forEach(processedMatches::add);
         return processedMatches;
     }
 

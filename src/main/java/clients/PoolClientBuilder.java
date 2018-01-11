@@ -42,13 +42,13 @@ public class PoolClientBuilder
     }
 
     private ClientSearchingData applyParameterBaseStepsTo(final ClientSearchingData searchingData,
-                                                                 final ConfigurationParameters configurationParameters)
+                                                          final ConfigurationParameters configurationParameters)
     {
         Map<String, Parameter> prioritizedSearchingDataMap = new LinkedHashMap<>();
         for (Map.Entry<String, Parameter> entry : searchingData.getParameters().entrySet()) {
             Parameter parameter = entry.getValue();
-            parameter.setExpandingStep(parameter.getExpandingStep()
-                    *configurationParameters.getBaseStepForParameter(entry.getKey()));
+            parameter.setExpandingStep(
+                    parameter.getExpandingStep() *configurationParameters.getBaseStepForParameter(entry.getKey()));
             prioritizedSearchingDataMap.put(entry.getKey(), parameter);
         }
         return new ClientSearchingData(prioritizedSearchingDataMap);
