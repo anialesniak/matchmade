@@ -5,7 +5,7 @@ Matchmade is a server application that lets you setup your own matchmaking syste
 1. [How it works in general](#how-it-works-in-general)
 2. [How matchmaking works in detail](#how-matchmaking-works-in-detail)
 3. [Configuring Matchmade](#configuring-matchmade)
-4. [Client request format](#client-request-format)
+4. [Client request](#client-request)
 5. [Matchmaking results](#matchmaking-results)
 6. [License](#license)
 7. [Authors](#authors)
@@ -63,7 +63,7 @@ parameterBaseSteps:
 ```
 This is not one line of the configuration, but we can treat is as a coherent part. After the `parameterBaseSteps:` line we list all of the parameters by writing their _**name**_ and numerical value called _**base step**_. 
 
-_**Name**_ can be just anything as long as it complies with YAML naming conventions. This name, and I mean exactly this name, will be later expected to be found in JSONs with client requests (read more about it in [Client request format](#client-request-format)).
+_**Name**_ can be just anything as long as it complies with YAML naming conventions. This name, and I mean exactly this name, will be later expected to be found in JSONs with client requests (read more about it in [Client request](#client-request)).
 
 _**Base step**_ is a value that will be used when Matchmade decides to expand given client searching data (when it is done has been described in [Matchmaking workflow](#matchmaking-workflow)). This value is a _minimal_ value of expansion. For instance, if in searching data for a particular parameter we had a range 10-15 and for this parameter base step was set to 2, that range after expansion will be changed to 8-17. You can see that base step should be a positive number - we don't want the ranges to shrink, that won't help Matchmade to find the match, rather the contrary. Also note that it is a _minimal_ value of expansion. This value can be multiplied by client itself that together with searched parameter values sends their priorities. How they influence expansion rate is described in [Priorities and ranged search expansion](#priorities-and-ranged-search-expansion) section.
 
@@ -184,10 +184,10 @@ Matchmade is made publicly available with [BSD 2-Clause License](https://github.
 
 ## Authors
 
-Anna Leśniak @annterina
+Anna Leśniak [annterina](https://github.com/annterina)
 
-Kacper Leśniak @KacperKenjiLesniak
+Kacper Leśniak [KacperKenjiLesniak](https://github.com/KacperKenjiLesniak)
 
-Jakub Gwizdała @Bzdeco
+Jakub Gwizdała [Bzdeco](https://github.com/Bzdeco)
 
-Łukasz Ściga @OatmealLick
+Łukasz Ściga [OatmealLick](https://github.com/OatmealLick)
