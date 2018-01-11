@@ -44,9 +44,9 @@ public class PoolClientTest {
         client0.expandParameters();
 
         assertThat(client0.getPrioritizedSearchingData().getParameters().get("height").getRanges().getLower())
-                .isEqualTo(168);
+                .isLessThan(170);
         assertThat(client0.getPrioritizedSearchingData().getParameters().get("height").getRanges().getUpper())
-                .isEqualTo(202);
+                .isGreaterThan(200);
     }
 
 }
