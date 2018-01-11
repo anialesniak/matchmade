@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Wrapper class for {@code Matchmade} http server. Based on {@code Jetty} http server implementation. Intended to be
+ * Wrapper class for {@code Matchmade} HTTP server. Based on {@code Jetty} http server implementation. Intended to be
  * started by calling {@link MatchmadeServer#run()}. Works on port 8080.
  */
 @Singleton
