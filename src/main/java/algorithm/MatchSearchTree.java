@@ -139,7 +139,8 @@ public class MatchSearchTree
     private Set<PoolClient> filterClientsThatDontMatchTo(PoolClient client, Set<PoolClient> matches)
     {
         final Set<PoolClient> processedMatches = new LinkedHashSet<>();
-        matches.stream()
+
+        if (matches != null)matches.stream()
                 .filter(currentClient -> doesMatch(client, currentClient))
                 .forEach(processedMatches::add);
         return processedMatches;
@@ -171,5 +172,13 @@ public class MatchSearchTree
     {
         match.forEach(matchedClient -> clientsMatches.remove(matchedClient.getClientID()));
         clientPool.getClients().removeAll(match);
+        for (PoolClient client:match) {
+            final double[] parametersArrayDouble = client.getSelfData().getParameters().values()
+                    .stream()
+                    .map(FixedParameter::getValue)
+                    .mapToDouble(Double::doubleValue)
+                    .toArray();
+            searchTree.delete(parametersArrayDouble);
+        }
     }
 }

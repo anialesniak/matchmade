@@ -50,15 +50,13 @@ public class PoolClient
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final clients.PoolClient poolClient = (clients.PoolClient) o;
-        return clientId == poolClient.clientId &&
-                Objects.equals(selfData, poolClient.selfData) &&
-                Objects.equals(prioritizedSearchingData, poolClient.prioritizedSearchingData);
+        return clientId == poolClient.clientId;
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(clientId, selfData, prioritizedSearchingData);
+        return Objects.hash(clientId);
     }
 
     @Override
