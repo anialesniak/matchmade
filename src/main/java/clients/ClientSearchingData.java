@@ -1,11 +1,14 @@
 package clients;
 
-import com.fasterxml.jackson.databind.deser.impl.CreatorCandidate;
 import parameters.Parameter;
 
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Data holder for the searching data of a client. Searching data informs about parameter values that a given client
+ * expects to find in the self data of matched clients.
+ */
 public class ClientSearchingData
 {
     private final Map<String, Parameter> parameters;

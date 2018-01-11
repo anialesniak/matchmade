@@ -3,7 +3,8 @@ package clients;
 import java.util.Objects;
 
 /**
- * Created by annterina on 04.01.18.
+ * This is the pool of all clients that have been registered by {@code Matchmade} server and are waiting to get
+ * matched by {@link algorithm.MatchSearchTree}.
  */
 public class PoolClient
 {

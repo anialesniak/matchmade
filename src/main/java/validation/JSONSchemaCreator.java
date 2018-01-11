@@ -11,6 +11,10 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This is a utility class used for creating JSON Schema internal representation to be used when validating requests.
+ * JSON Schema for a given configuration can be created based on solely expected parameter names.
+ */
 public class JSONSchemaCreator
 {
     private static ObjectMapper mapper;
