@@ -23,7 +23,7 @@ public final class ScalableRangedParameter extends RangedParameter implements Sc
 
     @Override
     public ParameterRanges getRanges() {
-        return new ParameterRanges(lower, upper);
+        return new ParameterRanges(lower-getExpandingRange(), upper+getExpandingRange());
     }
 
     @Override
