@@ -59,8 +59,8 @@ public class MatchSearchTreeTest
         //when
         matchSearchTree.matchIteration();
         //then
-        verify(clientMatches).clear();
-        verify(clientPool).getClients();
+        assertThat(clientMatches).isEmpty();
+        verify(clientPool, times(2)).getClients();
         verify(clientPool).expandClientsParameters();
     }
 
