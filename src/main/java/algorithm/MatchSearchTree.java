@@ -46,6 +46,18 @@ public class MatchSearchTree
         this.parametersCount = configuration.getConfigurationParameters().getParameterCount();
     }
 
+    MatchSearchTree(final ClientPool clientPool,
+                    final Configuration configuration,
+                    final Map<Integer, Set<PoolClient>> clientsMatches,
+                    final KDTree searchTree)
+    {
+        this.clientPool = clientPool;
+        this.teamSize = configuration.getConfigurationParameters().getTeamSize();
+        this.parametersCount = configuration.getConfigurationParameters().getParameterCount();
+        this.clientsMatches = clientsMatches;
+        this.searchTree = searchTree;
+    }
+
     public int getNumberOfClientsToMatch()
     {
         return clientPool.getNumberOfClientsInPool();
@@ -119,7 +131,7 @@ public class MatchSearchTree
                 .map(PoolClient.class::cast)
                 .filter(match -> !match.equals(client))
                 .forEach(clientSet::add);
-        //LOGGER.info("Matching set for client: {} is {}", client, clientSet);
+
         return clientSet;
     }
 
@@ -146,9 +158,10 @@ public class MatchSearchTree
     {
         final Set<PoolClient> processedMatches = new LinkedHashSet<>();
 
-        if (matches != null)matches.stream()
-                .filter(currentClient -> doesMatch(client, currentClient))
-                .forEach(processedMatches::add);
+        if (matches != null)
+            matches.stream()
+                   .filter(currentClient -> doesMatch(client, currentClient))
+                   .forEach(processedMatches::add);
         return processedMatches;
     }
 

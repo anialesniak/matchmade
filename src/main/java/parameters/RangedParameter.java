@@ -21,10 +21,6 @@ public abstract class RangedParameter
         this.expandingStep = expandingStep;
     }
 
-    public void setExpandingRange(double expandingRange) {
-        this.expandingRange = expandingRange;
-    }
-
     public void setExpandingStep(double expandingStep) {
         this.expandingStep = expandingStep;
     }
