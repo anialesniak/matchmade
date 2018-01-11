@@ -7,6 +7,7 @@ import com.beust.jcommander.JCommander
 import com.beust.jcommander.Parameter
 import com.beust.jcommander.Parameters
 import groovy.transform.Field
+import okhttp3.*
 
 import java.nio.charset.Charset
 import java.nio.file.Files
