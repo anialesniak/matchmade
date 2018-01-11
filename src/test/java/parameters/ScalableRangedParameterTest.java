@@ -23,4 +23,6 @@ public class ScalableRangedParameterTest
         assertThat(range.getLower()).isEqualTo(lower - expandingStep);
         assertThat(range.getUpper()).isEqualTo(upper + expandingStep);
     }
+
+
 }

@@ -6,19 +6,33 @@ import com.google.common.io.Resources;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import configuration.Configuration;
+import configuration.ConfigurationParameters;
 import guice.MatchmadeModule;
 import http.ClientRequestHandler;
 import matchmaker.ClientPool;
+import net.sf.javaml.core.kdtree.KDTree;
+import org.eclipse.jetty.server.Request;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
 
 public class MatchSearchTreeTest {
 
@@ -156,4 +170,51 @@ public class MatchSearchTreeTest {
         assertThat(match).isEmpty();
     }
 
+    @Test
+    public void shouldMatchAllClientsInOneIteration() throws Exception
+    {
+        // given
+        int numberOfParameters = 2;
+        int teamSize = 5;
+        int numberOfTestedClients = 100;
+        ClientPool clientPool = new ClientPool();
+        Configuration configuration = mock(Configuration.class);
+        ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class,
+                                                               withSettings().stubOnly());
+        when(configuration.getConfigurationParameters()).thenReturn(configurationParameters);
+        when(configurationParameters.getParameterCount()).thenReturn(numberOfParameters);
+        when(configurationParameters.getTeamSize()).thenReturn(teamSize);
+        when(configurationParameters.getParameterNames()).thenReturn(Arrays.asList("ranking", "score"));
+        Map<Integer, Set<PoolClient>> clientMatches = new HashMap<>();
+        KDTree searchTree = new KDTree(numberOfParameters);
+
+        Request baseRequest = mock(Request.class);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        ClientRequestHandler clientRequestHandler = new ClientRequestHandler(clientPool, configuration);
+
+        for(int clientCounter = 0; clientCounter < numberOfTestedClients; clientCounter++) {
+            File file = new File(
+                    String.format("src/integration-test/resources/all_matching_clients/client%d.json", clientCounter));
+            when(request.getContentLength()).thenReturn(1560);
+            when(request.getReader()).thenReturn(new BufferedReader(new FileReader(file)));
+            clientRequestHandler.handle("", baseRequest, request, response);
+        }
+
+        MatchSearchTree matchSearchTree = new MatchSearchTree(
+                clientPool,
+                configuration,
+                clientMatches,
+                searchTree
+        );
+
+        // when
+        assertThat(matchSearchTree.getNumberOfClientsToMatch()).isEqualTo(numberOfTestedClients);
+        matchSearchTree.fillSearchTree();
+        matchSearchTree.matchIteration();
+
+        // then
+        assertThat(matchSearchTree.getNumberOfClientsToMatch()).isEqualTo(0);
+        assertThat(clientMatches).hasSize(0);
+    }
 }
