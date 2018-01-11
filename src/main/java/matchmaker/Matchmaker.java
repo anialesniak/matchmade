@@ -14,7 +14,7 @@ import javax.inject.Singleton;
 public class Matchmaker
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(Matchmaker.class);
-    private static final int MINIMAL_ITERATION_TIME_IN_MILLIS = 10;
+    private static final int MINIMAL_ITERATION_TIME_IN_MILLIS = 300;
 
     private final MatchSearchTree searchTree;
 

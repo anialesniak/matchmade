@@ -27,31 +27,32 @@ for (i=0; i<size; i++) {
 
 
 def generateClient(rand){
-    randomInt = rand.nextInt(10)
+    randomDouble = rand.nextDouble()*10
     def builder = new JsonBuilder()
     def root = builder{
         clientSelf  {
             age  {
                 type  "nonScalableFixed"
-                value  16+randomInt
+                value  16+randomDouble
             }
 
             height  {
                 type  "nonScalableFixed"
-                value  165+randomInt
+                value  165+randomDouble
             }
 
             weight  {
                 type  "nonScalableFixed"
-                value  85+randomInt
+                value  85+randomDouble
             }
         }
 
         clientSearching  {
             age  {
-                type  "nonScalableRanged"
+                type  "scalableRanged"
                 lower  17
                 upper  23
+                priority 2
             }
 
             height  {
