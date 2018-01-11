@@ -1,6 +1,7 @@
 package guice;
 
 import algorithm.MatchSearchTree;
+import algorithm.MatchSearchTreeTest;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.junit.Test;
