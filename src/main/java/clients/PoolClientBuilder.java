@@ -8,6 +8,10 @@ import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * Class used for conversion from {@link TemporaryClient} to {@link PoolClient}. Such conversion requires
+ * {@link TemporaryClient} as well as {@link ConfigurationParameters}.
+ */
 public class PoolClientBuilder
 {
     TemporaryClient temporaryClient;

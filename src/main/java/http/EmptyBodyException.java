@@ -1,7 +1,7 @@
 package http;
 
 /**
- * Thrown when server receives empty body http request.
+ * Thrown when server receives empty body HTTP request.
  */
 public class EmptyBodyException extends RuntimeException
 {

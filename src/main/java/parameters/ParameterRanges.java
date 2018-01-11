@@ -1,8 +1,5 @@
 package parameters;
 
-/**
- * Created by kenjik on 22.11.17.
- */
 public class ParameterRanges {
 
     private double lower;

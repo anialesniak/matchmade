@@ -5,6 +5,10 @@ import parameters.NonScalableFixedParameter;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Data holder for the self data of a client. Self data describes client features/parameters and based on them it
+ * will be matched with appropriate other clients.
+ */
 public class ClientSelfData
 {
     private final Map<String, NonScalableFixedParameter> parameters;
