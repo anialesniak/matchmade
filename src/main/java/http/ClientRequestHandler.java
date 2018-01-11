@@ -70,6 +70,7 @@ public class ClientRequestHandler extends AbstractHandler
         LOGGER.debug("Received temporaryClient request");
         final String body = extractBody(request);
         handleRequestBody(body, response);
+        baseRequest.setHandled(true);
     }
 
     private void handleRequestBody(String body, HttpServletResponse response) throws IOException

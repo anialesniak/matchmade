@@ -1,4 +1,4 @@
-#!/usr/local/bin/groovy
+#!/usr/bin/groovy
 @Grapes(
         @Grab(group='com.squareup.okhttp3', module='okhttp', version='3.9.1')
 )
@@ -69,7 +69,7 @@ def generateClient(rand){
             }
         }
     }
-    return builder.toString();
+    return builder.toString()
 }
 
 def parseArgs(String[] args)
@@ -94,7 +94,7 @@ def sendRequest(String host, int port, String body)
             .post(requestBody)
             .build()
     Response response = client.newCall(request).execute()
-    println response.body().string()
+    println response
 }
 
 

@@ -49,7 +49,7 @@ def sendRequest(String host, int port, String body)
                         .post(requestBody)
                         .build()
     Response response = client.newCall(request).execute()
-    println response.body().string()
+    println response
 }
 
 
