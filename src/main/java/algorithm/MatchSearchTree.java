@@ -3,6 +3,7 @@ package algorithm;
 import clients.PoolClient;
 import com.google.common.collect.Sets;
 import configuration.Configuration;
+import http.MatchReporter;
 import matchmaker.ClientPool;
 import net.sf.javaml.core.kdtree.KDTree;
 import org.slf4j.Logger;
@@ -42,7 +43,12 @@ public class MatchSearchTree
     {
         this.clientPool = clientPool;
         this.teamSize = configuration.getConfigurationParameters().getTeamSize();
-        this. parametersCount = configuration.getConfigurationParameters().getParameterCount();
+        this.parametersCount = configuration.getConfigurationParameters().getParameterCount();
+    }
+
+    public int getNumberOfClientsToMatch()
+    {
+        return clientPool.getNumberOfClientsInPool();
     }
 
     public boolean isInitialized()
@@ -131,7 +137,7 @@ public class MatchSearchTree
                 .ifPresent((match) -> {
                     correctMatch.addAll(match);
                     correctMatch.add(client);
-                    LOGGER.info("Found match: {}", correctMatch);
+                    MatchReporter.reportMatch(correctMatch);
                 });
         return correctMatch;
     }
