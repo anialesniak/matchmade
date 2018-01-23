@@ -65,3 +65,13 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-all:1.10.19'
 }
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'Application'
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
