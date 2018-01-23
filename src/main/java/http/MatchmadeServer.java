@@ -27,7 +27,7 @@ public class MatchmadeServer
 
     public void run()
     {
-        LOGGER.info("Matchmade http server starting on 8080...");
+        LOGGER.debug("Matchmade http server starting on 8080...");
         final Server server = new Server(8080);
         ContextHandler context = new ContextHandler();
         context.setContextPath("/");

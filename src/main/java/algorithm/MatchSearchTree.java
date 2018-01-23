@@ -73,7 +73,7 @@ public class MatchSearchTree
     // guice? :^) - #cleancodingneverends #sorryforbeingmaniac
     public void initializeSearchTree()
     {
-        LOGGER.info("Search tree initialized");
+        LOGGER.debug("Search tree initialized");
         searchTree = new KDTree(parametersCount);
         clientsMatches = new HashMap<>();
     }

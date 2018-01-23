@@ -26,3 +26,6 @@ local.properties
 .gradletasknamecache
 .gradle/
 build/
+
+# Matchmade logs
+matching.log
