@@ -1,6 +1,5 @@
 package http;
 
-import algorithm.MatchSearchTree;
 import clients.TemporaryClient;
 import com.google.common.io.Resources;
 import com.google.inject.Guice;

@@ -1,0 +1,1 @@
+{"clientSelf":{"ranking":{"type":"nonScalableFixed","value":2030},"score":{"type":"nonScalableFixed","value":1145}},"clientSearching":{"ranking":{"type":"scalableRanged","lower":100,"upper":200,"priority":1},"score":{"type":"scalableRanged","lower":100,"upper":200,"priority":1}}}
