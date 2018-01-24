@@ -175,7 +175,7 @@ public class MatchSearchTreeTest {
     {
         // given
         int numberOfParameters = 2;
-        int teamSize = 5;
+        int teamSize = 2;
         int numberOfTestedClients = 100;
         ClientPool clientPool = new ClientPool();
         Configuration configuration = mock(Configuration.class);
@@ -216,5 +216,56 @@ public class MatchSearchTreeTest {
         // then
         assertThat(matchSearchTree.getNumberOfClientsToMatch()).isEqualTo(0);
         assertThat(clientMatches).hasSize(0);
+    }
+
+    @Test
+    public void shouldMatchInThreeIterations() throws Exception
+    {
+        // given
+        int numberOfParameters = 2;
+        int teamSize = 2;
+        int numberOfTestedClients = 101;
+        ClientPool clientPool = new ClientPool();
+        Configuration configuration = mock(Configuration.class);
+        ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class,
+                                                               withSettings().stubOnly());
+        when(configuration.getConfigurationParameters()).thenReturn(configurationParameters);
+        when(configurationParameters.getParameterCount()).thenReturn(numberOfParameters);
+        when(configurationParameters.getTeamSize()).thenReturn(teamSize);
+        when(configurationParameters.getParameterNames()).thenReturn(Arrays.asList("ranking", "score"));
+        when(configurationParameters.getBaseStepForParameter("ranking")).thenReturn(1.0);
+        when(configurationParameters.getBaseStepForParameter("score")).thenReturn(1.0);
+        Map<Integer, Set<PoolClient>> clientMatches = new HashMap<>();
+        KDTree searchTree = new KDTree(numberOfParameters);
+
+        Request baseRequest = mock(Request.class);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        ClientRequestHandler clientRequestHandler = new ClientRequestHandler(clientPool, configuration);
+
+        for(int clientCounter = 0; clientCounter < numberOfTestedClients; clientCounter++) {
+            File file = new File(
+                    String.format("src/integration-test/resources/director/client%d.json", clientCounter));
+            when(request.getContentLength()).thenReturn(1560);
+            when(request.getReader()).thenReturn(new BufferedReader(new FileReader(file)));
+            clientRequestHandler.handle("", baseRequest, request, response);
+        }
+
+        MatchSearchTree matchSearchTree = new MatchSearchTree(
+                clientPool,
+                configuration,
+                clientMatches,
+                searchTree
+        );
+
+        // when
+        assertThat(matchSearchTree.getNumberOfClientsToMatch()).isEqualTo(numberOfTestedClients);
+        matchSearchTree.fillSearchTree();
+        matchSearchTree.matchIteration();
+        matchSearchTree.matchIteration();
+        matchSearchTree.matchIteration();
+
+        // then
+        assertThat(matchSearchTree.getNumberOfClientsToMatch()).isEqualTo(99);
     }
 }
