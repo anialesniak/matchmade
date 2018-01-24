@@ -18,6 +18,7 @@ public class MatchmadeServer
     private static final Logger LOGGER = LoggerFactory.getLogger(MatchmadeServer.class);
 
     private final ClientRequestHandler requestHandler;
+    private Server server;
 
     @Inject
     MatchmadeServer(final ClientRequestHandler requestHandler)
@@ -28,7 +29,7 @@ public class MatchmadeServer
     public void run()
     {
         LOGGER.debug("Matchmade http server starting on 8080...");
-        final Server server = new Server(8080);
+        server = new Server(8080);
         ContextHandler context = new ContextHandler();
         context.setContextPath("/");
         context.setHandler(requestHandler);
@@ -39,6 +40,15 @@ public class MatchmadeServer
             //server.join();
         } catch (Exception e) {
             LOGGER.error("Well.. exception was thrown. Looks like server could not be started.", e);
+        }
+    }
+
+    public void stop()
+    {
+        try {
+            server.stop();
+        } catch (Exception e) {
+            LOGGER.error("Server couldn't be stopped.");
         }
     }
 }

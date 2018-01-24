@@ -1,5 +1,6 @@
 package http;
 
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -13,13 +14,20 @@ public class MatchmadeServerTest
 {
     @Mock
     private ClientRequestHandler requestHandler;
+    private MatchmadeServer matchmadeServer = new MatchmadeServer(requestHandler);
+
+    @After
+    public void stopServer() {
+        matchmadeServer.stop();
+    }
 
     @Test
     public void shouldStartWithNoException() throws Exception
     {
         //when
-        final Throwable throwableWithNoException = catchThrowable(() -> new MatchmadeServer(requestHandler).run());
+        final Throwable throwableWithNoException = catchThrowable(() -> matchmadeServer.run());
         //then
         assertThat(throwableWithNoException).doesNotThrowAnyException();
     }
+
 }
