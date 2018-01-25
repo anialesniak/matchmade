@@ -106,7 +106,7 @@ class EnrollParameters
     private final String host = 'localhost'
 
     @Parameter(names = ['-p', '--port'])
-    private final int port = 8080
+    private final int port = 8090
 
     @Parameter(names = ['-s', '--size'], required = true)
     private final int size

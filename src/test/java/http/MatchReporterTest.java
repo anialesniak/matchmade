@@ -29,7 +29,7 @@ public class MatchReporterTest
     public void shouldReportWithNoException()
     {
         //when
-        final Throwable throwableWithNoException = catchThrowable(() -> MatchReporter.reportMatch(dummyClientSet));
+        final Throwable throwableWithNoException = catchThrowable(() -> Reporter.logMatch(dummyClientSet));
         //then
         assertThat(throwableWithNoException).doesNotThrowAnyException();
         dummyClientSet.forEach(

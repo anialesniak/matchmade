@@ -117,6 +117,7 @@ public class ClientRequestHandler extends AbstractHandler
                                                 .build();
         LOGGER.debug("Request converted to poolClient with ID = {}", poolClient.getClientID());
         clientPool.getClients().add(poolClient);
+        Reporter.reportEnrolledClient(poolClient);
     }
 
     private TemporaryClient convertToTemporaryClient(final String jsonBody) throws IOException
