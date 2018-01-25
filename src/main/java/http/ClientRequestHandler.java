@@ -67,10 +67,23 @@ public class ClientRequestHandler extends AbstractHandler
     public void handle(final String target, final Request baseRequest, final HttpServletRequest request,
                        final HttpServletResponse response) throws IOException, ServletException
     {
-        LOGGER.debug("Received temporaryClient request");
-        final String body = extractBody(request);
-        handleRequestBody(body, response);
-        baseRequest.setHandled(true);
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+        response.addHeader("Access-Control-Allow-Headers", "accept, content-type, Access-Control-Allow-Origin");
+        response.addHeader("Access-Control-Max-Age", "1728000");
+        if (request.getMethod() != null && request.getMethod().equals("OPTIONS"))
+        {
+            //In case of an OPTIONS, we allow the access to the origin of the petition
+            System.out.println("Options got");
+            response.setStatus(HttpServletResponse.SC_OK);
+            baseRequest.setHandled(true);
+        }
+        else {
+            LOGGER.debug("Received temporaryClient request");
+            final String body = extractBody(request);
+            handleRequestBody(body, response);
+            baseRequest.setHandled(true);
+        }
     }
 
     private void handleRequestBody(String body, HttpServletResponse response) throws IOException
