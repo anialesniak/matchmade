@@ -10,12 +10,13 @@ import javax.inject.Singleton;
 
 /**
  * Wrapper class for {@code Matchmade} HTTP server. Based on {@code Jetty} http server implementation. Intended to be
- * started by calling {@link MatchmadeServer#run()}. Works on port 8080.
+ * started by calling {@link MatchmadeServer#run()}. Works on port 8090.
  */
 @Singleton
 public class MatchmadeServer
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(MatchmadeServer.class);
+    private static final int PORT = 8090;
 
     private final ClientRequestHandler requestHandler;
     private Server server;
@@ -28,8 +29,8 @@ public class MatchmadeServer
 
     public void run()
     {
-        LOGGER.debug("Matchmade http server starting on 8080...");
-        server = new Server(8080);
+        LOGGER.debug("Matchmade http server starting on 8090...");
+        server = new Server(PORT);
         ContextHandler context = new ContextHandler();
         context.setContextPath("/");
         context.setHandler(requestHandler);
@@ -37,7 +38,6 @@ public class MatchmadeServer
         server.setHandler(context);
         try {
             server.start();
-            //server.join();
         } catch (Exception e) {
             LOGGER.error("Well.. exception was thrown. Looks like server could not be started.", e);
         }

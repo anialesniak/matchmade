@@ -3,7 +3,7 @@ package algorithm;
 import clients.PoolClient;
 import com.google.common.collect.Sets;
 import configuration.Configuration;
-import http.MatchReporter;
+import http.Reporter;
 import matchmaker.ClientPool;
 import net.sf.javaml.core.kdtree.KDTree;
 import org.slf4j.Logger;
@@ -149,7 +149,8 @@ public class MatchSearchTree
                 .ifPresent((match) -> {
                     correctMatch.addAll(match);
                     correctMatch.add(client);
-                    MatchReporter.reportMatch(correctMatch);
+                    Reporter.reportMatch(correctMatch);
+                    Reporter.logMatch(correctMatch);
                 });
         return correctMatch;
     }
