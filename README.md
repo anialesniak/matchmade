@@ -11,7 +11,7 @@ Matchmade is a server application that lets you setup your own matchmaking syste
 7. [Authors](#authors)
 
 ## How it works in general
-Matchmade runs as a typical server, however it only accepts one kind of request. Accepted requests are those containing valid client "enrollment" - you can find how to create one in [Client request](#client-request) section, but it is not essential for understanding how Matchmade works. What's important is that enrollments contain data about the client itself - the features describing client, let's call them **client self data/parameters** and the data the client expects from matched clients - from now let it be called **client searching data/parameters**. Enrolled clients' data is internally kept and processed by the server matchmaking module and used in finding matches between registered clients.
+Matchmade runs as a typical server, however it only accepts one kind of request. Accepted requests are those containing valid client "enrollment" - you can find how to create one in [Client request](#client-request) section, but it is not essential for understanding how Matchmade works. What's important is that enrollment contains data about the client itself - the features describing client, let's call them **client self data/parameters** and the data the client expects from matched clients - from now let it be called **client searching data/parameters**. Enrolled clients' data is internally kept and processed by the server matchmaking module and used in finding matches between registered clients.
 
 ## How matchmaking works in detail
 
@@ -19,7 +19,7 @@ Matchmade runs as a typical server, however it only accepts one kind of request.
 Matchmaker module's job is to group enrolled clients into so called _matches_ which are basically groups of clients of size specified in Matchmade configuration file. The match can be created from a given set of clients if all clients are _mutually compatible_. Mutual compatibility means that the self data of the second client matches the searching data of the first client and vice versa. 
 
 > #### Example
-> We are using Matchmade to match chess players in pairs so that the players are on a comparable level. Each client is described by one feature - the ranking score representing competence in the game (no matter how it is measured). Therefore, we have a matchmaking task for **one parameter client** and **matched clients group size of two**. Each client also desires to play with another client whose ranking is of comparable value. Therefore, in the searching data each client will contain a narrow range of values with the range mean value equal to own ranking. In other words, that means each client is looking for client with ranking slightly lower, slightly higher or equal to own ranking. Hence the 2 clients will make a match if the first clients' ranking lies within the range of rankings searched for by the second client and vice versa.
+> We are using Matchmade to match chess players in pairs so that the players are on a comparable level. Each client is described by one feature - the ranking score representing competence in the game (no matter how it is measured). Therefore, we have a matchmaking task for **one parameter client** and **matched clients group size of two**. Each client also desires to play with another client whose ranking is of comparable value. Therefore, in the searching data each client will contain a narrow range of values with the range mean value equal to own ranking. In other words, that means each client is looking for a client with ranking slightly lower, slightly higher or equal to own ranking. Hence the 2 clients will make a match if the first clients' ranking lies within the range of rankings searched for by the second client and vice versa.
 
 But what if for particular clients there are no matching counterparts in the pool of registered clients? We could leave them for now and wait till some new clients enter the pool, but we could as well wait forever to never have all of those lone clients matched. To prevent it from happening and ensuring each client gets a relatively good match in a reasonable time Matchmade modifies client searching data slightly after each iteration of finding matches in the existing client pool. This in general results in broadening the search range for each client. To learn how the range is actually expanded and how you can configure it check out [Configuring matchmade](#configuring-matchmade) section.
 
@@ -76,8 +76,8 @@ Matchmade server on its own doesn't do anything special - it needs to have some 
 Let's suppose we are running Matchmade to match tennis players that are on a similar level. We will match them based on 4 parameters:
 
 * **age** - each client will specify how old his opponent should be by giving the range of values
-* **win/loose ratio** - each player has a concrete value of his/her W/L ratio and will specify in what range the W/L ratio of his/her opponent should be
-* **ranking** - players have their rankings that can be determined by their win/loose ratio
+* **win/loss ratio** - each player has a concrete value of his/her W/L ratio and will specify in what range the W/L ratio of his/her opponent should be
+* **ranking** - players have their rankings that can be determined by their win/loss ratio, number of played games etc.
 * **self rating of skill** - each player will assess his own skill on a scale from 1 to 5
 
 To run Matchmade we prepared the following configuration (if you don't know yet how Matchmade is configured go to [Configuring Matchmade](#configuring-matchmade)):
@@ -87,7 +87,7 @@ parameterCount: 4
 teamSize: 2
 parameterBaseSteps:
     age: 0
-    winLooseRatio: 0.01
+    winLossRatio: 0.01
     ranking: 5
     selfRating: 0
 ```
@@ -101,17 +101,17 @@ Base steps require some more explanation. But first we need to introduce possibl
 * **non-scalable fixed** - setting searching parameter to this type means that we expect clients matched to this client to have their _self parameter values exactly the same as specified_ here. In our example **self rating** will be of this type, because we want the matched players to rate their skills equally (this may tell something both about their skill and confidence)
 * **scalable fixed** - when we set parameter to this type we want to find other clients with _self parameter close to specified value_. In our tennis example **ranking** will be of this type, because we want the matched players to have ranking as close as possible to our ranking (which will be copied from self parameters to search parameters).
 * **non-scalable ranged** - if the parameter is set to this type Matchmade will find clients with _self parameter belonging to specified range (inclusive)_, but will not expand this range during execution when matches could not be found. Coming back to the tennis example, **age** will be of this type, because we want players to be sure with how old opponents they can be matched, but we want to let them specify more than one concrete age (which would be quite limiting).
-* **scalable ranged** - setting searching parameter to this type tells Matchmade to find clients with _self parameter belonging to specified range (inclusive)_, like with non-scalable ranged type, but it also allows Matchmade to expand the search range if the match could not be found. In our example, **winLooseRatio** will be of that type, as broadening the range of this values slightly will not affect players satisfaction with the match, but will help Matchmade to find the matches faster.
+* **scalable ranged** - setting searching parameter to this type tells Matchmade to find clients with _self parameter belonging to specified range (inclusive)_, like with non-scalable ranged type, but it also allows Matchmade to expand the search range if the match could not be found. In our example, **winLossRatio** will be of that type, as broadening the range of this values slightly will not affect players satisfaction with the match, but will help Matchmade to find the matches faster.
 
 **Fixed** types will contain `value` field simply holding value for given search parameter.
 
 **Ranged** types will contain `lower` and `upper` fields storing the inclusive boundaries of the search parameter range.
 
-Both **scalable** types will contain information field `priority` (explained below).
+Both **scalable** types will contain a `priority` field (explained below).
 
 ### Priorities and ranged search expansion
 
-Now, when we know what are the possible types of parameters the base step value can be explained. If a parameter is of scalable type (**scalable fixed** or **scalable ranged**) and match for a given client could not be found in the current client pool, Matchmade will **expand searching parameter _at least_ by the base step value**. Why at least? Because with scalable parameters come parameter `priority` fields specified in sent client request. This are basically the multipliers of the base step. So if the base step is for `ranking` is set to 5, but client sets in searching parameters priority of `ranking` to 3, when the searching parameter is expanded it will be expanded by 3*5=15, instead of just base step value (5).
+Now when we know what are the possible types of parameters the base step value can be explained. If a parameter is of scalable type (**scalable fixed** or **scalable ranged**) and match for a given client could not be found in the current client pool, Matchmade will **expand searching parameter _at least_ by the base step value**. Why at least? Because with scalable parameters come parameter `priority` fields specified in sent client request. These are basically the multipliers of the base step. So if the base step for `ranking` is set to 5, but client sets in searching parameters priority of `ranking` to 3, when the searching parameter is expanded it will be expanded by 3*5=15, instead of just base step value (5).
 
 ### JSON format
 
@@ -124,7 +124,7 @@ Before we finally show how client request JSON can look like in our example we n
       "type" : "nonScalableFixed",
       "value" : 21
     },
-    "winLooseRatio" : {
+    "winLossRatio" : {
       "type" : "nonScalableFixed",
       "value" : 1.46
     },
@@ -143,7 +143,7 @@ Before we finally show how client request JSON can look like in our example we n
       "lower" : 19,
       "upper" : 22
     },
-    "winLooseRatio" : {
+    "winLossRatio" : {
       "type" : "scalableRanged",
       "lower" : 1.4,
       "upper" : 1.6,
@@ -166,7 +166,7 @@ Before we finally show how client request JSON can look like in our example we n
 
 As far as for the `clientSelf` parameters we are restricted to use only non-scalable fixed type, there is no such restriction for `clientSearching` ones, where we can use all 4 types. 
 
-Note that in server configuration **we do not specify what are the expected types** of given parameters. All we is set base steps so that **in case** a parameter is expanded, it will be expanded at least by this value. However clients sending requests to server may assign any type to each searching parameter, also the non-scalable types. Even though a base step might be set to such parameter to some number bigger than 0, non-scalable parameter will never be expanded.
+Note that in server configuration **we do not specify what are the expected types** of given parameters. All we do is set base steps so that **in case** a parameter is expanded, it will be expanded at least by this value. However clients sending requests to server may assign any type to each searching parameter, also the non-scalable types. Even though a base step might be set to such parameter to some number bigger than 0, non-scalable parameter will never be expanded.
 
 Quite the opposite scenario is also possible - to set base step to 0 in configuration for parameters that client decided to send as ones of scalable type. Then even though it has expandable type we decided to enforce NOT expanding particular parameter by setting base step to 0 in configuration.
 
@@ -176,7 +176,7 @@ Usually all clients will use the same set of searching parameters with same type
 
 ## Matchmaking results
 
-When Matchmade founds the match between clients in its client pool it logs this success to standard server output. Matchmade server uses internal client identification system - each client is simply assigned a unique number. The logged results will consist of information which clients have been matched identifying clients by those values.
+When Matchmade founds the match between clients in its client pool it logs this success to standard server output as well as to `matching.log` file located in the directory to which the server has direct access. Matchmade server uses internal client identification system - each client is simply assigned a unique number. The logged results will consist of information which clients have been matched identifying clients by those values.
 
 ## License
 
