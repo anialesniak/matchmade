@@ -16,8 +16,8 @@ import java.util.Set;
 public class Reporter
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(Reporter.class);
-    private static final String ENROLLMENT_URL = "http://localhost:8080/send/matchmade/enrollment";
-    private static final String MATCH_URL = "http://localhost:8080/send/matchmade/match";
+    private static final String ENROLLMENT_URL = "http://localhost:8080/send/matchmade-enrollment";
+    private static final String MATCH_URL = "http://localhost:8080/send/matchmade-match";
 
     public static void logMatch(Set<PoolClient> match)
     {
