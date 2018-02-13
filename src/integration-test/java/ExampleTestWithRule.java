@@ -12,7 +12,7 @@ public class ExampleTestWithRule
 
     @Ignore("presentation purposes :^)")
     @Test
-    public void shouldSendClientRequest() throws Exception
+    public void shouldSendClientRequest()
     {
         TEST_RULE.enrollClient("src/integration-test/resources/clients/client0.json");
     }

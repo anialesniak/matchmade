@@ -36,24 +36,24 @@ public class MatchSearchTree
     private final int teamSize;
     private final int parametersCount;
     private KDTree searchTree;
-    private Map<Integer, Set<PoolClient>> clientsMatches;
+    private Map<Long, Set<PoolClient>> clientsMatches;
 
     @Inject
     public MatchSearchTree(final ClientPool clientPool, final Configuration configuration)
     {
         this.clientPool = clientPool;
-        this.teamSize = configuration.getConfigurationParameters().getTeamSize();
-        this.parametersCount = configuration.getConfigurationParameters().getParameterCount();
+        this.teamSize = configuration.getTeamSize();
+        this.parametersCount = configuration.getParameterCount();
     }
 
     MatchSearchTree(final ClientPool clientPool,
                     final Configuration configuration,
-                    final Map<Integer, Set<PoolClient>> clientsMatches,
+                    final Map<Long, Set<PoolClient>> clientsMatches,
                     final KDTree searchTree)
     {
         this.clientPool = clientPool;
-        this.teamSize = configuration.getConfigurationParameters().getTeamSize();
-        this.parametersCount = configuration.getConfigurationParameters().getParameterCount();
+        this.teamSize = configuration.getTeamSize();
+        this.parametersCount = configuration.getParameterCount();
         this.clientsMatches = clientsMatches;
         this.searchTree = searchTree;
     }
@@ -161,8 +161,8 @@ public class MatchSearchTree
 
         if (matches != null)
             matches.stream()
-                   .filter(currentClient -> doesMatch(client, currentClient))
-                   .forEach(processedMatches::add);
+                    .filter(currentClient -> doesMatch(client, currentClient))
+                    .forEach(processedMatches::add);
         return processedMatches;
     }
 
@@ -192,7 +192,7 @@ public class MatchSearchTree
     {
         match.forEach(matchedClient -> clientsMatches.remove(matchedClient.getClientID()));
         clientPool.getClients().removeAll(match);
-        for (PoolClient client:match) {
+        for (PoolClient client : match) {
             final double[] parametersArrayDouble = client.getSelfData().getParameters().values()
                     .stream()
                     .map(FixedParameter::getValue)

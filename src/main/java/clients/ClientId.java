@@ -3,11 +3,12 @@ package clients;
 /**
  * Unique ID for each {@link PoolClient} present in the {@link matchmaker.ClientPool}
  */
-public class ClientId {
+public class ClientId
+{
+    private static long currentId = 0;
 
-    private static int currentID = 0;
-
-    synchronized public static int getNextID(){
-        return currentID++;
+    synchronized public static long getNext()
+    {
+        return currentId++;
     }
 }

@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class NonScalableFixedParameterTest
 {
     @Test
-    public void shouldNotBeAffectedByExpand() throws Exception
+    public void shouldNotBeAffectedByExpand()
     {
         // given
         int value = 15;

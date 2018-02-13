@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ScalableRangedParameterTest
 {
     @Test
-    public void shouldExpandRangeCorrectly() throws Exception
+    public void shouldExpandRangeCorrectly()
     {
         // given
         int lower = 10;
@@ -23,6 +23,4 @@ public class ScalableRangedParameterTest
         assertThat(range.getLower()).isEqualTo(lower - expandingStep);
         assertThat(range.getUpper()).isEqualTo(upper + expandingStep);
     }
-
-
 }

@@ -24,9 +24,9 @@ public class Reporter
         LOGGER.info("Found match client IDs: {}", convertMatchToClientIDsList(match));
     }
 
-    private static List<Integer> convertMatchToClientIDsList(Set<PoolClient> match)
+    private static List<Long> convertMatchToClientIDsList(Set<PoolClient> match)
     {
-        List<Integer> matchedClientsIDs = new ArrayList<>();
+        List<Long> matchedClientsIDs = new ArrayList<>();
         match.forEach(poolClient -> matchedClientsIDs.add(poolClient.getClientID()));
         return matchedClientsIDs;
     }
@@ -44,15 +44,14 @@ public class Reporter
 
         try {
             new OkHttpClient().newCall(enrollRequest).execute();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             LOGGER.error("Could not send enrollment");
         }
     }
 
     public static void reportMatch(Set<PoolClient> match)
     {
-        List<Integer> clientIDs = convertMatchToClientIDsList(match);
+        List<Long> clientIDs = convertMatchToClientIDsList(match);
 
         RequestBody matchReport = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
@@ -65,13 +64,12 @@ public class Reporter
 
         try {
             new OkHttpClient().newCall(matchReportRequest).execute();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             LOGGER.error("Could not send match report");
         }
     }
 
-    private static String formatMatchParameter(List<Integer> clientIDs)
+    private static String formatMatchParameter(List<Long> clientIDs)
     {
         StringBuilder encodedListBuilder = new StringBuilder();
         clientIDs.forEach(clientID -> encodedListBuilder.append(clientID).append(';'));

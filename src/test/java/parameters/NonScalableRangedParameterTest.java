@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class NonScalableRangedParameterTest
 {
     @Test
-    public void shouldNotChangeRangeAfterExpand() throws Exception
+    public void shouldNotChangeRangeAfterExpand()
     {
         // given
         int lower = 10;

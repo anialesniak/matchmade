@@ -6,7 +6,7 @@ String validDirectory = "valid"
 String invalidByParameterNumberDirectory = "invalid_param_number"
 String invalidByParameterValuesDirectory = "invalid_param_values"
 
-List<String> validJsons = generateValidClients(30);
+List<String> validJsons = generateValidClients(30)
 List<String> invalidByParameterNumberJsons = generateInvalidByParamNumberClients(30)
 List<String> invalidByParameterValuesJsons= generateInvalidByParamValuesClients(30)
 
@@ -36,8 +36,8 @@ def generateValidClients(int number) {
     List<String> generated = new ArrayList<>()
 
     for (int i = 0; i < number; i++) {
-        Random rand = new Random();
-        randomRankingValue = rand.nextInt(601) - 300; // -300 to 300
+        Random rand = new Random()
+        randomRankingValue = rand.nextInt(601) - 300 // -300 to 300
         randomScoreValue = rand.nextInt(401) - 200 // -200 to 200
 
         def builder = new JsonBuilder()
@@ -78,8 +78,8 @@ def generateInvalidByParamNumberClients(int number) {
     List<String> generated = new ArrayList<>()
 
     for (int i = 0; i < number/2; i++) {
-        Random rand = new Random();
-        randomRankingValue = rand.nextInt(601) - 300; // -300 to 300
+        Random rand = new Random()
+        randomRankingValue = rand.nextInt(601) - 300 // -300 to 300
         randomScoreValue = rand.nextInt(401) - 200 // -200 to 200
 
         def builder = new JsonBuilder()
@@ -121,8 +121,8 @@ def generateInvalidByParamNumberClients(int number) {
         generated.add(builder.toString())
     }
     for (int i = 0; i < number/2; i++) {
-        Random rand = new Random();
-        randomRankingValue = rand.nextInt(601) - 300; // -300 to 300
+        Random rand = new Random()
+        randomRankingValue = rand.nextInt(601) - 300 // -300 to 300
         randomScoreValue = rand.nextInt(401) - 200 // -200 to 200
 
         def builder = new JsonBuilder()
@@ -154,8 +154,8 @@ def generateInvalidByParamValuesClients(int number) {
     List<String> generated = new ArrayList<>()
 
     for (int i = 0; i < number/2; i++) {
-        Random rand = new Random();
-        randomRankingValue = rand.nextInt(601) - 300; // -300 to 300
+        Random rand = new Random()
+        randomRankingValue = rand.nextInt(601) - 300 // -300 to 300
         randomScoreValue = rand.nextInt(401) - 200 // -200 to 200
 
         def builder = new JsonBuilder()
@@ -187,8 +187,8 @@ def generateInvalidByParamValuesClients(int number) {
         generated.add(builder.toString())
     }
     for (int i = 0; i < number/2; i++) {
-        Random rand = new Random();
-        randomRankingValue = rand.nextInt(601) - 300; // -300 to 300
+        Random rand = new Random()
+        randomRankingValue = rand.nextInt(601) - 300 // -300 to 300
         randomScoreValue = rand.nextInt(401) - 200 // -200 to 200
 
         def builder = new JsonBuilder()

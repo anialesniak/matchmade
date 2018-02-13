@@ -1,7 +1,6 @@
 package guice;
 
 import algorithm.MatchSearchTree;
-import algorithm.MatchSearchTreeTest;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.junit.Test;
@@ -14,7 +13,7 @@ public class MatchmadeModuleTest
     private final MatchmadeModule matchmadeModule = new MatchmadeModule();
 
     @Test
-    public void shouldSuccessfullyInitializeModule() throws Exception
+    public void shouldSuccessfullyInitializeModule()
     {
         //when
         final Throwable shouldBeEmptyThrowable = catchThrowable(() -> Guice.createInjector(matchmadeModule));
@@ -23,7 +22,7 @@ public class MatchmadeModuleTest
     }
 
     @Test
-    public void shouldProvideInitializedSearchTree() throws Exception
+    public void shouldProvideInitializedSearchTree()
     {
         //given
         final Injector injector = Guice.createInjector(matchmadeModule);

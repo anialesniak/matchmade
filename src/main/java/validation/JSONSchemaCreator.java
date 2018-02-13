@@ -39,8 +39,7 @@ public class JSONSchemaCreator
     {
         try {
             return JsonSchemaFactory.byDefault().getJsonSchema(jsonNode);
-        }
-        catch (ProcessingException e) {
+        } catch (ProcessingException e) {
             throw new IllegalStateException("Failed to create schema based on configuration", e);
         }
     }
@@ -135,7 +134,7 @@ public class JSONSchemaCreator
     {
         ObjectNode clientSearchingProperties = mapper.createObjectNode();
         parameterNames.forEach(propertyName -> clientSearchingProperties.set(propertyName,
-                                                                             createClientSearchingProperty()));
+                createClientSearchingProperty()));
         return clientSearchingProperties;
     }
 

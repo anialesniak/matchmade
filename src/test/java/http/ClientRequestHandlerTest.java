@@ -2,7 +2,6 @@ package http;
 
 import com.google.common.io.Resources;
 import configuration.Configuration;
-import configuration.ConfigurationParameters;
 import matchmaker.ClientPool;
 import org.eclipse.jetty.server.Request;
 import org.junit.Test;
@@ -34,8 +33,7 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class ClientRequestHandlerTest
 {
-
-    private static int CONTENT_LENGTH = 1560;
+    private static final int CONTENT_LENGTH = 1560;
 
     @Mock
     private static HttpServletRequest request;
@@ -48,8 +46,6 @@ public class ClientRequestHandlerTest
     @Mock
     private static Configuration configuration;
     @Mock
-    private static ConfigurationParameters configurationParameters;
-    @Mock
     private static RequestBodyValidator validator;
 
     @Test
@@ -61,8 +57,7 @@ public class ClientRequestHandlerTest
         given(request.getReader()).willReturn(reader);
         given(request.getContentLength()).willReturn(CONTENT_LENGTH);
         given(clientPool.getClients()).willReturn(new HashSet<>());
-        given(configuration.getConfigurationParameters()).willReturn(configurationParameters);
-        given(configurationParameters.getParameterNames()).willReturn(Arrays.asList("age", "weight", "height"));
+        given(configuration.getParameterNames()).willReturn(Arrays.asList("age", "weight", "height"));
 
         // when
         new ClientRequestHandler(clientPool, configuration).handle("", baseRequest, request, response);
@@ -75,23 +70,22 @@ public class ClientRequestHandlerTest
     }
 
     @Test
-    public void shouldThrowEmptyBodyException() throws Exception
+    public void shouldThrowEmptyBodyException()
     {
         // given
         given(request.getContentLength()).willReturn(0);
-        given(configuration.getConfigurationParameters()).willReturn(configurationParameters);
-        given(configurationParameters.getParameterNames()).willReturn(new ArrayList<>());
+        given(configuration.getParameterNames()).willReturn(new ArrayList<>());
 
         // when
         final Throwable throwableWithEmptyBodyException =
                 catchThrowable(() -> new ClientRequestHandler(clientPool, configuration).handle(
-                    "",
-                    baseRequest,
-                    request,
-                    response));
+                        "",
+                        baseRequest,
+                        request,
+                        response));
         // then
         assertThat(throwableWithEmptyBodyException).isInstanceOf(EmptyBodyException.class)
-                                                   .hasMessage("No body was found in request.");
+                .hasMessage("No body was found in request.");
     }
 
     @Test

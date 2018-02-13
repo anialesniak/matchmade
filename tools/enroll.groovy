@@ -1,4 +1,7 @@
-#!/usr/local/bin/groovy
+#!/usr/local/bin/groovy @Grapes(
+        @Grab(group='com.squareup.okhttp3', module='okhttp', version='3.9.1')
+)
+import com.beust.jcommander.JCommander
 @Grapes(
         @Grab(group='com.squareup.okhttp3', module='okhttp', version='3.9.1')
 )
@@ -7,7 +10,6 @@ import com.beust.jcommander.JCommander
 import com.beust.jcommander.Parameter
 import com.beust.jcommander.Parameters
 import groovy.transform.Field
-import okhttp3.*
 
 import java.nio.charset.Charset
 import java.nio.file.Files
@@ -34,7 +36,7 @@ def parseArgs(String[] args)
     filePath = parameters.filePath
 }
 
-def readFile(String filePath)
+static def readFile(String filePath)
 {
     byte[] encoded = Files.readAllBytes(Paths.get(filePath))
     return new String(encoded, Charset.defaultCharset())

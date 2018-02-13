@@ -51,8 +51,7 @@ public abstract class RangedParameter
 
         final RangedParameter that = (RangedParameter) o;
 
-        if (Double.compare(that.lower, lower) != 0) return false;
-        return Double.compare(that.expandingRange, expandingRange) == 0;
+        return Double.compare(that.lower, lower) == 0 && Double.compare(that.expandingRange, expandingRange) == 0;
     }
 
     @Override

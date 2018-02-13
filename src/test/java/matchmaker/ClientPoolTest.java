@@ -3,7 +3,6 @@ package matchmaker;
 import clients.PoolClient;
 import com.google.common.collect.ImmutableSet;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Set;
@@ -12,8 +11,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class ClientPoolTest {
-
+public class ClientPoolTest
+{
     private Set<PoolClient> clients;
     private ClientPool clientPool;
 

@@ -1,7 +1,6 @@
 package matchmaker;
 
 import clients.PoolClient;
-import clients.TemporaryClient;
 
 import javax.inject.Singleton;
 import java.util.Set;
@@ -14,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 public class ClientPool
 {
-    private Set<PoolClient> clientSet;
+    private final Set<PoolClient> clientSet;
 
     public ClientPool()
     {
@@ -36,7 +35,8 @@ public class ClientPool
         return clientSet.size();
     }
 
-    public void expandClientsParameters(){
+    public void expandClientsParameters()
+    {
         clientSet.forEach(PoolClient::expandParameters);
     }
 }

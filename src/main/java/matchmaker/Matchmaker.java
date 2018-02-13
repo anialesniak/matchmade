@@ -24,11 +24,12 @@ public class Matchmaker
         this.searchTree = searchTree;
     }
 
-    public void run(){
+    public void run()
+    {
         LOGGER.debug("Matchmaker starting...");
         new Thread(() -> {
             int iterationCount = 0;
-            while (true) {
+            while (true) { //todo gonna rework this somehow
                 iterationCount++;
                 LOGGER.debug("Iteration: {} Number of waiting clients: {}",
                         iterationCount,

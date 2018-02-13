@@ -4,8 +4,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
-import configuration.ConfigurationParameters;
-import org.junit.Before;
+import configuration.Configuration;
 import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -112,7 +111,7 @@ public class JSONRequestBodyValidatorTest
     }
 
     @Test
-    public void shouldThrowJsonParseExceptionForInvalidRequestBodyFormat() throws Exception
+    public void shouldThrowJsonParseExceptionForInvalidRequestBodyFormat()
     {
         // given
         RequestBodyValidator validator = createJsonRequestBodyValidatorFor(Arrays.asList("age"));
@@ -125,10 +124,10 @@ public class JSONRequestBodyValidatorTest
         assertThat(throwableWithJsonParseException.getCause()).isInstanceOf(JsonParseException.class);
     }
 
-    private RequestBodyValidator createJsonRequestBodyValidatorFor(List<String> parameterNames)
+    private RequestBodyValidator createJsonRequestBodyValidatorFor(final List<String> parameterNames)
     {
-        ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class, withSettings().stubOnly());
-        when(configurationParameters.getParameterNames()).thenReturn(parameterNames);
-        return new JSONRequestBodyValidator(configurationParameters);
+        Configuration configuration = mock(Configuration.class, withSettings().stubOnly());
+        when(configuration.getParameterNames()).thenReturn(parameterNames);
+        return new JSONRequestBodyValidator(configuration);
     }
 }

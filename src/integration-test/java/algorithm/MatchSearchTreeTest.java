@@ -6,7 +6,6 @@ import com.google.common.io.Resources;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import configuration.Configuration;
-import configuration.ConfigurationParameters;
 import guice.MatchmadeModule;
 import http.ClientRequestHandler;
 import matchmaker.ClientPool;
@@ -29,24 +28,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.withSettings;
 
 public class MatchSearchTreeTest {
 
     private static PoolClient client0, client1, client2, client3, client4, client5, client6, client7;
     private static MatchSearchTree searchTree;
     private static ClientPool clientPool;
-    private static Configuration configuration;
 
     @BeforeClass
     public static void populateClients() throws Exception{
         Injector injector = Guice.createInjector(new MatchmadeModule());
         searchTree = injector.getInstance(MatchSearchTree.class);
         clientPool = injector.getInstance(ClientPool.class);
-        configuration = injector.getInstance(Configuration.class);
+        final Configuration configuration = injector.getInstance(Configuration.class);
         final ClientRequestHandler requestHandler = injector.getInstance(ClientRequestHandler.class);
         Method method = ClientRequestHandler.class.getDeclaredMethod("convertToTemporaryClient", String.class);
         method.setAccessible(true);
@@ -55,54 +52,54 @@ public class MatchSearchTreeTest {
                 Resources.getResource("clients/client0.json"), StandardCharsets.UTF_8);
         client0 = PoolClient.builder()
                             .withTemporaryClient((TemporaryClient) method.invoke(requestHandler, json))
-                            .withConfigurationParameters(configuration.getConfigurationParameters())
+                            .withConfiguration(configuration)
                             .build();
         json = Resources.toString(
                 Resources.getResource("clients/client1.json"), StandardCharsets.UTF_8);
         client1 =  PoolClient.builder()
                              .withTemporaryClient((TemporaryClient) method.invoke(requestHandler, json))
-                             .withConfigurationParameters(configuration.getConfigurationParameters())
+                             .withConfiguration(configuration)
                              .build();
         json = Resources.toString(
                 Resources.getResource("clients/client2.json"), StandardCharsets.UTF_8);
         client2 =   PoolClient.builder()
                               .withTemporaryClient((TemporaryClient) method.invoke(requestHandler, json))
-                              .withConfigurationParameters(configuration.getConfigurationParameters())
+                              .withConfiguration(configuration)
                               .build();
         json = Resources.toString(
                 Resources.getResource("clients/client3.json"), StandardCharsets.UTF_8);
         client3 =  PoolClient.builder()
                              .withTemporaryClient((TemporaryClient) method.invoke(requestHandler, json))
-                             .withConfigurationParameters(configuration.getConfigurationParameters())
+                             .withConfiguration(configuration)
                              .build();
         json = Resources.toString(
                 Resources.getResource("clients/client4.json"), StandardCharsets.UTF_8);
         client4 =  PoolClient.builder()
                              .withTemporaryClient((TemporaryClient) method.invoke(requestHandler, json))
-                             .withConfigurationParameters(configuration.getConfigurationParameters())
+                             .withConfiguration(configuration)
                              .build();
         json = Resources.toString(
                 Resources.getResource("clients/client5.json"), StandardCharsets.UTF_8);
         client5 =  PoolClient.builder()
                              .withTemporaryClient((TemporaryClient) method.invoke(requestHandler, json))
-                             .withConfigurationParameters(configuration.getConfigurationParameters()).build();
+                             .withConfiguration(configuration).build();
         json = Resources.toString(
                 Resources.getResource("clients/client6.json"), StandardCharsets.UTF_8);
         client6 =  PoolClient.builder()
                              .withTemporaryClient((TemporaryClient) method.invoke(requestHandler, json))
-                             .withConfigurationParameters(configuration.getConfigurationParameters())
+                             .withConfiguration(configuration)
                              .build();
         json = Resources.toString(
                 Resources.getResource("clients/client7.json"), StandardCharsets.UTF_8);
         client7 =  PoolClient.builder()
                              .withTemporaryClient((TemporaryClient) method.invoke(requestHandler, json))
-                             .withConfigurationParameters(configuration.getConfigurationParameters())
+                             .withConfiguration(configuration)
                              .build();
 
     }
 
     @Before
-    public void addClientsToClientPool() throws Exception
+    public void addClientsToClientPool()
     {
         clientPool.getClients().add(client0);
         clientPool.getClients().add(client1);
@@ -125,7 +122,7 @@ public class MatchSearchTreeTest {
     }
 
     @Test
-    public void findMatchingSetForClient0() throws Exception
+    public void findMatchingSetForClient0()
     {
         Set<PoolClient> matchingSetForClient0 = searchTree.findMatchingSetFor(client0);
 
@@ -136,7 +133,7 @@ public class MatchSearchTreeTest {
     }
 
     @Test
-    public void findMatchingSetForClient1() throws Exception
+    public void findMatchingSetForClient1()
     {
         Set<PoolClient> matchingSetForClient1 = searchTree.findMatchingSetFor(client1);
 
@@ -146,7 +143,7 @@ public class MatchSearchTreeTest {
     }
 
     @Test
-    public void tryCreatingAMatchFromClient0AndTheirMatches() throws Exception
+    public void tryCreatingAMatchFromClient0AndTheirMatches()
     {
         searchTree.fillClientsMatches();
         Set<PoolClient> matchingSetForClient0 = searchTree.findMatchingSetFor(client0);
@@ -160,7 +157,7 @@ public class MatchSearchTreeTest {
     }
 
     @Test
-    public void tryCreatingAMatchFromClient1AndTheirMatches() throws Exception
+    public void tryCreatingAMatchFromClient1AndTheirMatches()
     {
         searchTree.fillClientsMatches();
         Set<PoolClient> matchingSetForClient1 = searchTree.findMatchingSetFor(client1);
@@ -179,13 +176,10 @@ public class MatchSearchTreeTest {
         int numberOfTestedClients = 100;
         ClientPool clientPool = new ClientPool();
         Configuration configuration = mock(Configuration.class);
-        ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class,
-                                                               withSettings().stubOnly());
-        when(configuration.getConfigurationParameters()).thenReturn(configurationParameters);
-        when(configurationParameters.getParameterCount()).thenReturn(numberOfParameters);
-        when(configurationParameters.getTeamSize()).thenReturn(teamSize);
-        when(configurationParameters.getParameterNames()).thenReturn(Arrays.asList("ranking", "score"));
-        Map<Integer, Set<PoolClient>> clientMatches = new HashMap<>();
+        when(configuration.getParameterCount()).thenReturn(numberOfParameters);
+        when(configuration.getTeamSize()).thenReturn(teamSize);
+        when(configuration.getParameterNames()).thenReturn(Arrays.asList("ranking", "score"));
+        Map<Long, Set<PoolClient>> clientMatches = new HashMap<>();
         KDTree searchTree = new KDTree(numberOfParameters);
 
         Request baseRequest = mock(Request.class);
@@ -227,15 +221,12 @@ public class MatchSearchTreeTest {
         int numberOfTestedClients = 101;
         ClientPool clientPool = new ClientPool();
         Configuration configuration = mock(Configuration.class);
-        ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class,
-                                                               withSettings().stubOnly());
-        when(configuration.getConfigurationParameters()).thenReturn(configurationParameters);
-        when(configurationParameters.getParameterCount()).thenReturn(numberOfParameters);
-        when(configurationParameters.getTeamSize()).thenReturn(teamSize);
-        when(configurationParameters.getParameterNames()).thenReturn(Arrays.asList("ranking", "score"));
-        when(configurationParameters.getBaseStepForParameter("ranking")).thenReturn(1.0);
-        when(configurationParameters.getBaseStepForParameter("score")).thenReturn(1.0);
-        Map<Integer, Set<PoolClient>> clientMatches = new HashMap<>();
+        when(configuration.getParameterCount()).thenReturn(numberOfParameters);
+        when(configuration.getTeamSize()).thenReturn(teamSize);
+        when(configuration.getParameterNames()).thenReturn(Arrays.asList("ranking", "score"));
+        when(configuration.getBaseStepForParameter("ranking")).thenReturn(1.0);
+        when(configuration.getBaseStepForParameter("score")).thenReturn(1.0);
+        Map<Long, Set<PoolClient>> clientMatches = new HashMap<>();
         KDTree searchTree = new KDTree(numberOfParameters);
 
         Request baseRequest = mock(Request.class);
