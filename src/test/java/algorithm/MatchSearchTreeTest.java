@@ -6,7 +6,6 @@ import clients.PoolClient;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import configuration.Configuration;
-import configuration.ConfigurationParameters;
 import matchmaker.ClientPool;
 import net.sf.javaml.core.kdtree.KDTree;
 import org.junit.Before;
@@ -32,9 +31,8 @@ public class MatchSearchTreeTest
 {
     private static final PoolClient DUMMY_POOL_CLIENT = getDummyPoolClient(1);
     private static final Set<PoolClient> DUMMY_POOL_CLIENT_SET = getDummyPoolClientSet(10);
-    private Configuration configuration;
     private ClientPool clientPool;
-    private ConfigurationParameters configurationParameters;
+    private Configuration configuration;
     private Map<Long, Set<PoolClient>> clientMatches;
     private KDTree searchTree;
 
@@ -45,10 +43,9 @@ public class MatchSearchTreeTest
     {
         configuration = mock(Configuration.class);
         clientPool = mock(ClientPool.class);
-        configurationParameters = mock(ConfigurationParameters.class);
+        configuration = mock(Configuration.class);
         clientMatches = new HashMap<>();
         searchTree = mock(KDTree.class);
-        given(configuration.getConfigurationParameters()).willReturn(configurationParameters);
         matchSearchTree = new MatchSearchTree(
                 clientPool,
                 configuration,
@@ -161,10 +158,7 @@ public class MatchSearchTreeTest
         // given
         int teamSize = 3;
         Configuration configuration = mock(Configuration.class, withSettings().stubOnly());
-        ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class,
-                                                               withSettings().stubOnly());
-        given(configuration.getConfigurationParameters()).willReturn(configurationParameters);
-        given(configurationParameters.getTeamSize()).willReturn(teamSize);
+        given(configuration.getTeamSize()).willReturn(teamSize);
         PoolClient dummyPoolClient1 = getDummyPoolClient(1);
         PoolClient dummyPoolClient2 = getDummyPoolClient(2);
         PoolClient dummyPoolClient3 = getDummyPoolClient(3);

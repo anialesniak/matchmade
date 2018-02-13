@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
-import configuration.ConfigurationParameters;
+import configuration.Configuration;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -127,8 +127,8 @@ public class JSONRequestBodyValidatorTest
 
     private RequestBodyValidator createJsonRequestBodyValidatorFor(List<String> parameterNames)
     {
-        ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class, withSettings().stubOnly());
-        when(configurationParameters.getParameterNames()).thenReturn(parameterNames);
-        return new JSONRequestBodyValidator(configurationParameters);
+        Configuration configuration = mock(Configuration.class, withSettings().stubOnly());
+        when(configuration.getParameterNames()).thenReturn(parameterNames);
+        return new JSONRequestBodyValidator(configuration);
     }
 }

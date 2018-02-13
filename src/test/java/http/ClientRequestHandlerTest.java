@@ -2,7 +2,6 @@ package http;
 
 import com.google.common.io.Resources;
 import configuration.Configuration;
-import configuration.ConfigurationParameters;
 import matchmaker.ClientPool;
 import org.eclipse.jetty.server.Request;
 import org.junit.Test;
@@ -48,8 +47,6 @@ public class ClientRequestHandlerTest
     @Mock
     private static Configuration configuration;
     @Mock
-    private static ConfigurationParameters configurationParameters;
-    @Mock
     private static RequestBodyValidator validator;
 
     @Test
@@ -61,8 +58,7 @@ public class ClientRequestHandlerTest
         given(request.getReader()).willReturn(reader);
         given(request.getContentLength()).willReturn(CONTENT_LENGTH);
         given(clientPool.getClients()).willReturn(new HashSet<>());
-        given(configuration.getConfigurationParameters()).willReturn(configurationParameters);
-        given(configurationParameters.getParameterNames()).willReturn(Arrays.asList("age", "weight", "height"));
+        given(configuration.getParameterNames()).willReturn(Arrays.asList("age", "weight", "height"));
 
         // when
         new ClientRequestHandler(clientPool, configuration).handle("", baseRequest, request, response);
@@ -79,8 +75,7 @@ public class ClientRequestHandlerTest
     {
         // given
         given(request.getContentLength()).willReturn(0);
-        given(configuration.getConfigurationParameters()).willReturn(configurationParameters);
-        given(configurationParameters.getParameterNames()).willReturn(new ArrayList<>());
+        given(configuration.getParameterNames()).willReturn(new ArrayList<>());
 
         // when
         final Throwable throwableWithEmptyBodyException =

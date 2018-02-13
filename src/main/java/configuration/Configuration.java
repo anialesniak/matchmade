@@ -1,29 +1,58 @@
 package configuration;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 import com.google.inject.Singleton;
-import org.yaml.snakeyaml.Yaml;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Singleton
-public class Configuration {
+public class Configuration
+{
+    private int parameterCount;
+    private int teamSize;
+    private Map<String, Double> parameterBaseSteps;
 
-    private ConfigurationParameters configurationParameters;
-
-    public Configuration() {
-        Yaml yaml = new Yaml();
-        try (InputStream in = Files.newInputStream(Paths.get("configuration.yaml"))) {
-            this.configurationParameters = yaml.loadAs(in, ConfigurationParameters.class);
-        } catch (IOException e) {
-            System.out.println("Provide file configuration.parameters");
-        }
+    public int getParameterCount()
+    {
+        return parameterCount;
     }
 
-    public ConfigurationParameters getConfigurationParameters(){
-        return this.configurationParameters;
+    public int getTeamSize()
+    {
+        return teamSize;
     }
 
+    public Map<String, Double> getParameterBaseSteps()
+    {
+        return parameterBaseSteps;
+    }
+
+    public List<String> getParameterNames()
+    {
+        return parameterBaseSteps.entrySet()
+                .stream()
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+    }
+
+    public void setParameterCount(int parameterCount)
+    {
+        this.parameterCount = parameterCount;
+    }
+
+    public void setTeamSize(int teamSize)
+    {
+        this.teamSize = teamSize;
+    }
+
+    public void setParameterBaseSteps(Map<String, Double> parameterBaseSteps)
+    {
+        this.parameterBaseSteps = parameterBaseSteps;
+    }
+
+    public double getBaseStepForParameter(String parameterName)
+    {
+        return parameterBaseSteps.get(parameterName);
+    }
 }

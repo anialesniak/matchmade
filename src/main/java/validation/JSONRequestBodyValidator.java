@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.main.JsonSchema;
-import configuration.ConfigurationParameters;
+import configuration.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,9 +24,9 @@ public class JSONRequestBodyValidator implements RequestBodyValidator
 
     private final JsonSchema requestJsonSchema;
 
-    public JSONRequestBodyValidator(ConfigurationParameters configurationParameters)
+    public JSONRequestBodyValidator(final Configuration configuration)
     {
-        requestJsonSchema = JSONSchemaCreator.createFor(configurationParameters.getParameterNames());
+        requestJsonSchema = JSONSchemaCreator.createFor(configuration.getParameterNames());
     }
 
     /**

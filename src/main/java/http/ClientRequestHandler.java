@@ -1,14 +1,16 @@
 package http;
 
-import clients.*;
+import clients.ClientDataType;
+import clients.ClientSearchingData;
+import clients.ClientSelfData;
+import clients.PoolClient;
+import clients.TemporaryClient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import configuration.Configuration;
-import configuration.ConfigurationParameters;
 import matchmaker.ClientPool;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.eclipse.jetty.util.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import parameters.NonScalableFixedParameter;
@@ -44,7 +46,7 @@ public class ClientRequestHandler extends AbstractHandler
     {
         this.clientPool = clientPool;
         this.configuration = configuration;
-        this.validator = new JSONRequestBodyValidator(configuration.getConfigurationParameters());
+        this.validator = new JSONRequestBodyValidator(configuration);
     }
 
     ClientRequestHandler(final ClientPool clientPool,
@@ -121,12 +123,11 @@ public class ClientRequestHandler extends AbstractHandler
         return new String(buf);
     }
 
-    private void handleValidRequestBody(String body) throws IOException
+    private void handleValidRequestBody(final String body) throws IOException
     {
-        ConfigurationParameters configurationParameters = configuration.getConfigurationParameters();
         final PoolClient poolClient = PoolClient.builder()
                                                 .withTemporaryClient(convertToTemporaryClient(body))
-                                                .withConfigurationParameters(configurationParameters)
+                                                .withConfiguration(configuration)
                                                 .build();
         LOGGER.debug("Request converted to poolClient with ID = {}", poolClient.getClientID());
         clientPool.getClients().add(poolClient);

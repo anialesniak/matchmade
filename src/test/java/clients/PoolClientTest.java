@@ -33,10 +33,10 @@ public class PoolClientTest {
 
         String json = Resources.toString(
                 Resources.getResource("client0.json"), StandardCharsets.UTF_8);
-        client0 = PoolClient.builder().withTemporaryClient((TemporaryClient) method.invoke(requestHandler, json)).withConfigurationParameters(configuration.getConfigurationParameters()).build();
+        client0 = PoolClient.builder().withTemporaryClient((TemporaryClient) method.invoke(requestHandler, json)).withConfiguration(configuration).build();
         json = Resources.toString(
                 Resources.getResource("client1.json"), StandardCharsets.UTF_8);
-        client1 =  PoolClient.builder().withTemporaryClient((TemporaryClient) method.invoke(requestHandler, json)).withConfigurationParameters(configuration.getConfigurationParameters()).build();
+        client1 =  PoolClient.builder().withTemporaryClient((TemporaryClient) method.invoke(requestHandler, json)).withConfiguration(configuration).build();
     }
 
     @Test

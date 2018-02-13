@@ -42,8 +42,8 @@ public class MatchSearchTree
     public MatchSearchTree(final ClientPool clientPool, final Configuration configuration)
     {
         this.clientPool = clientPool;
-        this.teamSize = configuration.getConfigurationParameters().getTeamSize();
-        this.parametersCount = configuration.getConfigurationParameters().getParameterCount();
+        this.teamSize = configuration.getTeamSize();
+        this.parametersCount = configuration.getParameterCount();
     }
 
     MatchSearchTree(final ClientPool clientPool,
@@ -52,8 +52,8 @@ public class MatchSearchTree
                     final KDTree searchTree)
     {
         this.clientPool = clientPool;
-        this.teamSize = configuration.getConfigurationParameters().getTeamSize();
-        this.parametersCount = configuration.getConfigurationParameters().getParameterCount();
+        this.teamSize = configuration.getTeamSize();
+        this.parametersCount = configuration.getParameterCount();
         this.clientsMatches = clientsMatches;
         this.searchTree = searchTree;
     }

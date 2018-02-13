@@ -1,6 +1,7 @@
 package clients;
 
-import configuration.ConfigurationParameters;
+import configuration.Configuration;
+import configuration.Configuration;
 import parameters.Parameter;
 
 import java.util.LinkedHashMap;
@@ -10,12 +11,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Class used for conversion from {@link TemporaryClient} to {@link PoolClient}. Such conversion requires
- * {@link TemporaryClient} as well as {@link ConfigurationParameters}.
+ * {@link TemporaryClient} as well as {@link Configuration}.
  */
 public class PoolClientBuilder
 {
-    TemporaryClient temporaryClient;
-    ConfigurationParameters configurationParameters;
+    private TemporaryClient temporaryClient;
+    private Configuration configuration;
 
     PoolClientBuilder() {}
 
@@ -25,30 +26,30 @@ public class PoolClientBuilder
         return this;
     }
 
-    public PoolClientBuilder withConfigurationParameters(final ConfigurationParameters configurationParameters)
+    public PoolClientBuilder withConfiguration(final Configuration configuration)
     {
-        this.configurationParameters = configurationParameters;
+        this.configuration = configuration;
         return this;
     }
 
     public PoolClient build()
     {
         checkNotNull(temporaryClient);
-        checkNotNull(configurationParameters);
+        checkNotNull(configuration);
 
         return new PoolClient(temporaryClient.getClientID(),
                 temporaryClient.getSelfData(),
-                applyParameterBaseStepsTo(temporaryClient.getSearchingData(), configurationParameters));
+                applyParameterBaseStepsTo(temporaryClient.getSearchingData(), configuration));
     }
 
     private ClientSearchingData applyParameterBaseStepsTo(final ClientSearchingData searchingData,
-                                                          final ConfigurationParameters configurationParameters)
+                                                          final Configuration configuration)
     {
         Map<String, Parameter> prioritizedSearchingDataMap = new LinkedHashMap<>();
         for (Map.Entry<String, Parameter> entry : searchingData.getParameters().entrySet()) {
             Parameter parameter = entry.getValue();
             parameter.setExpandingStep(
-                    parameter.getExpandingStep() *configurationParameters.getBaseStepForParameter(entry.getKey()));
+                    parameter.getExpandingStep() *configuration.getBaseStepForParameter(entry.getKey()));
             prioritizedSearchingDataMap.put(entry.getKey(), parameter);
         }
         return new ClientSearchingData(prioritizedSearchingDataMap);
