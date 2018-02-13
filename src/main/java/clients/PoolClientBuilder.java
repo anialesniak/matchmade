@@ -1,7 +1,6 @@
 package clients;
 
 import configuration.Configuration;
-import configuration.Configuration;
 import parameters.Parameter;
 
 import java.util.LinkedHashMap;
@@ -18,7 +17,9 @@ public class PoolClientBuilder
     private TemporaryClient temporaryClient;
     private Configuration configuration;
 
-    PoolClientBuilder() {}
+    PoolClientBuilder()
+    {
+    }
 
     public PoolClientBuilder withTemporaryClient(final TemporaryClient temporaryClient)
     {
@@ -49,7 +50,7 @@ public class PoolClientBuilder
         for (Map.Entry<String, Parameter> entry : searchingData.getParameters().entrySet()) {
             Parameter parameter = entry.getValue();
             parameter.setExpandingStep(
-                    parameter.getExpandingStep() *configuration.getBaseStepForParameter(entry.getKey()));
+                    parameter.getExpandingStep() * configuration.getBaseStepForParameter(entry.getKey()));
             prioritizedSearchingDataMap.put(entry.getKey(), parameter);
         }
         return new ClientSearchingData(prioritizedSearchingDataMap);

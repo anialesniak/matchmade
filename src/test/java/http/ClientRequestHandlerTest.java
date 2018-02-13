@@ -33,7 +33,6 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class ClientRequestHandlerTest
 {
-
     private static int CONTENT_LENGTH = 1560;
 
     @Mock
@@ -71,7 +70,7 @@ public class ClientRequestHandlerTest
     }
 
     @Test
-    public void shouldThrowEmptyBodyException() throws Exception
+    public void shouldThrowEmptyBodyException()
     {
         // given
         given(request.getContentLength()).willReturn(0);
@@ -80,13 +79,13 @@ public class ClientRequestHandlerTest
         // when
         final Throwable throwableWithEmptyBodyException =
                 catchThrowable(() -> new ClientRequestHandler(clientPool, configuration).handle(
-                    "",
-                    baseRequest,
-                    request,
-                    response));
+                        "",
+                        baseRequest,
+                        request,
+                        response));
         // then
         assertThat(throwableWithEmptyBodyException).isInstanceOf(EmptyBodyException.class)
-                                                   .hasMessage("No body was found in request.");
+                .hasMessage("No body was found in request.");
     }
 
     @Test

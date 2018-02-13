@@ -23,7 +23,8 @@ public class ClientSearchingData
         return parameters;
     }
 
-    public void expandParameters() {
+    public void expandParameters()
+    {
         parameters.forEach((key, parameter) -> parameter.expand());
     }
 
@@ -49,5 +50,4 @@ public class ClientSearchingData
                 "parameters=\n\t" + parameters +
                 '}';
     }
-
 }

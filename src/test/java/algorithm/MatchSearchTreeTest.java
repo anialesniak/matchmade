@@ -96,7 +96,7 @@ public class MatchSearchTreeTest
     }
 
     @Test
-    public void shouldFillClientsMatches() throws Exception
+    public void shouldFillClientsMatches()
     {
         // given
         PoolClient poolClient1 = getDummyPoolClient(1);
@@ -104,9 +104,9 @@ public class MatchSearchTreeTest
         PoolClient poolClient3 = getDummyPoolClient(3);
         Map<Long, Set<PoolClient>> clientMatches = new HashMap<>();
         given(clientPool.getClients()).willReturn(new HashSet<>(Arrays.asList(
-            poolClient1,
-            poolClient2,
-            poolClient3
+                poolClient1,
+                poolClient2,
+                poolClient3
         )));
         given(searchTree.range(any(double[].class), any(double[].class))).willReturn(new Object[]{poolClient1});
         final MatchSearchTree matchSearchTree = new MatchSearchTree(
@@ -124,7 +124,7 @@ public class MatchSearchTreeTest
     }
 
     @Test
-    public void shouldNotFindMatchingSetForGivenClient() throws Exception
+    public void shouldNotFindMatchingSetForGivenClient()
     {
         // given
         given(searchTree.range(any(double[].class), any(double[].class))).willReturn(new Object[]{DUMMY_POOL_CLIENT});
@@ -137,7 +137,7 @@ public class MatchSearchTreeTest
     }
 
     @Test
-    public void shouldFindMatchingSetForGivenClient() throws Exception
+    public void shouldFindMatchingSetForGivenClient()
     {
         // given
         PoolClient poolClient = getDummyPoolClient(2);
@@ -153,7 +153,7 @@ public class MatchSearchTreeTest
     }
 
     @Test
-    public void shouldTryCreatingAMatchFromGivenClients() throws Exception
+    public void shouldTryCreatingAMatchFromGivenClients()
     {
         // given
         int teamSize = 3;

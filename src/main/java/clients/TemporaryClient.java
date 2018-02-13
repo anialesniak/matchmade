@@ -5,9 +5,9 @@ import java.util.Objects;
 /**
  * {@link TemporaryClient} in {@code Matchmade} consists of three things:
  * <ul>
- *     <li>{@code self data} - data which is describing client trying to find a match</li>
- *     <li>{@code searching data} - these are the values wanted in clients which will be a match for current client</li>
- *     <li>{@code client id} - internal unique identifier for a client</li>
+ * <li>{@code self data} - data which is describing client trying to find a match</li>
+ * <li>{@code searching data} - these are the values wanted in clients which will be a match for current client</li>
+ * <li>{@code client id} - internal unique identifier for a client</li>
  * </ul>
  */
 public class TemporaryClient
@@ -33,7 +33,10 @@ public class TemporaryClient
         return searchingData;
     }
 
-    public long getClientID() {return clientId;}
+    public long getClientID()
+    {
+        return clientId;
+    }
 
     @Override
     public boolean equals(final Object o)

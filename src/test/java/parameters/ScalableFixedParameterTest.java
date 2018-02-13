@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ScalableFixedParameterTest
 {
     @Test
-    public void shouldExpandValueCorrectly() throws Exception
+    public void shouldExpandValueCorrectly()
     {
         // given
         int value = 10;
@@ -21,6 +21,5 @@ public class ScalableFixedParameterTest
         ParameterRanges range = scalableFixedParameter.getRanges();
         assertThat(range.getLower()).isEqualTo(value - expandingStep);
         assertThat(range.getUpper()).isEqualTo(value + expandingStep);
-
     }
 }

@@ -73,14 +73,12 @@ public class ClientRequestHandler extends AbstractHandler
         response.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
         response.addHeader("Access-Control-Allow-Headers", "accept, content-type, Access-Control-Allow-Origin");
         response.addHeader("Access-Control-Max-Age", "1728000");
-        if (request.getMethod() != null && request.getMethod().equals("OPTIONS"))
-        {
+        if (request.getMethod() != null && request.getMethod().equals("OPTIONS")) {
             //In case of an OPTIONS, we allow the access to the origin of the petition
             System.out.println("Options got");
             response.setStatus(HttpServletResponse.SC_OK);
             baseRequest.setHandled(true);
-        }
-        else {
+        } else {
             LOGGER.debug("Received temporaryClient request");
             final String body = extractBody(request);
             handleRequestBody(body, response);
@@ -96,8 +94,7 @@ public class ClientRequestHandler extends AbstractHandler
             handleValidRequestBody(body);
             response.setStatus(HttpServletResponse.SC_OK);
             LOGGER.debug("PoolClient added to pool, returning with status 200");
-        }
-        catch (InvalidRequestBodyException e) {
+        } catch (InvalidRequestBodyException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             LOGGER.warn("Request failed validation, returning with status 400");
         }
@@ -108,8 +105,7 @@ public class ClientRequestHandler extends AbstractHandler
     {
         if (request.getContentLength() > 0) {
             return readBody(request);
-        }
-        else {
+        } else {
             throw new EmptyBodyException("No body was found in request.");
         }
     }
@@ -126,9 +122,9 @@ public class ClientRequestHandler extends AbstractHandler
     private void handleValidRequestBody(final String body) throws IOException
     {
         final PoolClient poolClient = PoolClient.builder()
-                                                .withTemporaryClient(convertToTemporaryClient(body))
-                                                .withConfiguration(configuration)
-                                                .build();
+                .withTemporaryClient(convertToTemporaryClient(body))
+                .withConfiguration(configuration)
+                .build();
         LOGGER.debug("Request converted to poolClient with ID = {}", poolClient.getClientID());
         clientPool.getClients().add(poolClient);
         Reporter.reportEnrolledClient(poolClient);

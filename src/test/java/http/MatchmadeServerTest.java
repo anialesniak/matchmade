@@ -17,17 +17,17 @@ public class MatchmadeServerTest
     private MatchmadeServer matchmadeServer = new MatchmadeServer(requestHandler);
 
     @After
-    public void stopServer() {
+    public void stopServer()
+    {
         matchmadeServer.stop();
     }
 
     @Test
-    public void shouldStartWithNoException() throws Exception
+    public void shouldStartWithNoException()
     {
         //when
         final Throwable throwableWithNoException = catchThrowable(() -> matchmadeServer.run());
         //then
         assertThat(throwableWithNoException).doesNotThrowAnyException();
     }
-
 }

@@ -32,9 +32,10 @@ public class JSONRequestBodyValidator implements RequestBodyValidator
     /**
      * Checks if a given {@code requestBody} contains a valid JSON object that {@code Matchmade} can treat as client
      * request.
+     *
      * @param requestBody body extracted from the incoming request
      * @throws InvalidRequestBodyException Thrown if request body could not have been read, was't correctly formatted
-     * as JSON object or didn't match expected JSON Schema.
+     *                                     as JSON object or didn't match expected JSON Schema.
      */
     @Override
     public void validate(String requestBody) throws InvalidRequestBodyException
@@ -43,16 +44,13 @@ public class JSONRequestBodyValidator implements RequestBodyValidator
             JsonNode json = new ObjectMapper().readTree(requestBody);
             boolean isValid = requestJsonSchema.validate(json).isSuccess();
 
-            if(!isValid)
+            if (!isValid)
                 throw new InvalidRequestBodyException("JSON does not match expected schema");
-        }
-        catch (JsonParseException e) {
+        } catch (JsonParseException e) {
             throwInvalidRequestBodyExceptionWith("Failed to convert request body to JSON", e);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throwInvalidRequestBodyExceptionWith("Low level IO exception, could not read JSON contents", e);
-        }
-        catch (ProcessingException e) {
+        } catch (ProcessingException e) {
             throwInvalidRequestBodyExceptionWith("Failed to validate request against created schema", e);
         }
     }

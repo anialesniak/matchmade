@@ -44,8 +44,7 @@ public class Reporter
 
         try {
             new OkHttpClient().newCall(enrollRequest).execute();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             LOGGER.error("Could not send enrollment");
         }
     }
@@ -65,8 +64,7 @@ public class Reporter
 
         try {
             new OkHttpClient().newCall(matchReportRequest).execute();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             LOGGER.error("Could not send match report");
         }
     }

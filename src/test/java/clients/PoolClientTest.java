@@ -14,16 +14,15 @@ import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.*;
 
-/**
- * Created by annterina on 11.01.18.
- */
-public class PoolClientTest {
+public class PoolClientTest
+{
 
     private static PoolClient client0, client1;
     private static Configuration configuration;
 
     @BeforeClass
-    public static void populateClients() throws Exception{
+    public static void populateClients() throws Exception
+    {
         Injector injector = Guice.createInjector(new MatchmadeModule());
         configuration = injector.getInstance(Configuration.class);
 
@@ -36,11 +35,12 @@ public class PoolClientTest {
         client0 = PoolClient.builder().withTemporaryClient((TemporaryClient) method.invoke(requestHandler, json)).withConfiguration(configuration).build();
         json = Resources.toString(
                 Resources.getResource("client1.json"), StandardCharsets.UTF_8);
-        client1 =  PoolClient.builder().withTemporaryClient((TemporaryClient) method.invoke(requestHandler, json)).withConfiguration(configuration).build();
+        client1 = PoolClient.builder().withTemporaryClient((TemporaryClient) method.invoke(requestHandler, json)).withConfiguration(configuration).build();
     }
 
     @Test
-    public void expandParameters() throws Exception {
+    public void expandParameters()
+    {
         client0.expandParameters();
 
         assertThat(client0.getPrioritizedSearchingData().getParameters().get("height").getRanges().getLower())

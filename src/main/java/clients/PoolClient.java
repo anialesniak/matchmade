@@ -41,7 +41,8 @@ public class PoolClient
         return clientId;
     }
 
-    public void expandParameters(){
+    public void expandParameters()
+    {
         prioritizedSearchingData.expandParameters();
     }
 

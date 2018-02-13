@@ -1,7 +1,6 @@
 package matchmaker;
 
 import clients.PoolClient;
-import clients.TemporaryClient;
 
 import javax.inject.Singleton;
 import java.util.Set;
@@ -36,7 +35,8 @@ public class ClientPool
         return clientSet.size();
     }
 
-    public void expandClientsParameters(){
+    public void expandClientsParameters()
+    {
         clientSet.forEach(PoolClient::expandParameters);
     }
 }

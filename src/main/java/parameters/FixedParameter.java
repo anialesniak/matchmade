@@ -1,7 +1,6 @@
 package parameters;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Base class for parameters which are intended to be <i>fixed</i> - concrete value as opposed to
@@ -20,7 +19,8 @@ public abstract class FixedParameter
         this.expandingStep = expandingStep;
     }
 
-    public void setExpandingStep(double expandingStep) {
+    public void setExpandingStep(double expandingStep)
+    {
         this.expandingStep = expandingStep;
     }
 
@@ -29,11 +29,13 @@ public abstract class FixedParameter
         return value;
     }
 
-    public double getExpandingRange() {
+    public double getExpandingRange()
+    {
         return expandingRange;
     }
 
-    public double getExpandingStep() {
+    public double getExpandingStep()
+    {
         return expandingStep;
     }
 

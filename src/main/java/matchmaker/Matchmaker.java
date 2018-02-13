@@ -24,7 +24,8 @@ public class Matchmaker
         this.searchTree = searchTree;
     }
 
-    public void run(){
+    public void run()
+    {
         LOGGER.debug("Matchmaker starting...");
         new Thread(() -> {
             int iterationCount = 0;

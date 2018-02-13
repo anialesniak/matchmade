@@ -39,7 +39,8 @@ public class MatchmadeModule extends AbstractModule
 
     @Provides
     @Inject
-    public Configuration provideConfiguration() {
+    public Configuration provideConfiguration()
+    {
         Yaml yaml = new Yaml();
         try (InputStream in = Files.newInputStream(Paths.get("configuration.yaml"))) {
             return yaml.loadAs(in, Configuration.class);
