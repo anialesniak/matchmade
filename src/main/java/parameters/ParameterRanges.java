@@ -2,8 +2,8 @@ package parameters;
 
 public class ParameterRanges {
 
-    private double lower;
-    private double upper;
+    private final double lower;
+    private final double upper;
 
     public ParameterRanges(double lower, double upper){
         this.lower = lower;

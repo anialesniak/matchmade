@@ -29,7 +29,7 @@ public class Matchmaker
         LOGGER.debug("Matchmaker starting...");
         new Thread(() -> {
             int iterationCount = 0;
-            while (true) {
+            while (true) { //todo gonna rework this somehow
                 iterationCount++;
                 LOGGER.debug("Iteration: {} Number of waiting clients: {}",
                         iterationCount,

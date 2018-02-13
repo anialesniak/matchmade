@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 public class ClientPool
 {
-    private Set<PoolClient> clientSet;
+    private final Set<PoolClient> clientSet;
 
     public ClientPool()
     {

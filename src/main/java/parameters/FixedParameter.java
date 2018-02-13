@@ -47,8 +47,7 @@ public abstract class FixedParameter
 
         final FixedParameter that = (FixedParameter) o;
 
-        if (Double.compare(that.value, value) != 0) return false;
-        return Double.compare(that.expandingRange, expandingRange) == 0;
+        return Double.compare(that.value, value) == 0 && Double.compare(that.expandingRange, expandingRange) == 0;
     }
 
     @Override

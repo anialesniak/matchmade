@@ -67,7 +67,7 @@ public class ClientRequestHandler extends AbstractHandler
      */
     @Override
     public void handle(final String target, final Request baseRequest, final HttpServletRequest request,
-                       final HttpServletResponse response) throws IOException, ServletException
+                       final HttpServletResponse response) throws IOException
     {
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");

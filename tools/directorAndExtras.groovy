@@ -1,7 +1,7 @@
 import groovy.json.JsonBuilder
 import org.testng.reporters.Files
 
-int numberOfGeneratedExtras = 99;
+int numberOfGeneratedExtras = 99
 String directory = "../src/integration-test/resources/director"
 
 List<String> clients = new ArrayList<>()
@@ -75,8 +75,8 @@ for(int i = 0; i < clients.size(); i++) {
 }
 
 def generateExtra() {
-    Random rand = new Random();
-    randomRankingValue = rand.nextInt(190) + 10; // 10 to 200
+    Random rand = new Random()
+    randomRankingValue = rand.nextInt(190) + 10 // 10 to 200
     randomScoreValue = rand.nextInt(290) + 10 // 10 to 300
 
     def builder = new JsonBuilder()
@@ -107,7 +107,7 @@ def generateExtra() {
         }
     }
 
-    return builder.toString();
+    return builder.toString()
 }
 
 

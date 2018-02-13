@@ -3,8 +3,6 @@ package parameters;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import com.google.common.collect.Range;
-
 public final class ScalableFixedParameter extends FixedParameter implements Scalable
 {
     @JsonCreator

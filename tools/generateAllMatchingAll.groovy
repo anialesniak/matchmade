@@ -1,7 +1,7 @@
 import groovy.json.JsonBuilder
 import org.testng.reporters.Files
 
-int numberOfGeneratedJsons = 100;
+int numberOfGeneratedJsons = 100
 String directory = "../src/integration-test/resources/all_matching_clients"
 
 for(int i = 0; i < numberOfGeneratedJsons; i++) {
@@ -11,8 +11,8 @@ for(int i = 0; i < numberOfGeneratedJsons; i++) {
 }
 
 def generateClient() {
-    Random rand = new Random();
-    randomRankingValue = rand.nextInt(601) - 300; // -300 to 300
+    Random rand = new Random()
+    randomRankingValue = rand.nextInt(601) - 300 // -300 to 300
     randomScoreValue = rand.nextInt(401) - 200 // -200 to 200
 
     def builder = new JsonBuilder()
@@ -43,6 +43,6 @@ def generateClient() {
         }
     }
 
-    return builder.toString();
+    return builder.toString()
 }
 

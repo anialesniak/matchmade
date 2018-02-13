@@ -37,7 +37,7 @@ public class MatchmadeServer
         context.setAllowNullPathInfo(true);
         server.setHandler(context);
         try {
-            server.start();
+            server.start(); //todo possibly get rid of jetty and switch to sth else (due to http handling mostly)
         } catch (Exception e) {
             LOGGER.error("Well.. exception was thrown. Looks like server could not be started.", e);
         }

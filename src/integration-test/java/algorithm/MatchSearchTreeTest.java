@@ -37,14 +37,13 @@ public class MatchSearchTreeTest {
     private static PoolClient client0, client1, client2, client3, client4, client5, client6, client7;
     private static MatchSearchTree searchTree;
     private static ClientPool clientPool;
-    private static Configuration configuration;
 
     @BeforeClass
     public static void populateClients() throws Exception{
         Injector injector = Guice.createInjector(new MatchmadeModule());
         searchTree = injector.getInstance(MatchSearchTree.class);
         clientPool = injector.getInstance(ClientPool.class);
-        configuration = injector.getInstance(Configuration.class);
+        final Configuration configuration = injector.getInstance(Configuration.class);
         final ClientRequestHandler requestHandler = injector.getInstance(ClientRequestHandler.class);
         Method method = ClientRequestHandler.class.getDeclaredMethod("convertToTemporaryClient", String.class);
         method.setAccessible(true);

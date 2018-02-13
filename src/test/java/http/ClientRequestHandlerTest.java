@@ -33,7 +33,7 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class ClientRequestHandlerTest
 {
-    private static int CONTENT_LENGTH = 1560;
+    private static final int CONTENT_LENGTH = 1560;
 
     @Mock
     private static HttpServletRequest request;
