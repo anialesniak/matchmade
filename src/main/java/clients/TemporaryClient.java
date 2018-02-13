@@ -12,13 +12,13 @@ import java.util.Objects;
  */
 public class TemporaryClient
 {
-    private final int clientId;
+    private final long clientId;
     private final ClientSelfData selfData;
     private final ClientSearchingData searchingData;
 
     public TemporaryClient(final ClientSelfData selfData, final ClientSearchingData searchingData)
     {
-        this.clientId = ClientId.getNextID();
+        this.clientId = ClientId.getNext();
         this.selfData = selfData;
         this.searchingData = searchingData;
     }
@@ -33,7 +33,7 @@ public class TemporaryClient
         return searchingData;
     }
 
-    public int getClientID() {return clientId;}
+    public long getClientID() {return clientId;}
 
     @Override
     public boolean equals(final Object o)

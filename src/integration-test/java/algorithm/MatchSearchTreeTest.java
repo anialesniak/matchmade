@@ -185,7 +185,7 @@ public class MatchSearchTreeTest {
         when(configurationParameters.getParameterCount()).thenReturn(numberOfParameters);
         when(configurationParameters.getTeamSize()).thenReturn(teamSize);
         when(configurationParameters.getParameterNames()).thenReturn(Arrays.asList("ranking", "score"));
-        Map<Integer, Set<PoolClient>> clientMatches = new HashMap<>();
+        Map<Long, Set<PoolClient>> clientMatches = new HashMap<>();
         KDTree searchTree = new KDTree(numberOfParameters);
 
         Request baseRequest = mock(Request.class);
@@ -235,7 +235,7 @@ public class MatchSearchTreeTest {
         when(configurationParameters.getParameterNames()).thenReturn(Arrays.asList("ranking", "score"));
         when(configurationParameters.getBaseStepForParameter("ranking")).thenReturn(1.0);
         when(configurationParameters.getBaseStepForParameter("score")).thenReturn(1.0);
-        Map<Integer, Set<PoolClient>> clientMatches = new HashMap<>();
+        Map<Long, Set<PoolClient>> clientMatches = new HashMap<>();
         KDTree searchTree = new KDTree(numberOfParameters);
 
         Request baseRequest = mock(Request.class);

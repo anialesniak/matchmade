@@ -36,7 +36,7 @@ public class MatchSearchTree
     private final int teamSize;
     private final int parametersCount;
     private KDTree searchTree;
-    private Map<Integer, Set<PoolClient>> clientsMatches;
+    private Map<Long, Set<PoolClient>> clientsMatches;
 
     @Inject
     public MatchSearchTree(final ClientPool clientPool, final Configuration configuration)
@@ -48,7 +48,7 @@ public class MatchSearchTree
 
     MatchSearchTree(final ClientPool clientPool,
                     final Configuration configuration,
-                    final Map<Integer, Set<PoolClient>> clientsMatches,
+                    final Map<Long, Set<PoolClient>> clientsMatches,
                     final KDTree searchTree)
     {
         this.clientPool = clientPool;

@@ -9,16 +9,24 @@ import configuration.Configuration;
 import configuration.ConfigurationParameters;
 import matchmaker.ClientPool;
 import net.sf.javaml.core.kdtree.KDTree;
-import org.assertj.core.internal.Integers;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.withSettings;
 
 public class MatchSearchTreeTest
 {
@@ -27,7 +35,7 @@ public class MatchSearchTreeTest
     private Configuration configuration;
     private ClientPool clientPool;
     private ConfigurationParameters configurationParameters;
-    private Map<Integer, Set<PoolClient>> clientMatches;
+    private Map<Long, Set<PoolClient>> clientMatches;
     private KDTree searchTree;
 
     private MatchSearchTree matchSearchTree;
@@ -76,8 +84,8 @@ public class MatchSearchTreeTest
     public void shouldClearClientMatches()
     {
         //given
-        final Map<Integer, Set<PoolClient>> clientMatches = new HashMap<>();
-        clientMatches.put(5, ImmutableSet.of());
+        final Map<Long, Set<PoolClient>> clientMatches = new HashMap<>();
+        clientMatches.put(5L, ImmutableSet.of());
         final MatchSearchTree matchSearchTree = new MatchSearchTree(
                 clientPool,
                 configuration,
@@ -97,7 +105,7 @@ public class MatchSearchTreeTest
         PoolClient poolClient1 = getDummyPoolClient(1);
         PoolClient poolClient2 = getDummyPoolClient(2);
         PoolClient poolClient3 = getDummyPoolClient(3);
-        Map<Integer, Set<PoolClient>> clientMatches = new HashMap<>();
+        Map<Long, Set<PoolClient>> clientMatches = new HashMap<>();
         given(clientPool.getClients()).willReturn(new HashSet<>(Arrays.asList(
             poolClient1,
             poolClient2,
@@ -160,10 +168,10 @@ public class MatchSearchTreeTest
         PoolClient dummyPoolClient1 = getDummyPoolClient(1);
         PoolClient dummyPoolClient2 = getDummyPoolClient(2);
         PoolClient dummyPoolClient3 = getDummyPoolClient(3);
-        Map<Integer, Set<PoolClient>> clientMatches = new HashMap<>();
-        clientMatches.put(1, new HashSet<>(Arrays.asList(dummyPoolClient2, dummyPoolClient3)));
-        clientMatches.put(2, new HashSet<>(Arrays.asList(dummyPoolClient1, dummyPoolClient3)));
-        clientMatches.put(3, new HashSet<>(Arrays.asList(dummyPoolClient1, dummyPoolClient2)));
+        Map<Long, Set<PoolClient>> clientMatches = new HashMap<>();
+        clientMatches.put(1L, new HashSet<>(Arrays.asList(dummyPoolClient2, dummyPoolClient3)));
+        clientMatches.put(2L, new HashSet<>(Arrays.asList(dummyPoolClient1, dummyPoolClient3)));
+        clientMatches.put(3L, new HashSet<>(Arrays.asList(dummyPoolClient1, dummyPoolClient2)));
 
         final MatchSearchTree matchSearchTree = new MatchSearchTree(
                 clientPool,
@@ -183,14 +191,12 @@ public class MatchSearchTreeTest
 
     private static Set<PoolClient> getDummyPoolClientSet(int numberOfClients)
     {
-        final Set<PoolClient> set = new HashSet<>();
-        for (int i=0; i<numberOfClients; i++) {
-            set.add(getDummyPoolClient(i));
-        }
-        return set;
+        return IntStream.range(0, numberOfClients)
+                .mapToObj(MatchSearchTreeTest::getDummyPoolClient)
+                .collect(Collectors.toSet());
     }
 
-    private static PoolClient getDummyPoolClient(int clientId)
+    private static PoolClient getDummyPoolClient(long clientId)
     {
         final ClientSelfData clientSelfData = mock(ClientSelfData.class, withSettings().stubOnly());
         final ClientSearchingData clientSearchingData = mock(ClientSearchingData.class, withSettings().stubOnly());

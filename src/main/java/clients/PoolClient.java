@@ -8,11 +8,11 @@ import java.util.Objects;
  */
 public class PoolClient
 {
-    private final int clientId;
+    private final long clientId;
     private final ClientSelfData selfData;
     private final ClientSearchingData prioritizedSearchingData;
 
-    PoolClient(final int clientId,
+    PoolClient(final long clientId,
                final ClientSelfData selfData,
                final ClientSearchingData prioritizedSearchingData)
     {
@@ -36,7 +36,7 @@ public class PoolClient
         return prioritizedSearchingData;
     }
 
-    public int getClientID()
+    public long getClientID()
     {
         return clientId;
     }

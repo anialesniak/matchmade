@@ -5,9 +5,11 @@ package clients;
  */
 public class ClientId {
 
-    private static int currentID = 0;
+    private static long currentId = 0;
 
-    synchronized public static int getNextID(){
-        return currentID++;
+    synchronized public static long getNext() {
+        return currentId++;
     }
+
+
 }
